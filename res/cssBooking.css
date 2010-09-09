@@ -1,0 +1,295 @@
+.tx-abbooking-pi1 .theYears td {
+	font-family: arial;
+	font-size: 14pt;
+	color: black;
+}
+.tx-abbooking-pi1 .theYears td.selected {
+	font-family: arial;
+	font-size: 14pt;
+	font-weight: bold;
+	color: blue;
+}
+
+.tx-abbooking-pi1 .listlegend td {
+/* 	font-family: arial; */
+	font-size: 100%;
+/* 	border: 2px solid #666666; */
+ 	width: 14px;
+	text-align: center;
+}
+.tx-abbooking-pi1 .listlegend td.legend {
+/* 	 border: 0px; */
+/* 	 width: 100px; */
+	 text-align: left;
+}
+.tx-abbooking-pi1 .availabilityCalendar td.ABmonth {
+	vertical-align: top;
+}
+.tx-abbooking-pi1 .availabilityCalendar .ABcalendar td {
+/* 	font-family: arial; */
+	font-size: 100%;
+/* 	width: 14px; */
+	text-align: center;
+}
+
+.tx-abbooking-pi1 .availabilityCalendar .noDay {
+/* 	font-family: arial; */
+	font-size: 100%;
+	border: 0px;
+/* 	width: 14px; */
+	text-align: center;
+
+}
+
+.tx-abbooking-pi1 .transp {
+	opacity: .4;
+}
+.tx-abbooking-pi1 .Day {
+/* 	background-color: #fff; */
+}
+.tx-abbooking-pi1 .Weekend {
+	background-color: #c6c6c6;
+}
+.tx-abbooking-pi1 .booked {
+	border: 2px solid #d30000;
+	text-decoration: line-through;
+}
+.tx-abbooking-pi1 .overBookedDay {
+	background-color: #FF0000;
+}
+
+.tx-abbooking-pi1 .vacant {
+	border: 2px solid #008000;
+}
+
+.tx-abbooking-pi1 .Start {
+	border-right: 2px solid #d30000;
+	border-bottom: 2px solid #d30000;
+	border-left: 2px solid #008000;
+	border-top: 2px solid #008000;
+	text-decoration: line-through;
+}
+
+.tx-abbooking-pi1 .End {
+	border-right: 2px solid #008000;
+	border-bottom: 2px solid #008000;
+	border-left: 2px solid #d30000;
+	border-top: 2px solid #008000;
+	text-decoration: none;
+}
+.tx-abbooking-pi1 .DayTitle {
+	font-weight: bold;
+}
+
+.tx-abbooking-pi1 .availabilityCalendar .legend {
+/* 	width: 120px; */
+/* 	font-family: arial; */
+	font-size: 100%;
+	border: 0px;
+	text-align: left;
+}
+.tx-abbooking-pi1 .availabilityCalendar .ABmonthname {
+	background-color: #e0e0e0;
+	border: 0px;
+}
+
+.tx-abbooking-pi1 div.availabilityCalendar {
+	position: relative;
+/* 	min-height: 80px; */
+}
+.tx-abbooking-pi1 ul.Bookings  {
+	position: absolute;
+	top: 20px;
+}
+
+.tx-abbooking-pi1 ul.Bookings  li {
+/* 	border: 2px solid #fff; */
+	float: left;
+	padding: 2px;
+	margin: 0 1px 22px;
+	width: 1.4em;
+	text-align: center;
+	list-style-type: none;
+}
+
+.tx-abbooking-pi1 ul.DayNames {
+	float: left;
+/* 	position: absolute; */
+/* 	top: 0px; */
+}
+.tx-abbooking-pi1 ul.DayNames li {
+/*  	border: 2px solid #aa0000; */
+	list-style-type: none;
+	float: left;
+	padding: 2px;
+	margin: 0 3px 26px;
+	width: 1.4em;
+	text-align: left;
+}
+
+input {
+	border: 1px solid #aa0000;
+	margin: 1px;
+}
+
+input.error {
+	border: 3px solid #aa0000;
+	background-color: #fffa79;
+}
+
+input.readonly {
+ 	border: 0px solid #aa0000;
+	background-color: #ffffff;
+}
+
+input.edit {
+	padding: 5px 0px;
+	border: 1px solid #aa0000;
+	background-color: #fffa79;
+	font-size: 100%;
+}
+
+div.buttons {
+	position: relative;
+	top: 0px;
+}
+
+input.submit_final {
+	padding: 5px 0px;
+/*  	border: 2px solid #17a500; */
+	font-size: 140%;
+	background-color: #aadd88;
+}
+
+input.submit {
+	padding: 5px 0px;
+/* 	border: 2px solid #17a500; */
+	font-size: 140%;
+	background-color: #aadd88;
+}
+
+/* get rid of checkbox of date2calendar extension */
+input[type="checkbox"].jscalendar_cb {
+	border: 0;
+	width: 0px;
+	height: 0px;
+	margin: 0px;
+}
+
+.tx-abbooking-pi1 div.offer {
+	padding: 5px;
+}
+
+.tx-abbooking-pi1 div.offer p.offer {
+	font-size: 120%;
+	font-weight: bold;
+}
+.tx-abbooking-pi1 div.offer p.bookNow {
+	font-size: 120%;
+	text-align: right;
+	position: relative;
+	bottom: -10px;
+	clear: both;
+/* 	float: right; */
+}
+
+.tx-abbooking-pi1  li.offerList {
+	float: left;
+	list-style-type: none;
+ 	margin: 5px 0 5px 0;
+ 	padding: 10px;
+  	border: 1px solid #aaa;
+	width: 95%;
+}
+.tx-abbooking-pi1  div.requestForm {
+	float: left;
+	list-style-type: none;
+ 	margin: 5px 0 5px 0;
+ 	padding: 10px;
+  	border: 1px solid #aaa;
+	width: 95%;
+}
+.tx-abbooking-pi1 img.date2cal_img_cal  {
+	text-align: right;
+	float: none;
+	margin: 1px;
+/* 	float: right; */
+}
+.tx-abbooking-pi1 input.jscalendar  {
+	width: 7em;
+}
+
+td.vacant:hover {
+	background-color: #ad8;
+}
+
+textarea[name="tx_abbooking_pi1[mitteilung]"] {
+	border: 1px solid #aa0000;
+	margin: 1px;
+	width: 100%;
+}
+
+.tx-abbooking-pi1 div.bookingSteps {
+	position: relative;
+	float: left;
+	width: 95%;
+	border: 1px solid #aaa;
+	padding: 10px;
+/* 	min-height: 80px; */
+}
+
+.tx-abbooking-pi1 div.bookingSteps ul li {
+/* 	border: 2px solid #fff; */
+	float: left;
+	padding: 2px;
+	margin: 0;
+	width: 30%;
+	text-align: center;
+	list-style-type: none;
+	border: 1px solid #ddd;
+	font-size: 120%;
+	font-weight: normal;
+}
+.tx-abbooking-pi1  div.bookingSteps ul  li.current {
+	font-size: 120%;
+	font-weight: bold;
+	border: 1px solid #008000;
+}
+.tx-abbooking-pi1  div.bookingSteps ul  li.past {
+	font-size: 120%;
+	font-weight: normal;
+	background-color: #ddd;
+	border: 1px solid #ddd;
+}
+
+.tx-abbooking-pi1  h2.setupErrors {
+	border: 2px solid #333;
+	font-family: Monospace;
+	font-weight: bold;
+	font-size: 140%;
+	text-align: center;
+	color: #a00;
+	background-color: #ddd;
+	padding: 5px;
+}
+.tx-abbooking-pi1 div.priceDetails {
+	border-top: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	float: left;
+	width: 100%;
+}
+.tx-abbooking-pi1  .priceDetails ul {
+	list-style-type: none;
+	margin: 0;
+}
+.tx-abbooking-pi1  span.priceDescription {
+	float: left;
+	clear: right;
+}
+.tx-abbooking-pi1  span.priceValue {
+	float: right;
+	clear: right;
+}
+.tx-abbooking-pi1  .priceTotal {
+	margin-bottom: 1em;
+}

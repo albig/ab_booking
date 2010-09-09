@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'ab_booking'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_abbooking_booking">Booking Details</label>
+			<label index="tx_abbooking_booking.startdate">Start of Booking</label>
+			<label index="tx_abbooking_booking.enddate">End of Booking</label>
+			<label index="tx_abbooking_booking.title">Title</label>
+			<label index="tx_abbooking_booking.productid">Product ID</label>
+			<label index="tx_abbooking_booking.editcode">Edit Code</label>
+			<label index="tx_abbooking_booking.request">Request</label>
+			<label index="tx_abbooking_product">Product Properties</label>
+			<label index="tx_abbooking_product.title">Title</label>
+			<label index="tx_abbooking_product.capacitymin">Minimal Capacity</label>
+			<label index="tx_abbooking_product.capacitymax">Maximum Capacity</label>
+			<label index="tx_abbooking_product.filterprice">Filter prices by the following text (e.g. Single)</label>
+			<label index="tx_abbooking_product.priceid">Price ID</label>
+			<label index="tx_abbooking_product.uiddetails">UID details</label>
+			<label index="tx_abbooking_price">Product Prices</label>
+			<label index="tx_abbooking_price.title">Title</label>
+			<label index="tx_abbooking_price.currency">Currency</label>
+			<label index="tx_abbooking_price.adult1">One Adult</label>
+			<label index="tx_abbooking_price.adult2">Two Adult</label>
+			<label index="tx_abbooking_price.adult3">Three Adults</label>
+			<label index="tx_abbooking_price.adult4">Four Adult</label>
+			<label index="tx_abbooking_price.child">Child</label>
+			<label index="tx_abbooking_price.teen">Teen</label>
+			<label index="tx_abbooking_price.discount">Discount</label>
+			<label index="tx_abbooking_price.discountPeriod">Discount after X days</label>
+			<label index="tx_abbooking_price.singleComponent1">Single Component (e.g. Roomcleaning)</label>
+			<label index="tx_abbooking_price.singleComponent2">Single Component (e.g. Roomcleaning)</label>
+			<label index="tx_abbooking_price.seasonid">Corresponding Seasons</label>
+			<label index="tx_abbooking_seasons">Season</label>
+			<label index="tx_abbooking_seasons.title">Description</label>
+			<label index="tt_content.list_type_pi1">Booking Calendar</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="tx_abbooking_booking">Buchungsdetails</label>
+			<label index="tx_abbooking_booking.startdate">Erster Tag der Buchung</label>
+			<label index="tx_abbooking_booking.enddate">Letzter Tag der Buchung</label>
+			<label index="tx_abbooking_booking.title">Beschreibung</label>
+			<label index="tx_abbooking_booking.productid">Produkt ID</label>
+			<label index="tx_abbooking_booking.editcode">Bearbeitungscode</label>
+			<label index="tx_abbooking_booking.request">Anfrage</label>
+			<label index="tx_abbooking_product">Produkt Eigenschaften</label>
+			<label index="tx_abbooking_product.title">Titel</label>
+			<label index="tx_abbooking_price.currency">Währung</label>
+			<label index="tx_abbooking_product.capacitymin">Minimale Kapazität</label>
+			<label index="tx_abbooking_product.capacitymax">Maximale Kapazität</label>
+			<label index="tx_abbooking_product.filterprice">Preise nach folgendem Text filtern (z.B. Einzelzimmer)</label>
+			<label index="tx_abbooking_product.priceid">Preis ID</label>
+			<label index="tx_abbooking_product.uiddetails">UID Details</label>
+			<label index="tx_abbooking_price">Produkt Preis</label>
+			<label index="tx_abbooking_price.title">Titel</label>
+			<label index="tx_abbooking_price.adult1">Ein Erwachsener</label>
+			<label index="tx_abbooking_price.adult2">Zwei Erwachsene</label>
+			<label index="tx_abbooking_price.adult3">Drei Erwachsene</label>
+			<label index="tx_abbooking_price.adult4">Vier Erwachsene</label>
+			<label index="tx_abbooking_price.child">Kind</label>
+			<label index="tx_abbooking_price.teen">Jugendlicher</label>
+			<label index="tx_abbooking_price.discount">Rabatt</label>
+			<label index="tx_abbooking_price.discountPeriod">Rabatt nach X Tagen</label>
+			<label index="tx_abbooking_price.singleComponent1">Einzelposten (z.B. Endreinigung)</label>
+			<label index="tx_abbooking_price.singleComponent2">Einzelposten (z.B. Endreinigung)</label>
+			<label index="tx_abbooking_price.seasonid">Saisonzeiten</label>
+			<label index="tx_abbooking_seasons">Saison</label>
+			<label index="tx_abbooking_seasons.title">Bezeichnung</label>
+			<label index="tt_content.list_type_pi1">Buchungskalender</label>
+		</languageKey>
+	</data>
+</T3locallang>

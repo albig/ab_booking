@@ -1,0 +1,26 @@
+plugin.tx_abbooking_pi1 = USER_INT
+plugin.tx_abbooking_pi1 {
+
+	# show prices in the availability list and in the confirmation view
+	showPrice = 1
+	# show details of price components
+	showPriceDetails = 1
+        file.cssBooking = {$plugin.tx_abbooking_pi1.file.cssBooking}
+	_LOCAL_LANG {
+		de {
+			discount = Rabatt
+			specialComponent1 = Endreinigungspauschale
+			specialComponent2 = Endreinigungspauschale
+		}
+		en {
+			discount = Discount
+			specialComponent1 = Room Cleaning
+			specialComponent2 = Room Cleaning
+		}
+	}
+#	remote.remoteSettingsEnable = {$plugin.tx_abbooking_pi1.remote.remoteSettingsEnable}
+#	remote.remoteURL = {$plugin.tx_abbooking_pi1.remote.remoteURL}
+#	remote.remoteType = {$plugin.tx_abbooking_pi1.remote.remoteType}
+#	remote.remoteStoragePID = {$plugin.tx_abbooking_pi1.remote.remoteStoragePID}
+#	remote.remoteProductUIDs = {$plugin.tx_abbooking_pi1.remote.remoteProductUIDs}
+}

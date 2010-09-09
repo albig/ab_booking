@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>module</type>
+		<description>Language labels for plugin &quot;tx_abbooking_pi1&quot;</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="vacant day">vacant</label>
+			<label index="booked day">booked</label>
+
+			<label index="Jan">January</label>
+			<label index="Feb">February</label>
+			<label index="Mar">March</label>
+			<label index="Apr">April</label>
+			<label index="May">May</label>
+			<label index="Jun">June</label>
+			<label index="Jul">July</label>
+			<label index="Aug">August</label>
+			<label index="Sep">September</label>
+			<label index="Oct">October</label>
+			<label index="Nov">November</label>
+			<label index="Dec">December</label>
+
+			<label index="booking calendar">booking calendar</label>
+
+			<label index="Mon">Monday</label>
+			<label index="Tus">Tuesday</label>
+			<label index="Wed">Wednesday</label>
+			<label index="Thu">Thursday</label>
+			<label index="Fri">Friday</label>
+			<label index="Sat">Saturday</label>
+			<label index="Sun">Sunday</label>
+			<label index="Mo">M</label>
+			<label index="Tu">T</label>
+			<label index="We">W</label>
+			<label index="Th">T</label>
+			<label index="Fr">F</label>
+			<label index="Sa">S</label>
+			<label index="Su">S</label>
+
+			<label index="back">Back</label>
+			<label index="feld_name">Name</label>
+			<label index="feld_street">Street</label>
+			<label index="feld_town">Town</label>
+			<label index="feld_plz">Area Code</label>
+
+			<label index="feld_email">Email</label>
+			<label index="feld_telefon">Phone</label>
+			<label index="feld_anreise">Arrival</label>
+			<label index="feld_abreise">Depature</label>
+			<label index="feld_naechte">Number of Nights</label>
+			<label index="feld_personen">Number of Persons</label>
+			<label index="titel_anfrage">Booking</label>
+			<label index="submit_button_label">Send</label>
+			<label index="submit_button_check">Check</label>
+
+			<label index="feld_mitteilung">Message</label>
+
+			<label index="title_request">Booking Request</label>
+			<label index="title_availability">Availability</label>
+
+
+			<label index="error_noEmailConfigured">No Email Address has been configured!</label>
+			<label index="error_noProductSelected">No product has been selected!</label>
+			<label index="error_noPriceSelected">No price has been associated to the product!</label>
+			<label index="error_email">Please check your email-address!</label>
+			<label index="error_empty_name">Please enter your name!</label>
+			<label index="error_empty_street">Please enter your street!</label>
+			<label index="error_empty_town">Please enter your town!</label>
+			<label index="error_empty_plz">Please enter your area code!</label>
+			<label index="error_no_vacancies">Unfortunately, the room is already booked!</label>
+			<label index="error_vacancies_limited">Please note: the availability is limited!</label>
+			<label index="error_startDateInThePast">Your seleted start date is in the past!</label>
+			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
+			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
+
+
+			<label index="product_title">Description</label>
+			<label index="total_amount">Total (incl. VAT)</label>
+			<label index="person">Person</label>
+			<label index="persons">Persons</label>
+			<label index="period">Night</label>
+			<label index="periods">Nights</label>
+			<label index="please_confirm">Please confirm your details.</label>
+			<label index="submit_button_edit">Change Details</label>
+			<label index="submit_button_final">Complete Booking</label>
+			<label index="bookNow">Book Now Online</label>
+
+			<label index="booking_step_1">Enter</label>
+			<label index="booking_step_2">Check</label>
+			<label index="booking_step_3">Booked</label>
+
+			<label index="result_available">available</label>
+			<label index="result_occupied">occupied</label>
+			<label index="we_may_offer">We may offer the following items:</label>
+			<label index="no_offer">Unfortunately we cannot offer you anything for the date you requested.</label>
+			<label index="up_to">up to</label>
+
+			<label index="link_availability_check">Check Availability</label>
+
+			<label index="send_success">Thank you for your booking. We will contact you by mail during the next 24 hours. If you receive no mail from us, please contact us by mail or phone!</label>
+			<label index="send_failure">There was an error sending your request. Please call us or send us an e-mail!</label>
+			<label index="email_new_booking">Booking Request by</label>
+			<label index="email_your_booking">Your Booking Request from</label>
+
+</languageKey>
+		<languageKey index="de" type="array">
+			<label index="vacant day">frei</label>
+			<label index="booked day">gebucht</label>
+			<label index="overbooked">Tag überbucht</label>
+			<label index="Jan">Januar</label>
+			<label index="Feb">Februar</label>
+			<label index="Mar">März</label>
+			<label index="Apr">April</label>
+			<label index="May">Mai</label>
+			<label index="Jun">Juni</label>
+			<label index="Jul">Juli</label>
+			<label index="Aug">August</label>
+			<label index="Sep">September</label>
+			<label index="Oct">Oktober</label>
+			<label index="Nov">November</label>
+			<label index="Dec">Dezember</label>
+			<label index="booking calendar">Buchungskalender</label>
+			<label index="Mon">Montag</label>
+			<label index="Tus">Dienstag</label>
+			<label index="Wed">Mittwoch</label>
+			<label index="Thu">Donnerstag</label>
+			<label index="Fri">Freitag</label>
+			<label index="Sat">Samstag</label>
+			<label index="Sun">Sonntag</label>
+			<label index="Mo">M</label>
+			<label index="Tu">D</label>
+			<label index="We">M</label>
+			<label index="Th">D</label>
+			<label index="Fr">F</label>
+			<label index="Sa">S</label>
+			<label index="Su">S</label>
+			<label index="back">Zurück</label>
+
+			<label index="feld_name">Vorname Name</label>
+			<label index="feld_street">Straße Hausnummer</label>
+			<label index="feld_town">Wohnort</label>
+			<label index="feld_plz">Postleitzahl</label>
+
+			<label index="feld_email">Email</label>
+			<label index="feld_telefon">Telefon</label>
+			<label index="feld_anreise">Anreise Datum</label>
+			<label index="feld_abreise">Abreise Datum</label>
+			<label index="feld_naechte">Anzahl der Übernachtungen</label>
+			<label index="feld_personen">Anzahl der Personen</label>
+			<label index="feld_mitteilung">Mitteilung</label>
+			<label index="submit_button_label">Absenden</label>
+			<label index="submit_button_check">Eingaben Prüfen</label>
+
+			<label index="title_request">Buchungsanfrage</label>
+			<label index="title_availability">Verfügbarkeit</label>
+
+			<label index="error_noEmailConfigured">Es wurde keine Email Adresse konfiguriert!</label>
+			<label index="error_noProductSelected">Es wurde kein Produkt ausgewählt!</label>
+			<label index="error_noPriceSelected">Dem Produkt wurde kein Preis zugeordnet!</label>
+			<label index="error_email">Bitte überprüfen Sie Ihre Email-Adresse!</label>
+			<label index="error_empty_name">Bitte geben Sie Ihren Namen an!</label>
+			<label index="error_empty_street">Bitte geben Sie Ihre Straße an!</label>
+			<label index="error_empty_town">Bitte geben Sie Ihren Wohnort an!</label>
+			<label index="error_empty_plz">Bitte geben Sie Ihre Postleitzahl an!</label>
+			<label index="error_no_vacancies">Leider ist das Zimmer zum gewünschten Zeitpunkt belegt!</label>
+			<label index="error_vacancies_limited">Leider steht das Zimmer nur für die angegebenen Zeiten zur Verfügung!</label>
+			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
+			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
+			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
+
+			<label index="product_title">Bezeichnung</label>
+			<label index="total_amount">Gesamtpreis (inkl. MwSt.)</label>
+			<label index="person">Person</label>
+			<label index="persons">Personen</label>
+			<label index="period">Nacht</label>
+			<label index="periods">Nächte</label>
+			<label index="please_confirm">Bitte prüfen Sie Ihre Angaben und schließen Sie die Buchung ab.</label>
+			<label index="submit_button_edit">Angaben ändern</label>
+			<label index="submit_button_final">Buchung abschließen</label>
+			<label index="bookNow">Online Buchen</label>
+
+			<label index="booking_step_1">Eingabe</label>
+			<label index="booking_step_2">Prüfen</label>
+			<label index="booking_step_3">Fertig</label>
+
+			<label index="result_available">Verfügbar</label>
+			<label index="result_occupied">Belegt</label>
+			<label index="we_may_offer">Wir können Ihnen folgende Angebote machen:</label>
+			<label index="no_offer">Leider können wir Ihnen kein Angebot für den angefragten Zeitraum machen.</label>
+			<label index="up_to">bis</label>
+
+			<label index="link_availability_check">Verfügbarkeitsprüfung</label>
+
+			<label index="send_success">Vielen Dank für Ihre Nachricht. Sie erhalten innerhalb von 24 Stunden eine Antwort von uns. Sollten Sie nichts von uns hören ist u.U. Ihre Email-Adresse nicht korrekt. Bitte rufen Sie uns in diesem Fall bitte an.</label>
+			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
+			<label index="email_new_booking">Buchungsanfrage von</label>
+			<label index="email_your_booking">Ihre Buchungsanfrage vom</label>
+		</languageKey>
+
+	</data>
+</T3locallang>

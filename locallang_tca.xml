@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description>labels for ab_booking</description>
+		<type>module</type>
+		<csh_table></csh_table>
+		<labelContext type="array">
+		</labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="ab_booking.pi_flexform.sheetDisplayOptions">display options</label>
+			<label index="ab_booking.pi_flexform.numMonths">Number of Months</label>
+			<label index="ab_booking.pi_flexform.numMonthsCols">Columns</label>
+			<label index="ab_booking.pi_flexform.numMonthsRows">Rows</label>
+			<label index="ab_booking.pi_flexform.monthsLineView">Show Months in a Row</label>
+			<label index="ab_booking.pi_flexform.sheetGeneralOptions">General Options</label>
+			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
+			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
+			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions">Booking</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
+			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
+			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
+			<label index="ab_booking.pi_flexform.numDefaultNights">Default Amount of Days to Book</label>
+			<label index="ab_booking.pi_flexform.numDefaultPersons">Default Amount of Persons to Book</label>
+			<label index="ab_booking.pi_flexform.showPersonsSelector">Show Selector for Number of Persons</label>
+			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>
+			<label index="ab_booking.pi_flexform.what_to_display">What to display</label>
+			<label index="ab_booking.pi_flexform.PIDstorage">PID of Storage Sysfolder</label>
+			<label index="ab_booking.pi_flexform.PIDbooking">PID of Booking Page</label>
+			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
+			<label index="ab_booking.pi_flexform.CheckProductID">Check Products for Availablitity</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer">Use ab_swiftmailer for Email Transport</label>
+			<label index="ab_booking.pi_flexform.EmailAddress">Email Address if NOT using ab_swiftmailer</label>
+			<label index="ab_booking.pi_flexform.EmailRealname">Realname if NOT using ab_swiftmailer</label>
+			<label index="ab_booking.pi_flexform.textSayThankYou">Thank You Text after final Booking</label>
+			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Confirmation Email</label>
+			<label index="ab_booking.pi_flexform.sheetRemoteOptions">Remote Options</label>
+			<label index="ab_booking.pi_flexform.remoteSettingsEnable">Use Remote Settings</label>
+			<label index="ab_booking.pi_flexform.remoteURL">Remote URL (incl. http://[..]/)</label>
+			<label index="ab_booking.pi_flexform.remoteType">Page Type Number</label>
+			<label index="ab_booking.pi_flexform.remoteStoragePID">Remote Storage PID of all Bookings, Products, Prices</label>
+			<label index="ab_booking.pi_flexform.remoteProductUIDs">Remote Product UIDs to query (comma separated)</label>
+			<label index="ab_booking.pi_flexform.dynField">dynamic list field</label>
+		</languageKey>
+		<languageKey index="de" type="array">
+			<label index="ab_booking.pi_flexform.sheetDisplayOptions">Anzeige Optionen</label>
+			<label index="ab_booking.pi_flexform.numMonths">Anzahl der Monate</label>
+			<label index="ab_booking.pi_flexform.numMonthsCols">Kalender Spalten</label>
+			<label index="ab_booking.pi_flexform.numMonthsRows">Kalender Reihen</label>
+			<label index="ab_booking.pi_flexform.monthsLineView">Monat einzeilig darstellen</label>
+			<label index="ab_booking.pi_flexform.sheetGeneralOptions">Allgemeine Einstellungen</label>
+			<label index="ab_booking.pi_flexform.itemDescription">Kurzbeschreibung</label>
+			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Kalender</label>
+			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Verfügbarkeits Prüfung</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions">Buchung</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Link im Kalender aktivieren</label>
+			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Link in Angebots-Liste aktivieren</label>
+			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximaler Buchungszeitraum (Tage)</label>
+			<label index="ab_booking.pi_flexform.numDefaultNights">Standard-Wert Buchungstage</label>
+			<label index="ab_booking.pi_flexform.numDefaultPersons">Standard-Wert Personen</label>
+			<label index="ab_booking.pi_flexform.showPersonsSelector">Personenanzahl auswählbar?</label>
+			<label index="ab_booking.pi_flexform.detailInfosUID">UID der Detail Info Seite</label>
+			<label index="ab_booking.pi_flexform.what_to_display">Was soll angezeigt werden</label>
+			<label index="ab_booking.pi_flexform.PIDstorage">PID der Buchungs-Sysfolder</label>
+			<label index="ab_booking.pi_flexform.PIDbooking">PID der Buchungsseite</label>
+			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
+			<label index="ab_booking.pi_flexform.CheckProductID">Produkt auf Verfügbarkeit prüfen</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer">ab_swiftmailer für den Email-Versand nutzen</label>
+			<label index="ab_booking.pi_flexform.EmailAddress">Email Adresse, wenn ab_swiftmailer NICHT benutzt wird</label>
+			<label index="ab_booking.pi_flexform.EmailRealname">Name, wenn ab_swiftmailer NICHT benutzt wird</label>
+			<label index="ab_booking.pi_flexform.textSayThankYou">Danksagung nach Absenden der Buchung</label>
+			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Bestätigungs-Email</label>
+			<label index="ab_booking.pi_flexform.sheetRemoteOptions">Fernabfrage</label>
+			<label index="ab_booking.pi_flexform.remoteSettingsEnable">Fernabfrage aktivieren</label>
+			<label index="ab_booking.pi_flexform.remoteURL">URL (inkl. http://[..]/)</label>
+			<label index="ab_booking.pi_flexform.remoteType">Seiten Type Nummer</label>
+			<label index="ab_booking.pi_flexform.remoteStoragePID">PID des Sysfolders mit den Buchungen, Produkten, Preisen</label>
+			<label index="ab_booking.pi_flexform.remoteProductUIDs">abzufragende Produkt UIDs (Komma separiert)</label>
+			<label index="ab_booking.pi_flexform.dynField">dynamic list field</label>
+		</languageKey>
+	</data>
+	<orig_hash type="array">
+		<languageKey index="de" type="array">
+			<label index="ab_booking.pi_flexform.sheetDisplayOptions" type="integer">183391510</label>
+			<label index="ab_booking.pi_flexform.numMonths" type="integer">115903846</label>
+			<label index="ab_booking.pi_flexform.numMonthsCols" type="integer">23640109</label>
+			<label index="ab_booking.pi_flexform.numMonthsRows" type="integer">87094408</label>
+			<label index="ab_booking.pi_flexform.sheetGeneralOptions" type="integer">9218825</label>
+			<label index="ab_booking.pi_flexform.itemDescription" type="integer">57553922</label>
+			<label index="ab_booking.pi_flexform.sheetCalendarOptions" type="integer">150966827</label>
+			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions" type="integer">109957913</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions" type="integer">4332477</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink" type="integer">179809195</label>
+			<label index="ab_booking.pi_flexform.enableCheckBookingLink" type="integer">182428140</label>
+			<label index="ab_booking.pi_flexform.numCheckNextMonths" type="integer">3223258</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxInterval" type="integer">82323251</label>
+			<label index="ab_booking.pi_flexform.detailInfosUID" type="integer">37607590</label>
+			<label index="ab_booking.pi_flexform.what_to_display" type="integer">4813935</label>
+			<label index="ab_booking.pi_flexform.PIDstorage" type="integer">80050390</label>
+			<label index="ab_booking.pi_flexform.PIDbooking" type="integer">243697323</label>
+			<label index="ab_booking.pi_flexform.ProductID" type="integer">159320228</label>
+			<label index="ab_booking.pi_flexform.CheckProductID" type="integer">50644178</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer" type="integer">36987574</label>
+			<label index="ab_booking.pi_flexform.EmailAddress" type="integer">232282731</label>
+			<label index="ab_booking.pi_flexform.EmailRealname" type="integer">177838871</label>
+			<label index="ab_booking.pi_flexform.textSayThankYou" type="integer">234174359</label>
+			<label index="ab_booking.pi_flexform.textConfirmEmail" type="integer">111653081</label>
+			<label index="ab_booking.pi_flexform.sheetRemoteOptions" type="integer">225334154</label>
+			<label index="ab_booking.pi_flexform.remoteSettingsEnable" type="integer">24830905</label>
+			<label index="ab_booking.pi_flexform.remoteURL" type="integer">132673227</label>
+			<label index="ab_booking.pi_flexform.remoteType" type="integer">75964098</label>
+			<label index="ab_booking.pi_flexform.remoteStoragePID" type="integer">75275483</label>
+			<label index="ab_booking.pi_flexform.remoteProductUIDs" type="integer">266694784</label>
+			<label index="ab_booking.pi_flexform.dynField" type="integer">178190478</label>
+		</languageKey>
+	</orig_hash>
+	<orig_text type="array">
+		<languageKey index="de" type="array">
+			<label index="ab_booking.pi_flexform.sheetDisplayOptions">display options</label>
+			<label index="ab_booking.pi_flexform.numMonths">Number of Months</label>
+			<label index="ab_booking.pi_flexform.numMonthsCols">Columns</label>
+			<label index="ab_booking.pi_flexform.numMonthsRows">Rows</label>
+			<label index="ab_booking.pi_flexform.sheetGeneralOptions">General Options</label>
+			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
+			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
+			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions">Booking</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
+			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
+			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
+			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>
+			<label index="ab_booking.pi_flexform.what_to_display">What to display</label>
+			<label index="ab_booking.pi_flexform.PIDstorage">PID of Storage Sysfolder</label>
+			<label index="ab_booking.pi_flexform.PIDbooking">PID of Booking Page</label>
+			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
+			<label index="ab_booking.pi_flexform.CheckProductID">Check Products for Availablitity</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer">Use ab_swiftmailer for Email Transport</label>
+			<label index="ab_booking.pi_flexform.EmailAddress">Email Address if NOT using ab_swiftmailer</label>
+			<label index="ab_booking.pi_flexform.EmailRealname">Realname if NOT using ab_swiftmailer</label>
+			<label index="ab_booking.pi_flexform.textSayThankYou">Thank You Text after final Booking</label>
+			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Confirmation Email</label>
+			<label index="ab_booking.pi_flexform.sheetRemoteOptions">Remote Options</label>
+			<label index="ab_booking.pi_flexform.remoteSettingsEnable">Use Remote Settings</label>
+			<label index="ab_booking.pi_flexform.remoteURL">Remote URL (incl. http://[..]/)</label>
+			<label index="ab_booking.pi_flexform.remoteType">Page Type Number</label>
+			<label index="ab_booking.pi_flexform.remoteStoragePID">Remote Storage PID of all Bookings, Products, Prices</label>
+			<label index="ab_booking.pi_flexform.remoteProductUIDs">Remote Product UIDs to query (comma separated)</label>
+			<label index="ab_booking.pi_flexform.dynField">dynamic list field</label>
+		</languageKey>
+	</orig_text>
+</T3locallang>

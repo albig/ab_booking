@@ -1,0 +1,5 @@
+# cat=basic/enable; type=boolean; label=Enable Debugging
+enableDebug = 0
+
+# cat=basic/enable; type=string; label=Logfile with full path: If enableDebug is set, all requests will be written to debugLogFile. Please make sure, the directory is already present. Don't use this in a production system!
+debugLogFile = fileadmin/log/ab_booking.log
