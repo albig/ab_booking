@@ -127,7 +127,7 @@ class tx_abbooking_remote  {
 
 		// Traverse the entire array based on the language...
 		// and assign each configuration option to $this->lConf array...
-		if (sizeof($piFlexForm)>0)
+		if (is_array($piFlexForm))
 			foreach ( $piFlexForm['data'] as $sheet => $data ) {
 				foreach ( $data as $lang => $value ) {
 					foreach ( $value as $key => $val ) {

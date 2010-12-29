@@ -21,6 +21,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
+
 /**
  * [CLASS/FUNCTION INDEX of SCRIPT]
  *
@@ -90,10 +91,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// get all initial settings
 		$this->init();
-
-// 		print_r($this->conf);
-//  		print_r($this->lConf);
-// 		print_r($this->cObj->data);
 
 		switch ( $this->lConf['mode'] ) {
 			case 'form':
@@ -168,6 +165,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* --------------------------- */
 						/* booking final - send mails  */
 						/* --------------------------- */
+						$numErrors = $this->check_form_input();
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
 							$result= $this->send_confirmation_email($send_errors);
@@ -286,14 +284,23 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (isset($this->lConf['ABProductID']))
 			$this->lConf['ProductID'] = $this->lConf['ABProductID'];
 
-		$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['numNights'].' days', $this->lConf['startDateStamp']);
+		// ---------------------------------
+		// calculate endDateStamp
+		// ---------------------------------
+		if (empty($this->lConf['startDateStamp']))
+			$this->lConf['startDateStamp'] = strtotime(strftime("%Y-%m-%d"));
+		if (empty($this->lConf['numNights']))
+			$this->lConf['endDateStamp'] = strtotime('+ 14 days', $this->lConf['startDateStamp']);
+		else
+			$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['numNights'].' days', $this->lConf['startDateStamp']);
 
 		if (!isset($this->lConf['ABdo']))
 			$this->lConf['mode'] = 'display';
 		else {
 			// check if formular or display mode:
-			if ($this->lConf['uidpid'] == $this->lConf['ABuidpid'] ||
-				$this->lConf['PIDbooking'] == $this->cObj->data['pid']) {
+			if (($this->lConf['what_to_display'] == 'BOOKING') &&
+			      ($this->lConf['uidpid'] == $this->lConf['ABuidpid'] ||
+				$this->lConf['PIDbooking'] == $this->cObj->data['pid'])) {
 				$this->lConf['mode'] = 'form';
 				// overwrite flexform setting
 				if (isset($this->lConf['ABProductID']))
@@ -377,10 +384,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$content.='<div class="requestForm">';
 
-		// check for limited vacancies...
-		if ($product['maxAvailable'] < $this->lConf['numNights']) {
-			$this->form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited')."<br/>";
-		}
 
 		$content.='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
 
@@ -436,6 +439,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if (isset($this->form_errors['endDateNotValid'])) {
 				$ErrorVacanciesLimited='class="error"';
 				$content.='<h2><b>'.$this->form_errors['endDateNotValid'].'</b></h2>';
+			}
+			if (isset($this->form_errors['numNightsNotValid'])) {
+				$ErrorVacanciesLimited='class="error"';
+				$content.='<h2><b>'.$this->form_errors['numNightsNotValid'].'</b></h2>';
 			}
 		}
 
@@ -561,7 +568,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 		$content.='</div>';
 		return $content;
-// 		return $this->pi_wrapInBaseClass($content);
 	}
 	/**
 	 * availability prices form ;-)
@@ -679,7 +685,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$out .= '</tr></table>';
 		// get the years of booking
 		$pidList = $this->pi_getPidList($this->cObj->data['pages'],$this->cObj->data['recursive']);
-// 		print_r($pidList);
 
 		// check what year and month will be in $months
 		$m = ( date(m) + $months) % 12 ;
@@ -694,7 +699,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('DISTINCT uid, startdate, enddate','tx_abbooking_booking, tx_abbooking_booking_productid_mm',$myquery,'','startdate','');
 
-// 		print_r($res);
 		// one array for start and end dates. one for each pid
 		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
@@ -832,7 +836,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$myquery .= ' AND (tx_abbooking_seasons.starttime <'. $this->lConf['endDateStamp'].' AND tx_abbooking_seasons.endtime >= '.$this->lConf['startDateStamp'].' ';
 					// check also for default rate without valid start and stopdate
 					$myquery .= 'OR (tx_abbooking_seasons.starttime = 0 AND tx_abbooking_seasons.endtime = 0))';
-					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'','starttime','');
+					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($product_properties[$product]['priceid'], 'tx_abbooking_price').') ','');
 
 					// one array for start and end dates. one for each pid
 					$p = 0;
@@ -840,15 +844,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$product_properties[$product]['prices'][$p] = $row;
 						$p++;
 					};
-					// get the valid prices per day - cheapest is valid
-					for ($d=$this->lConf['startDateStamp']; $d<=$this->lConf['endDateStamp']; $d=strtotime('+1 day', $d)) {
+					// get the valid prices per day
+					for ($d = $this->lConf['startDateStamp']; $d <= $this->lConf['endDateStamp']; $d=strtotime('+1 day', $d)) {
 						for ($i=0; $i<$p; $i++) {
-							if ($product_properties[$product]['prices'][$i]['starttime'] == 0)
-								$priceDay = $product_properties[$product]['prices'][$i];
-							else if ($product_properties[$product]['prices'][$i]['starttime'] <= $d && $product_properties[$product]['prices'][$i]['endtime'] > $d)
-								$priceDay = $product_properties[$product]['prices'][$i];
+							if ($product_properties[$product]['prices'][$i]['starttime'] <= $d && $product_properties[$product]['prices'][$i]['endtime'] >= $d)
+							    break;
+							else if ($product_properties[$product]['prices'][$i]['starttime'] == 0)
+							    break;
+							// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
 						}
-						if ($priceDay['adult2'] < $product_properties[$product]['prices'][$d]['adult2'] || empty($product_properties[$product]['prices'][$d]['adult2']))
+						$priceDay = $product_properties[$product]['prices'][$i];
+// 						if ($priceDay['adult2'] < $product_properties[$product]['prices'][$d]['adult2'] || empty($product_properties[$product]['prices'][$d]['adult2']))
 							$product_properties[$product]['prices'][$d] = $priceDay;
 					}
 
@@ -989,6 +995,21 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$numErrors = 0;
 		$dns_ok = 0;
 
+		if (empty($this->lConf['productDetails'])) {
+			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
+			return $content;
+		} else {
+			foreach ( $this->lConf['productDetails'] as $key => $val ) {
+				$product = $val;
+			}
+		}
+
+		// check for limited vacancies...
+		if ($product['maxAvailable'] < $this->lConf['numNights']) {
+			$this->form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited')."<br/>";
+			$numErrors++;
+		}
+
 		// Email mit Syntax und Domaincheck
 		$motif1="#^[[:alnum:]]([[:alnum:]\._-]{0,})[[:alnum:]]";
 		$motif1.="@";
@@ -1034,8 +1055,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$numErrors++;
 		}
 
+		if (empty($this->lConf['numNights'])) {
+			$this->form_errors['numNightsNotValid'] = $this->pi_getLL('error_numNightsNotValid')."<br/>";
+			$numErrors++;
+		}
+
 		return $numErrors;
-			//Now check if Swift actually sends it
 	}
 
 
@@ -1175,8 +1200,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			'request' => $request,
 		);
 
-	// 	print_r($fields_values);
-
 		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking', $fields_values);
 
 		$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1186,7 +1209,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			'uid_local' => $id_inserted,
 			'uid_foreign' => implode(',', $this->lConf['AvailableProductIDs']),
 		);
-	// 	print_r($fields_values);
 		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_productid_mm', $fields_values);
 
 		$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
@@ -1241,12 +1263,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			else
 				$text_persons = ', '.$max_persons.' '.$this->pi_getLL('persons');
 		}
-		if ($value['rateUsed'] == 1)
-			$text_periods .= ' '.$this->pi_getLL('period');
-		else
-			$text_periods .= ' '.$this->pi_getLL('periods');
 
 		foreach ($usedPrices as $title => $value) {
+			if ($value['rateUsed'] == 1)
+				$text_periods .= ' '.$this->pi_getLL('period');
+			else
+				$text_periods .= ' '.$this->pi_getLL('periods');
+
 			$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$title.$text_persons;
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
