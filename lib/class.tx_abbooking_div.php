@@ -426,7 +426,10 @@ class tx_abbooking_div {
 				$bodytext = $product['detailsRaw']['bodytext'];
 			} else {
 				$title = $product['title'];
-				unset($bodytext);
+				if (!empty($product['detailsRaw']['bodytext']))
+					$bodytext = $product['detailsRaw']['bodytext'];
+				else
+					unset($bodytext);
 			}
 
 

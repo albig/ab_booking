@@ -170,7 +170,7 @@
 			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
-			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht ungültig!</label>
+			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht gültig!</label>
 
 			<label index="product_title">Bezeichnung</label>
 			<label index="total_amount">Gesamtpreis (inkl. MwSt.)</label>

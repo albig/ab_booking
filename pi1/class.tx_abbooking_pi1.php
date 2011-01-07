@@ -114,7 +114,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$this->insert_booking(1);
 						}
 
-						$offers = tx_abbooking_div::printOfferList();
+ 						$offers = tx_abbooking_div::printOfferList();
 
 						/* ------------------------- */
 						/* list available items      */
@@ -1278,13 +1278,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$content = '';
 		$product = $this->lConf['productDetails'][$key];
-
 		if ($product['noPriceID'] == 1 && $this->lConf['showPrice'] == 1)
 			return '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noPriceSelected').'</b></h2>';
 
 		if ($this->lConf['showPrice'] == '1') {
 			$rates = $this->calcRates($key, $period);
-
 
 			if ($printHTML == 1) {
 				if ($this->lConf['showPriceDetails'] == '1') {
