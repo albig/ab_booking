@@ -29,22 +29,21 @@
  *
  *   62: class tx_abbooking_pi1 extends tslib_pibase
  *   74:     function main($content, $conf)
- *  233:     function init()
- *  350:     public function request_form($conf, $stage)
- *  563:     public function availability_form()
- *  655:     function print_request_overview($conf)
- *  792:     public function get_product_properties($ProductPID, $ProductUID)
- *  850:     function getAllProducts($pidList)
- *  873:     function check_availability($pidList)
- *  951:     function check_form_input()
- * 1011:     function log_request($logFile)
- * 1034:     function send_confirmation_email(&$ssend_errors)
- * 1105:     function insert_booking($request)
- * 1163:     function calcRates($uid, $maxAvailable)
- * 1197:     function isRobot()
- * 1221:     function checkRemote($content, $conf)
+ *  239:     function init()
+ *  361:     public function request_form($conf, $product, $stage)
+ *  571:     public function availability_form()
+ *  665:     function print_request_overview($conf)
+ *  800:     public function get_product_properties($ProductUID)
+ *  879:     function check_availability($storagePid)
+ *  945:     function check_form_input()
+ * 1027:     function log_request($logFile)
+ * 1051:     function send_confirmation_email($key, &$send_errors)
+ * 1127:     function insert_booking($request)
+ * 1182:     function calcRates($key, $maxAvailable)
+ * 1277:     function printCalculatedRates($key, $period, $printHTML = 1)
+ * 1335:     function isRobot()
  *
- * TOTAL FUNCTIONS: 15
+ * TOTAL FUNCTIONS: 14
  * (This index is automatically created/updated by the extension "extdeveval")
  *
  */
@@ -99,6 +98,14 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$this->lConf['ABdo'] = 'bor0';
 
 				$this->check_availability($this->lConf['PIDstorage']);
+
+				// in case of the booking request formular only
+				// one product is allowed at a time:
+				foreach ( $this->lConf['productDetails'] as $key => $val ) {
+					$product = $val;
+					break;
+				}
+
 				switch ( $this->lConf['ABdo'] ) {
 					case 'availabilityList':
 						// DEBUG - log requests only if enableDebug in extConf is selected
@@ -141,24 +148,24 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* ------------------------- */
 						/* booking request formular  */
 						/* ------------------------- */
-						$out .= $this->request_form($conf, $stage = 1);
+						$out .= $this->request_form($conf, $product, $stage = 1);
 						break;
 					case 'bor1':
 						$out .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
 						$out .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
-						$availableMaxDate = strtotime('+ '.$this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]]['maxAvailable'].' days', $this->lConf['startDateStamp']);
+						$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
 						$out .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
 						$out .= '</p><br />';
 
-						$out .= $this->request_form($conf, $stage = 1);
+						$out .= $this->request_form($conf, $product, $stage = 1);
 						break;
 					case 'bor2':
 						$numErrors = $this->check_form_input();
 						if ($numErrors > 0) {
-							$out .= $this->request_form($conf, $stage = 1);
+							$out .= $this->request_form($conf, $product, $stage = 1);
 						}
 						else {
-							$out .= $this->request_form($conf, $stage = 3);
+							$out .= $this->request_form($conf, $product, $stage = 3);
 						}
 						break;
 					case 'bor3':
@@ -168,7 +175,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$numErrors = $this->check_form_input();
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
-							$result= $this->send_confirmation_email($send_errors);
+							$result= $this->send_confirmation_email($product['uid'], $send_errors);
 							if ($result == 2) {
 								if (isset($this->lConf['textSayThankYou']))
 									$out .= '<p>'.nl2br($this->lConf['textSayThankYou']).'</p>';
@@ -184,7 +191,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							}
 
 						} else {
-							$out .= $this->request_form($conf, $stage = 2);
+							$out .= $this->request_form($conf, $product, $stage = 2);
 						}
 
 						break;
@@ -308,7 +315,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			} else
 				$this->lConf['mode'] = 'display';
 		}
-
 		// ---------------------------------
 		// check flexform data
 		// ---------------------------------
@@ -319,26 +325,18 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (is_numeric($this->lConf['PIDbooking']))
 			$this->lConf['gotoPID'] = $this->lConf['PIDbooking'];
 		else {
- //  			if (intval($this->conf['PIDstorage'])>0)
-//  				$this->lConf['PIDstorage'] = $this->conf['PIDstorage'];
 			$this->lConf['gotoPID'] = $GLOBALS['TSFE']->id;
 		}
 
 
 		// get the storage pid from flexform
 		if (! intval($this->lConf['PIDstorage'])>0) {
-			//  or TSconfig
-//  			if (intval($this->conf['PIDstorage'])>0)
-//  				$this->lConf['PIDstorage'] = $this->conf['PIDstorage'];
-// 			else { // last chance the site Storage Pid
-				$storagePid = $GLOBALS['TSFE']->getStorageSiterootPids();
-				$this->lConf['PIDstorage'] = $storagePid['_STORAGE_PID'];
-// 				print_r($storagePid);
-// 			}
+			$storagePid = $GLOBALS['TSFE']->getStorageSiterootPids();
+			$this->lConf['PIDstorage'] = $storagePid['_STORAGE_PID'];
 		}
 
  		if (isset($this->lConf['ProductID'])) {
-			$this->lConf['productDetails'] = $this->get_product_properties($this->lConf['PIDstorage'], $this->lConf['ProductID']);
+			$this->lConf['productDetails'] = $this->get_product_properties($this->lConf['ProductID']);
 			// merge array of available and offtime product IDs
 			$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
 		}
@@ -357,20 +355,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 *
 	 * @param	[type]		$conf: ...
 	 * @param	integer		$stage of booking process
+	 * @param	[type]		$stage: ...
 	 * @return	HTML		form with booking details
 	 */
-	public function request_form($conf, $stage) {
+	public function request_form($conf, $product, $stage) {
 
 		$interval = array();
 
-		if (empty($this->lConf['productDetails'])) {
+		if (empty($product)) {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 			return $content;
-		} else {
-			foreach ( $this->lConf['productDetails'] as $key => $val ) {
-	// 			$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs']];
-				$product = $val; //this->lConf['productDetails'][$this->lConf['AvailableProductIDs']];
-			}
 		}
 
 		$interval['startDate'] = $this->lConf['startDateStamp'];
@@ -491,7 +485,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['mitteilung']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">';
 
-					$content .= $this->printCalculatedRates($this->lConf['AvailableProductIDs'][0], $this->piVars['ABnumNights'], 1);
+					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['ABnumNights'], 1);
 
 					$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
 					$params = array (
@@ -581,7 +575,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			return $content;
 		} else {
 			foreach ( $this->lConf['productDetails'] as $key => $val ) {
-// 				$product[$key] = $val; //this->lConf['productDetails'][$this->lConf['AvailableProductIDs']];
 				$overallCapacity += $val['capacitymax'];
 			}
 		}
@@ -661,7 +654,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		';
 
 		return $content;
-// 		return $this->pi_wrapInBaseClass($content);
 	}
 
 	/**
@@ -799,80 +791,75 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	}
 
 	/**
-	 * request form ;-)
+	 * get all properties of a product with the given UID
 	 *
-	 * @param	[type]		$ProductPID: ...
+	 * @param	[type]		$storagePid: ...
 	 * @param	[type]		$ProductUID: ...
 	 * @return	[type]		...
 	 */
-	public function get_product_properties($ProductPID, $ProductUID) {
+	public function get_product_properties($ProductUID) {
 
 		$availableProductIDs = array();
 		$offTimeProductIDs = array();
 
 		if (!empty($ProductUID)) {
 			// SELECT:
-			$myquery= 'pid='.$ProductPID.' AND uid IN ('.$ProductUID.') AND capacitymax>0 AND deleted=0 AND hidden=0';
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, title, capacitymin, capacitymax, priceid, uiddetails','tx_abbooking_product',$myquery,'','title','');
-
+			$myquery= 'pid='.$this->lConf['PIDstorage'].' AND uid IN ('.$ProductUID.') AND capacitymax>0 AND deleted=0 AND hidden=0';
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, title, capacitymin, capacitymax, priceid, uiddetails','tx_abbooking_product',$myquery,'','','');
 			// one array for start and end dates. one for each pid
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				$product_properties[$row['uid']] = $row;
+ 				$product_properties[$row['uid']] = $row;
 			};
 
 			$pi = 0;
-			foreach ( $product_properties as $product => $data ) {
-				$availableProductIDs[$pi] = $product;
+			// step through found products
+			foreach ( $product_properties as $uid => $product ) {
+				$availableProductIDs[$pi] = $uid;
 				$pi++;
-
 				// get prices if any
-				if (!empty($product_properties[$product]['priceid'])) {
-// 					$myquery = 'pid='.$ProductPID.' AND uid IN ('.$product_properties[$product]['priceid'].') AND deleted=0 AND hidden=0';
-// 					$myquery .= ' AND (starttime <='. $this->lConf['endDateStamp'].' AND endtime > '.$this->lConf['startDateStamp'].' OR (starttime = 0 AND endtime = 0))';;
-// 					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('starttime, endtime, title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price',$myquery,'','starttime','');
-
-					$myquery = 'tx_abbooking_price.pid='.$ProductPID.' AND tx_abbooking_price.uid IN ('.$product_properties[$product]['priceid'].') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
+				if (!empty($product['priceid'])) {
+					$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$product['priceid'].') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
 					$myquery .= ' AND uid_local=tx_abbooking_price.uid AND uid_foreign=tx_abbooking_seasons.uid';
 					$myquery .= ' AND (tx_abbooking_seasons.starttime <'. $this->lConf['endDateStamp'].' AND tx_abbooking_seasons.endtime >= '.$this->lConf['startDateStamp'].' ';
 					// check also for default rate without valid start and stopdate
 					$myquery .= 'OR (tx_abbooking_seasons.starttime = 0 AND tx_abbooking_seasons.endtime = 0))';
-					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($product_properties[$product]['priceid'], 'tx_abbooking_price').') ','');
+					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($product['priceid'], 'tx_abbooking_price').') ','');
 
 					// one array for start and end dates. one for each pid
 					$p = 0;
 					while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-						$product_properties[$product]['prices'][$p] = $row;
+						$product['prices'][$p] = $row;
 						$p++;
 					};
 					// get the valid prices per day
 					for ($d = $this->lConf['startDateStamp']; $d <= $this->lConf['endDateStamp']; $d=strtotime('+1 day', $d)) {
 						for ($i=0; $i<$p; $i++) {
-							if ($product_properties[$product]['prices'][$i]['starttime'] <= $d && $product_properties[$product]['prices'][$i]['endtime'] >= $d)
-							    break;
-							else if ($product_properties[$product]['prices'][$i]['starttime'] == 0)
-							    break;
+							if ($product['prices'][$i]['starttime'] <= $d && $product['prices'][$i]['endtime'] >= $d)
+							break;
+							else if ($product['prices'][$i]['starttime'] == 0)
+							break;
 							// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
 						}
-						$priceDay = $product_properties[$product]['prices'][$i];
+						$priceDay = $product['prices'][$i];
 // 						if ($priceDay['adult2'] < $product_properties[$product]['prices'][$d]['adult2'] || empty($product_properties[$product]['prices'][$d]['adult2']))
-							$product_properties[$product]['prices'][$d] = $priceDay;
+						$product['prices'][$d] = $priceDay;
 					}
 
 				} else {
 					// product has no associated priceid --> this may be an error
-					$product_properties[$product]['noPriceID'] = 1;
+					$product['noPriceID'] = 1;
 				}
-				$product_properties[$product]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
+				$product['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
 				// get uid and pid of the detailed description content element
-				$uidpid = explode("#", $product_properties[$product]['uiddetails']);
+				$uidpid = explode("#", $product['uiddetails']);
 				if (is_numeric($uidpid[0])) {
-					$product_properties[$product]['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid.' AND deleted=0 AND hidden=0','header,bodytext');
+					$product['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid.' AND deleted=0 AND hidden=0','header,bodytext');
 					// if there is no detailed description in current language, try default...
-					if (empty($product_properties[$product]['detailsRaw']))
-						$product_properties[$product]['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND deleted=0 AND hidden=0','header,bodytext');
+					if (empty($product['detailsRaw']))
+						$product['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND deleted=0 AND hidden=0','header,bodytext');
 				}
-
+ 			$product_properties_return[$uid]=$product;
 			}
 		}
 
@@ -880,38 +867,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$this->lConf['AvailableProductIDs'] = $availableProductIDs;
 		$this->lConf['OffTimeProductIDs'] = $offTimeProductIDs;
 
-		return $product_properties;
-	}
-	/**
-	 * Get List of all Products listed
-	 *
-	 * @param	[type]		$pidList: ...
-	 * @return	array		with product name and uid
-	 */
-	function getAllProducts($pidList) {
-		$allProductIDs['products'] = array();
-
-		// SELECT:
-		/* get a list of all products */
-		$myquery='pid IN ('. $pidList .') AND deleted=0 AND hidden=0';
-
-
-		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, title','tx_abbooking_product', $myquery,'','uid','');
-
-		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-			array_push($allProductIDs['products'], $row);
-		}
-
-		return $allProductIDs;
+		return $product_properties_return;
 	}
 
 	/**
 	 * Check vacancies for given date
 	 *
-	 * @param	[type]		$pidList: ...
+	 * @param	[type]		$storagePid: ...
 	 * @return	0		on success, 1 on error
 	 */
-	function check_availability($pidList) {
+	function check_availability($storagePid) {
 		$item = array();
 
 		// calculate startDate and endDate of booking request
@@ -932,25 +897,27 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['startList'] = $startDate;
 			$interval['endList'] = $endDate;
 		}
-		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $pidList, $interval);
+		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $storagePid, $interval);
 
-		foreach ($bookings['bookings'] as $key => $row) {
-			if (!isset($item[$row['uid_foreign']]['maxAvailable']))
-				$item[$row['uid_foreign']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
+		foreach ($this->lConf['productDetails'] as $key => $product) {
+			foreach ($bookings['bookings'] as $key => $row) {
+				if (!isset($item[$row['uid_foreign']]['maxAvailable']))
+					$item[$row['uid_foreign']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-			// booked period is in future of startDate
-			if ($row['startdate']>$startDate)
-				$item[$row['uid_foreign']]['available'] = (int)date("d",$row['startdate'] - $startDate) - 1; /* day diff */
-			else if ($row['enddate']>$startDate)
-				// booked period overlaps startDate
-				$item[$row['uid_foreign']]['available'] = 0;
+				// booked period is in future of startDate
+				if ($row['startdate']>$startDate)
+					$item[$row['uid_foreign']]['available'] = (int)date("d",$row['startdate'] - $startDate) - 1; /* day diff */
+				else if ($row['enddate']>$startDate)
+					// booked period overlaps startDate
+					$item[$row['uid_foreign']]['available'] = 0;
 
-			// find maximum available period for item[UID]
-			if ($item[$row['uid_foreign']]['available'] < $item[$row['uid_foreign']]['maxAvailable'])
-				$item[$row['uid_foreign']]['maxAvailable'] = $item[$row['uid_foreign']]['available'];
-		};
+				// find maximum available period for item[UID]
+				if ($item[$row['uid_foreign']]['available'] < $item[$row['uid_foreign']]['maxAvailable'])
+					$item[$row['uid_foreign']]['maxAvailable'] = $item[$row['uid_foreign']]['available'];
+			}
+		}
 
-		// look for off-times and reduce maxAvailable for all items
+		//look for off-times and reduce maxAvailable for all items
 		$maxAvailableAll = $this->lConf['numCheckMaxInterval'];
 		foreach($this->lConf['OffTimeProductIDs'] as $id => $offTimeID) {
 			if (isset($item[$offTimeID]['maxAvailable']) && $item[$offTimeID]['maxAvailable'] < $maxAvailableAll)
@@ -966,20 +933,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $maxAvailableAll;
 		}
 
-// XXXab -------------------------
-		if ($this->lConf['remoteSettingsEnable'] == 1 && isset($this->lConf['remoteURL'])
-				&& isset($this->lConf['remoteProductUIDs'])) {
-
-			$params_united = $startDate.'_'.$this->lConf['numCheckMaxInterval'].'_'.$this->lConf['numPersons'].'_'.$this->lConf['remoteProductUIDs'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-
-			$remoteURL = $this->lConf['remoteURL'].'/?id=&type='.$this->lConf['remoteType'].'&tx_abbooking_pi1[ABx]='.$params_united.'&tx_abbooking_pi1[spid]='.$this->lConf['remoteStoragePID'];
-
-			$output = unserialize(t3lib_div::getURL($remoteURL));
-//  			print_r($output);
-		}
-// XXXab -------------------------
 		return 0;
-// 		return $this->pi_wrapInBaseClass($out);
 	}
 
 
@@ -1028,7 +982,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 
-		
+
 		if (empty($this->piVars['name'])) {
 			$this->form_errors['name'] = $this->pi_getLL('error_empty_name')."<br/>";
 			$numErrors++;
@@ -1091,11 +1045,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * Send Confirmation Email via ab_swiftmailer
 	 *
 	 * @param	[type]		$$send_errors: ...
+	 * @param	[type]		$send_errors: ...
 	 * @return	number		of successfully sent emails
 	 */
-	function send_confirmation_email(&$send_errors) {
+	function send_confirmation_email($key, &$send_errors) {
 
-		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
+		$product = $this->lConf['productDetails'][$key];
+
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
 		$text_mail .= $this->pi_getLL('feld_name').": ".$this->piVars['name']."\n";
@@ -1115,7 +1071,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$text_mail .= "---------------------------------------------------------\n";
 
-		$text_mail .= $this->printCalculatedRates($this->lConf['AvailableProductIDs'][0], $this->lConf['numNights'], 0);
+		$text_mail .= $this->printCalculatedRates($key, $this->lConf['numNights'], 0);
 
 		if ($this->lConf['showPrice'] == '1') {
 		}
@@ -1143,7 +1099,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			} else
 				$send_success++;
 		}
-		// else send the typo3-way:
+		// else send the TYPO3-way:
 		else {
 			// send booking mail to owner, reply-to customer
 			t3lib_div::plainMailEncoded($this->lConf['EmailAddress'],
@@ -1223,11 +1179,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * @param	[type]		$maxAvailable: ...
 	 * @return	string		with amount, currency...
 	 */
-	function calcRates($uid, $maxAvailable) {
+	function calcRates($key, $maxAvailable) {
 
 		$priceDetails = array();
 
-		$product = $this->lConf['productDetails'][$uid];
+		$product = $this->lConf['productDetails'][$key];
 
 		if ($maxAvailable < $this->lConf['numNights'])
 			$period = $maxAvailable;
@@ -1315,18 +1271,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 *
 	 * @param	array		$rates
 	 * @param	bool		$printHTML: ...
+	 * @param	[type]		$printHTML: ...
 	 * @return	string		string for output...
 	 */
-	function printCalculatedRates($uid, $period, $printHTML = 1) {
+	function printCalculatedRates($key, $period, $printHTML = 1) {
 
 		$content = '';
-		$product = $this->lConf['productDetails'][$uid];
+		$product = $this->lConf['productDetails'][$key];
 
-		if ($product['noPriceID'] == 1 && $this->lConf['showPrice'] == 1) 
+		if ($product['noPriceID'] == 1 && $this->lConf['showPrice'] == 1)
 			return '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noPriceSelected').'</b></h2>';
 
 		if ($this->lConf['showPrice'] == '1') {
-			$rates = $this->calcRates($product['uid'], $period);
+			$rates = $this->calcRates($key, $period);
 
 
 			if ($printHTML == 1) {
@@ -1342,7 +1299,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 				$content .= '<div class="priceTotal"><span class="priceDescription"><b>'.$this->pi_getLL('total_amount').'</b></span>: ';
 				$content .= '<span class="priceValue"><b>'.$rates['textPriceTotalAmount'].'</b></div>';
-			} else { 
+			} else {
 				// without HTML e.g. for mail output
 				if ($this->lConf['showPriceDetails'] == '1') {
 					foreach ($rates['priceDetails'] as $id => $priceLine) {
@@ -1369,6 +1326,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		return $content;
 
 	}
+
 	/**
 	 * Check for Robots
 	 *
@@ -1391,49 +1349,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else return 0;
 	}
 
-	/**
-	 * ;-)
-	 *
-	 * @param	[type]		$content: ...
-	 * @param	[type]		$conf: ...
-	 * @return	empty
-	 */
-	function checkRemote($content, $conf){
-		$this->conf = $conf;
-		$this->pi_setPiVarDefaults();
-		$this->pi_loadLL();
-
-		$bookings = array();
-		$this->pi_USER_INT_obj = 1;
-
-		$this->init();
-
-		// calculate startDate and endDate of booking request
-		if (isset($this->lConf['startDateStamp']))
-			$startDate = $this->lConf['startDateStamp'];
-		else
-			$startDate = time();
-
-		// look some days in the future..
-		if (isset($this->lConf['endDateStamp']))
-			$endDate = strtotime('+ '.$this->lConf['numNights'].' days', $this->lConf['startDateStamp']);
-		else
-			$endDate = strtotime('+ 3 days', $startDate);
-
-		$allProductIDs = $this->getAllProducts($this->piVars['spid']);
-		if (!isset($interval['startList']) && !isset($interval['endList'])) {
-			$interval['startList'] = $startDate;
-			$interval['endList'] = $endDate;
-		}
-		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $this->piVars['spid'], $interval);
-// 		$bookings = $this->getBookings($startDate, $endDate, $this->piVars['spid'], $this->lConf['ProductID']);
-
-		$out = serialize(array_merge($allProductIDs, $bookings));
-		return $out;
-	}
-
 }
-
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ab_booking/pi1/class.tx_abbooking_pi1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ab_booking/pi1/class.tx_abbooking_pi1.php']);
 }

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2010 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2011 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -35,11 +35,11 @@ class tx_abbooking_div {
 	 * Get Booked Periods for an Interval
 	 *
 	 * @param	string		$uid
-	 * @param	string		$pidList: ...
+	 * @param	string		$storagePid: ...
 	 * @param	array		$interval: ...
 	 * @return	array		with booking periods
 	 */
-	function getBookings($uid, $pidList, $interval) {
+	function getBookings($uid, $storagePid, $interval) {
 
 		$bookingsRaw = array();
 		$remotebookings = array();
@@ -52,95 +52,25 @@ class tx_abbooking_div {
 			$interval['endList'] = $interval['endDate'];
 		}
 
-		if ($pidList !='' && $uid !='') {
+		if ($storagePid !='' && $uid !='') {
 			// SELECT
 			// 2. get for bookings for these uids/pids
-			$query= 'pid IN ('. $pidList .') AND uid_foreign IN ('.$uid.') AND deleted=0 AND hidden=0 AND request=0 AND uid=uid_local AND ( enddate >=('.$interval['startList'].') AND startdate <=('.$interval['endList'].'))';
+			$query= 'pid IN ('. $storagePid .') AND uid_foreign IN ('.$uid.') AND deleted=0 AND hidden=0 AND request=0 AND uid=uid_local AND ( enddate >=('.$interval['startList'].') AND startdate <=('.$interval['endList'].'))';
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('DISTINCT uid_foreign, startdate, enddate','tx_abbooking_booking, tx_abbooking_booking_productid_mm',$query,'','startdate','');
 
-
 			// one array for start and end dates. one for each pid
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-// 				array_push($bookingsRaw, $row);
 				$bookingsRaw[] = $row;
 			};
 		}
+
 		$localbookings['bookings'] = $bookingsRaw;
-// 		return $localbookings;
 
-		if ($this->lConf['remoteSettingsEnable'] == 1 && isset($this->lConf['remoteURL'])
-				&& isset($this->lConf['remoteProductUIDs'])) {
+ 		return $localbookings;
 
-			$params_united = $interval['startList'].'_'.date("z", $interval['endList']-$interval['startList']).'_'.$this->lConf['numPersons'].'_'.$this->lConf['remoteProductUIDs'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-
-			$remoteURL = $this->lConf['remoteURL'].'/?id=&type='.$this->lConf['remoteType'].'&tx_abbooking_pi1[ABx]='.$params_united.'&tx_abbooking_pi1[spid]='.$this->lConf['remoteStoragePID'];
-
-			$remotebookings[] = unserialize(t3lib_div::getURL($remoteURL));
-		}
-
-		$allbookings = array_merge($localbookings, $remotebookings);
-
-		return $allbookings;
 	}
 
-	/**
-	 * Get Booked Periods for an Interval
-	 *
-	 * @param	string		$uid
-	 * @param	string		$pidList: ...
-	 * @param	array		$interval: ...
-	 * @return	array		with booking periods
-	 */
-	function getBookedPeriods($uid, $pidList, $interval) {
-
-		$bookedDays = array();
-		$bookingsRaw = array();
-		$remotebookings = array();
-
-		if (!isset($uid))
-			$uid = $this->lConf['ProductID'];
-
-		if (!isset($interval['startList']) && !isset($interval['endList'])) {
-			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = $interval['endDate'];
-		}
-
-		if (!empty($pidList) && !empty($uid)) {
-			// SELECT
-			// 2. get for bookings for these uids/pids
-			$query= 'pid IN ('. $pidList .') AND uid_foreign IN ('.$uid.') AND deleted=0 AND hidden=0 AND request=0 AND uid=uid_local AND ( enddate >=('.$interval['startList'].') AND startdate <=('.$interval['endList'].'))';
-
-	// 		print_r($query);
-
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('DISTINCT startdate, enddate','tx_abbooking_booking, tx_abbooking_booking_productid_mm',$query,'','startdate','');
-
-
-			// one array for start and end dates. one for each pid
-			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-				for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
-					$bookedDays[$d]['booked']++ ;
-				}
-				$bookedDays[$row['startdate']]['isStart']++;
-				$bookedDays[$row['enddate']]['isEnd']++;
-			};
-		}
-		$localbookings['bookedDays']=$bookedDays;
-
-		if ($this->lConf['remoteSettingsEnable'] == 1 && isset($this->lConf['remoteURL'])
-				&& isset($this->lConf['remoteProductUIDs'])) {
-
-			$params_united = $interval['startList'].'_'.date("z", $interval['endList']-$interval['startList']).'_'.$this->lConf['numPersons'].'_'.$this->lConf['remoteProductUIDs'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-
-			$remoteURL = $this->lConf['remoteURL'].'/?id=&type='.$this->lConf['remoteType'].'&tx_abbooking_pi1[ABx]='.$params_united.'&tx_abbooking_pi1[spid]='.$this->lConf['remoteStoragePID'];
-
-			$remotebookings[] = unserialize(t3lib_div::getURL($remoteURL));
-		}
-
-		$allbookings = array_merge($localbookings, $remotebookings);
-
-		return $allbookings;
-	}
 
 	/**
 	 * Calculate Booked Days-Array for Calendar View
@@ -474,24 +404,28 @@ class tx_abbooking_div {
 		$offers['numOffers'] = 0;
 		$i = 0;
 
-// print_r($this->lConf['productDetails']);
-		foreach ( $this->lConf['productDetails'] as $key => $val ) {
+		$productIds=explode(',', $this->lConf['ProductID']);
+		foreach ( $productIds as $key => $uid ) {
+			if (!empty($this->lConf['productDetails'][$uid]))
+				$product = $this->lConf['productDetails'][$uid];
+			else
+				continue; // skip because empty or OffTimeProductID
 			$i++;
 			$offers[$i] = '';
 			unset($linkBookNow);
 			if (sizeof($this->lConf['OffTimeProductIDs']) > 0)
 				$offTimeProducts = ','.implode(',', $this->lConf['OffTimeProductIDs']);
 
-			$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$val['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+			$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 			$params = array (
 				$this->prefixId.'[ABx]' => $params_united,
 			);
-			if (!empty($val['uiddetails']) && !empty($val['detailsRaw']['header'])) {
+			if (!empty($product['uiddetails']) && !empty($product['detailsRaw']['header'])) {
 				// get detailed description:
-				$title = $val['detailsRaw']['header'];
-				$bodytext = $val['detailsRaw']['bodytext'];
+				$title = $product['detailsRaw']['header'];
+				$bodytext = $product['detailsRaw']['bodytext'];
 			} else {
-				$title = $val['title'];
+				$title = $product['title'];
 				unset($bodytext);
 			}
 
@@ -501,19 +435,19 @@ class tx_abbooking_div {
 			else
 				$link = $title;
 
-			if ($val['maxAvailable'] > 0) {
+			if ($product['maxAvailable'] > 0) {
 				$offers['numOffers']++;
 				$offers[$i] .= '<li class="offerList">'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b><br /> '; //.$this->pi_getLL('up_to');
-				$availableMaxDate = strtotime('+ '.$val['maxAvailable'].' days', $this->lConf['startDateStamp']);
+				$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
 // 				$offers[$i] .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
-				if ($val['maxAvailable'] < $this->piVars['ABnumNights']) {
+				if ($product['maxAvailable'] < $this->piVars['ABnumNights']) {
 					$interval['limitedVacancies'] = $availableMaxDate;
 					$offers[$i] .= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
 				}
 				$offers[$i] .= '<br />';
 				$offers[$i] .= $bodytext;
 
-				$offers[$i] .= $this->printCalculatedRates($val['uid'], $val['maxAvailable'], 1);
+				$offers[$i] .= $this->printCalculatedRates($uid, $product['maxAvailable'], 1);
 
 				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
 			} else {
@@ -529,7 +463,7 @@ class tx_abbooking_div {
 			$interval['startList'] = strtotime('-2 day', $interval['startDate']);
 			$interval['endList'] = strtotime('+2 day', $interval['endDate']);
 
-			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($val['uid'].$offTimeProducts, $interval);
+			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
 			if ($this->lConf['enableCheckBookingLink'] == 1)
 				$offers[$i] .= $linkBookNow;

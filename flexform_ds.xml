@@ -2,14 +2,12 @@
 <T3DataStructure>
   <meta>
     <langDisable>1</langDisable>
-<!--     <langChildren>1</langChildren> -->
   </meta>
   <sheets>
 <sheetGeneralOptions>
        <ROOT>
 	    <TCEforms>
 		    <sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetGeneralOptions</sheetTitle>
-<!-- 		    <sheetDescription>hallo</sheetDescription> -->
 	    </TCEforms>
 		<type>array</type>
 		<el>
@@ -51,13 +49,9 @@
 			<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.ProductID</label>
 			<config>
 				<type>select</type>
-<!-- 				<size>5</size> -->
 				<maxitems>100</maxitems>
 				<size>5</size>
                                 <minitems>0</minitems>
-<!-- 				<multiple>0</multiple> -->
-<!--				<items type="array"></items>
-				<allownonidvalues>1</allownonidvalues>-->
  				<itemsProcFunc>tx_abbooking_remote->flexFormListProductIDs</itemsProcFunc>
 			</config>
 			</TCEforms>
@@ -313,7 +307,7 @@
 	</ROOT>
 </sheetBookingOptions>
 
-<sheetRemoteOptions>
+<!--<sheetRemoteOptions>
 	<ROOT>
 		<TCEforms>
 			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetRemoteOptions</sheetTitle>
@@ -371,11 +365,6 @@
 				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.remoteMatchLocal</label>
 				<config>
 					<type>select</type>
-<!--					<foreign_table>tx_abbooking_product</foreign_table>
-					<foreign_table_where>ORDER BY tx_abbooking_product.uid</foreign_table_where>
-					<internal_type>db</internal_type>-->
-	<!-- 				<allowed>pages</allowed> -->
-<!-- 					<size>3</size> -->
 					<maxitems>100</maxitems>
 					<size>5</size>
 					<minitems>0</minitems>
@@ -399,7 +388,7 @@
 			</remoteProductUIDs>
 		</el>
 	</ROOT>
-</sheetRemoteOptions>
+</sheetRemoteOptions>-->
 
 </sheets>
 </T3DataStructure>
