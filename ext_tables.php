@@ -103,7 +103,7 @@ $TCA['tx_abbooking_seasons'] = array (
             'endtime' => 'endtime',    ## WOP:[tables][4][add_endtime]
         ),
         'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_seasons.gif',
+        'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_seasons.png',
     ),
 );
 

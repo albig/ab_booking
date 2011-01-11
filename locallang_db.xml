@@ -36,7 +36,7 @@
 			<label index="tx_abbooking_price.seasonid">Corresponding Seasons</label>
 			<label index="tx_abbooking_seasons">Season</label>
 			<label index="tx_abbooking_seasons.title">Description</label>
-			<label index="tt_content.list_type_pi1">Booking Calendar</label>
+			<label index="tt_content.list_type_pi1">Simple Booking Extension</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="tx_abbooking_booking">Buchungsdetails</label>
@@ -69,7 +69,7 @@
 			<label index="tx_abbooking_price.seasonid">Saisonzeiten</label>
 			<label index="tx_abbooking_seasons">Saison</label>
 			<label index="tx_abbooking_seasons.title">Bezeichnung</label>
-			<label index="tt_content.list_type_pi1">Buchungskalender</label>
+			<label index="tt_content.list_type_pi1">Simple Booking Extension</label>
 		</languageKey>
 	</data>
 </T3locallang>

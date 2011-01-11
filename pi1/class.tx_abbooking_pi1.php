@@ -328,6 +328,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['gotoPID'] = $GLOBALS['TSFE']->id;
 		}
 
+		// set defaults if still empty:
+		if (! isset($this->lConf['numPersons']))
+			$this->lConf['numPersons'] = $this->lConf['numDefaultPersons'];
+		if (! isset($this->lConf['numNights']))
+			$this->lConf['numNights'] = $this->lConf['numDefaultNights'];
 
 		// get the storage pid from flexform
 		if (! intval($this->lConf['PIDstorage'])>0) {
@@ -385,6 +390,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (isset($this->lConf['numPersons']))
 			if ($this->lConf['numPersons'] > $product['capacitymax'])
 				$selNumPersons[$product['capacitymax']] = $selected;
+			else if ($this->lConf['numPersons'] < $product['capacitymin'])
+				$selNumPersons[$product['capacitymin']] = $selected;
 			else
 				$selNumPersons[$this->lConf['numPersons']] = $selected;
 		else
@@ -537,7 +544,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b><br/>
 						<select name="'.$this->prefixId.'[ABnumPersons]" size="1">';
 					/* how many persons are possible? */
-					for ($i = 1; $i<=$product['capacitymax']; $i++) {
+					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
 						if ($this->lConf['maxavailable'] < $this->piVars['ABnumNights'])
 							$numNights = $this->lConf['maxavailable'];
 						else
