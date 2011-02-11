@@ -158,10 +158,6 @@ $TCA['tx_abbooking_product'] = array (
 				'eval'     => 'date',
 				'checkbox' => '0',
 				'default'  => '0',
-				'range'    => array (
-					'upper' => mktime(3, 14, 7, 1, 19, 2038),
-					'lower' => mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))
-				)
 			)
 		),
 		'title' => array (		## WOP:[tables][2][fields][1][fieldname]
@@ -477,10 +473,6 @@ $TCA['tx_abbooking_seasons'] = array (
                 'eval'     => 'date',
                 'checkbox' => '0',
                 'default'  => '0',
-                'range'    => array (
-                    'upper' => mktime(3, 14, 7, 1, 19, 2038),
-                    'lower' => mktime(0, 0, 0, date('m')-1, date('d'), date('Y'))
-                )
             )
         ),
     ),
