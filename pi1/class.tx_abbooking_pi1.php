@@ -558,6 +558,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					);
 
 					$content .= '</select><br/>';
+
+					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['ABnumNights'], 1);
+					
 					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
 					$content .= 	htmlspecialchars($this->pi_getLL('feld_mitteilung')).'<br/>
 							<textarea name="'.$this->prefixId.'[mitteilung]" rows=5 cols=30 wrap="PHYSICAL">'.htmlspecialchars($this->piVars['mitteilung']).'</textarea><br/>
@@ -809,6 +812,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$availableProductIDs = array();
 		$offTimeProductIDs = array();
 
+
+		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
+			$interval['startDate'] = $this->lConf['startDateStamp'];
+			$interval['endDate'] = $this->lConf['endDateStamp'];
+		}
+		if (!isset($interval['startList']) && !isset($interval['endList'])) {
+			$interval['startList'] = $interval['startDate'];
+			$interval['endList'] = $interval['endDate'];
+		}
+		
+
 		if (!empty($ProductUID)) {
 			// SELECT:
 			$myquery= 'pid='.$this->lConf['PIDstorage'].' AND uid IN ('.$ProductUID.') AND capacitymax>0 AND deleted=0 AND hidden=0';
@@ -824,38 +838,50 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$availableProductIDs[$pi] = $uid;
 				$pi++;
 				// get prices if any
-				if (!empty($product['priceid'])) {
-					$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$product['priceid'].') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
-					$myquery .= ' AND uid_local=tx_abbooking_price.uid AND uid_foreign=tx_abbooking_seasons.uid';
-					$myquery .= ' AND (tx_abbooking_seasons.starttime <'. $this->lConf['endDateStamp'].' AND tx_abbooking_seasons.endtime >= '.$this->lConf['startDateStamp'].' ';
-					// check also for default rate without valid start and stopdate
-					$myquery .= 'OR (tx_abbooking_seasons.starttime = 0 AND tx_abbooking_seasons.endtime = 0))';
-					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($product['priceid'], 'tx_abbooking_price').') ','');
+// 				if (!empty($product['priceid'])) {
+// 					$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$product['priceid'].') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
+// 					$myquery .= ' AND uid_local=tx_abbooking_price.uid AND uid_foreign=tx_abbooking_seasons.uid';
+// 					// there are four cases of time intervals:
+// 					// 1: start set, stop set                 |-------------|
+// 					// 2: start set, stop open                |---------------->
+// 					// 3: start open, stop set             <----------------|
+// 					// 4: start open, stop open (default rate) <------------->
+// 					$myquery .= ' AND ((tx_abbooking_seasons.starttime <'. $this->lConf['endDateStamp'].' OR tx_abbooking_seasons.starttime = 0) ';
+// 					$myquery .= ' AND (tx_abbooking_seasons.endtime >= '.$this->lConf['startDateStamp'].' OR tx_abbooking_seasons.endtime = 0))';
+// 
+// 					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($product['priceid'], 'tx_abbooking_price').') ','');
+// 
+// 					$p = 0;
+// 					while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
+// 						$pricesAvailable[$p] = $row;
+// 						$p++;
+// 					};
+// 					// get the valid prices per day
+// 					for ($d = $this->lConf['startDateStamp']; $d < $this->lConf['endDateStamp']; $d=strtotime('+1 day', $d)) {
+// 						for ($i=0; $i<$p; $i++) {
+// 							if (($pricesAvailable[$i]['starttime'] <= $d || $pricesAvailable[$i]['starttime'] == 0)
+// 								&& ($pricesAvailable[$i]['endtime'] >= $d || $pricesAvailable[$i]['endtime'] == 0))
+// 								break;
+// 							// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
+// 						}
+// 						if ($i == $p)
+// 						  $product['prices'][$d] = NULL;
+// 						else
+// 						  $product['prices'][$d] = $pricesAvailable[$i];
+// 					}
+// // print_r($product['prices']);
+// 				} else {
+// 					// product has no associated priceid --> this may be an error
+// 					$product['noPriceID'] = 1;
+// 				}
 
-					// one array for start and end dates. one for each pid
-					$p = 0;
-					while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
-						$product['prices'][$p] = $row;
-						$p++;
-					};
-					// get the valid prices per day
-					for ($d = $this->lConf['startDateStamp']; $d <= $this->lConf['endDateStamp']; $d=strtotime('+1 day', $d)) {
-						for ($i=0; $i<$p; $i++) {
-							if ($product['prices'][$i]['starttime'] <= $d && $product['prices'][$i]['endtime'] >= $d)
-							break;
-							else if ($product['prices'][$i]['starttime'] == 0)
-							break;
-							// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
-						}
-						$priceDay = $product['prices'][$i];
-// 						if ($priceDay['adult2'] < $product_properties[$product]['prices'][$d]['adult2'] || empty($product_properties[$product]['prices'][$d]['adult2']))
-						$product['prices'][$d] = $priceDay;
-					}
 
-				} else {
-					// product has no associated priceid --> this may be an error
-					$product['noPriceID'] = 1;
-				}
+
+
+		$product['prices'] = tx_abbooking_div::getPrices($uid, $interval);
+
+		
+				
 				$product['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
 				// get uid and pid of the detailed description content element
@@ -904,24 +930,38 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['startList'] = $startDate;
 			$interval['endList'] = $endDate;
 		}
+
+		// step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $storagePid, $interval);
+		foreach ($bookings['bookings'] as $key => $row) {
+			if (!isset($item[$row['uid_foreign']]['maxAvailable']))
+				$item[$row['uid_foreign']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-		foreach ($this->lConf['productDetails'] as $key => $product) {
-			foreach ($bookings['bookings'] as $key => $row) {
-				if (!isset($item[$row['uid_foreign']]['maxAvailable']))
-					$item[$row['uid_foreign']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
+			// booked period is in future of startDate
+			if ($row['startdate']>$startDate)
+				$item[$row['uid_foreign']]['available'] = (int)date("d",$row['startdate'] - $startDate) - 1; /* day diff */
+			else if ($row['enddate']>$startDate)
+				// booked period overlaps startDate
+				$item[$row['uid_foreign']]['available'] = 0;
 
-				// booked period is in future of startDate
-				if ($row['startdate']>$startDate)
-					$item[$row['uid_foreign']]['available'] = (int)date("d",$row['startdate'] - $startDate) - 1; /* day diff */
-				else if ($row['enddate']>$startDate)
-					// booked period overlaps startDate
-					$item[$row['uid_foreign']]['available'] = 0;
+			// find maximum available period for item[UID]
+			if ($item[$row['uid_foreign']]['available'] < $item[$row['uid_foreign']]['maxAvailable'])
+				$item[$row['uid_foreign']]['maxAvailable'] = $item[$row['uid_foreign']]['available'];
+		}
 
-				// find maximum available period for item[UID]
-				if ($item[$row['uid_foreign']]['available'] < $item[$row['uid_foreign']]['maxAvailable'])
-					$item[$row['uid_foreign']]['maxAvailable'] = $item[$row['uid_foreign']]['available'];
+		// step through prices to find maximum availability
+ 		foreach ($this->lConf['productDetails'] as $uid => $product) {
+			for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+				if ($product['prices'][$d] == 'noPrice') {
+					if ($d > $startDate && ((int)date("d",$d - $startDate) - 1) < $item[$uid]['available'])
+						$item[$uid]['available'] = (int)date("d", $d - $startDate) - 1 ; /* day diff */
+					else
+						$item[$uid]['available'] = 0;
+				}
 			}
+			// find maximum available period for item[UID]
+			if ($item[$uid]['available'] < $item[$uid]['maxAvailable'])
+				$item[$uid]['maxAvailable'] = $item[$uid]['available'];
 		}
 
 		//look for off-times and reduce maxAvailable for all items
@@ -1213,8 +1253,35 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$d < $this->lConf['endDateStamp'] && $d < strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
 				$d = strtotime('+1 day', $d)) {
 				$total_amount += $product['prices'][$d]['adult'.$max_persons];
-				$usedPrices[$product['prices'][$d]['title']]['rateUsed']++;
-				$usedPrices[$product['prices'][$d]['title']]['rateValue'] = $product['prices'][$d]['adult'.$max_persons];
+				$cur_title = $product['prices'][$d]['title'];
+				$usedPrices[$cur_title]['rateUsed']++;
+				$usedPrices[$cur_title]['rateValue'] = $product['prices'][$d]['adult'.$max_persons];
+				
+				// get rate start and stop by comparing current and predecessor rate title
+				if (empty($usedPrices[$cur_title]['dateStart'])) {
+					$usedPrices[$cur_title]['dateStart'] = $d;
+				}
+				// if change title:
+				if (strcmp($cur_title, $pre_title) != 0) {
+					if (! empty($usedPrices[$pre_title]['dateStart'])) {
+						if ($usedPrices[$pre_title]['rateUsed'] > 1)
+							$usedPrices[$pre_title]['rateDates'][] = strftime('%a %x', $usedPrices[$pre_title]['dateStart']).' - '.strftime('%a %x',strtotime('-1 day', $d) );
+						else
+							$usedPrices[$pre_title]['rateDates'][] = strftime('%a %x',strtotime('-1 day', $d) );
+						unset($usedPrices[$pre_title]['dateStart']);
+					}
+
+				}
+				// cleanup at the end
+				if (strtotime('+1 day', $d) == strtotime('+'.$period.' day', $this->lConf['startDateStamp'])) {
+					if (! empty($usedPrices[$cur_title]['dateStart'])) {
+						if ($usedPrices[$cur_title]['rateUsed'] > 1)
+							$usedPrices[$cur_title]['rateDates'][] = strftime('%a %x', $usedPrices[$cur_title]['dateStart']).' - '.strftime('%a %x', $d);
+						else
+							$usedPrices[$cur_title]['rateDates'][] = strftime('%a %x', $d);
+					}
+				}
+				$pre_title = $cur_title;
 		}
 		// take currency from startDate
 		$currency = $product['prices'][$this->lConf['startDateStamp']]['currency'];
@@ -1234,6 +1301,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$text_periods .= ' '.$this->pi_getLL('periods');
 
 			$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$title.$text_persons;
+			
+			$lDetails['dates'] =  $value['rateDates'];
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
 		}
@@ -1245,6 +1314,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$total_amount -= $discountValue;
 
 			$lDetails['description'] = $this->pi_getLL('discount').' '.round($discountrate,0).'%';
+			$lDetails['dates'] = '';
 			$lDetails['value'] = '-'.number_format($discountValue, 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
 		}
@@ -1253,6 +1323,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$total_amount += $product['prices'][$this->lConf['startDateStamp']]['singleComponent1'];
 
 			$lDetails['description'] = $this->pi_getLL('specialComponent1');
+			$lDetails['dates'] = '';
 			$lDetails['value'] = number_format($product['prices'][$this->lConf['startDateStamp']]['singleComponent1'], 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
 		}
@@ -1298,6 +1369,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						foreach ($rates['priceDetails'] as $id => $priceLine) {
 							$lengthOfDescription=strlen($priceLine['description'])+2+strlen($priceLine['value']);
 							$content .= '<li><span class="priceDescription">'.$priceLine['description'].'</span>';
+							foreach($priceLine['dates'] as $id => $dateString){
+								$content .= '<br /><span class="priceDates">'.$dateString.'</span>';
+							}
 							$content .= '<span class="priceValue">'.$priceLine['value'].'</span></li>';
 						}
 					$content .= '</ul></div>';

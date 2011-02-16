@@ -42,7 +42,6 @@ class tx_abbooking_div {
 	function getBookings($uid, $storagePid, $interval) {
 
 		$bookingsRaw = array();
-		$remotebookings = array();
 
 		if (!isset($uid))
 			$uid = $this->lConf['ProductID'];
@@ -71,6 +70,75 @@ class tx_abbooking_div {
 
 	}
 
+	/**
+	 * Get prices per day
+	 *
+	 * @param	string		$uid
+	 * @param	array		$interval: ...
+	 * @return	array		with booking periods
+	 */
+	function getPrices($uid, $interval) {
+
+		$pricePerDay = array();
+
+		if (!isset($uid))
+			$uid = $this->lConf['ProductID'];
+
+		if (!isset($interval['startList']) && !isset($interval['endList'])) {
+			$interval['startList'] = $interval['startDate'];
+			$interval['endList'] = $interval['endDate'];
+		}
+
+		if ($uid !='') {
+			// SELECT
+		
+			// 1. get priceid for uid
+			$myquery= 'pid='.$this->lConf['PIDstorage'].' AND uid IN ('.$uid.') AND capacitymax>0 AND deleted=0 AND hidden=0';
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, priceid','tx_abbooking_product',$myquery,'','','');
+			// one array for start and end dates. one for each pid
+			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
+				$priceids = $row['priceid'];
+			};
+
+			// 2. get prices for priceid in interval
+			$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$priceids.') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
+			$myquery .= ' AND uid_local=tx_abbooking_price.uid AND uid_foreign=tx_abbooking_seasons.uid';
+			// there are four cases of time intervals:
+			// 1: start set, stop set                 |-------------|
+			// 2: start set, stop open                |---------------->
+			// 3: start open, stop set             <----------------|
+			// 4: start open, stop open (default rate) <------------->
+			$myquery .= ' AND ((tx_abbooking_seasons.starttime <='. $interval['endList'].' OR tx_abbooking_seasons.starttime = 0) ';
+			$myquery .= ' AND (tx_abbooking_seasons.endtime > '.$interval['startList'].' OR tx_abbooking_seasons.endtime = 0))';
+
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
+
+			$p = 0;
+			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
+				$pricesAvailable[$p] = $row;
+				$p++;
+			};
+
+			// get the valid prices per day
+			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+				for ($i=0; $i<$p; $i++) {
+					if (($pricesAvailable[$i]['starttime'] <= $d || $pricesAvailable[$i]['starttime'] == 0)
+						&& ($pricesAvailable[$i]['endtime'] > $d || $pricesAvailable[$i]['endtime'] == 0))
+						break;
+					// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
+				}
+				if ($i == $p)
+				  $pricePerDay[$d] = 'noPrice';
+				else
+				  $pricePerDay[$d] = $pricesAvailable[$i];
+			}
+
+
+			
+		}
+ 		return $pricePerDay;
+
+	}
 
 	/**
 	 * Calculate Booked Days-Array for Calendar View
@@ -79,7 +147,7 @@ class tx_abbooking_div {
 	 * @param	[type]		$interval: ...
 	 * @return	array		with booking periods
 	 */
-	function calcBookedPeriods($bookings, $interval) {
+	function calcBookedPeriods($bookings, $prices, $interval) {
 
 		$bookedDays = array();
 		$bookedDaysCSS = array();
@@ -87,7 +155,6 @@ class tx_abbooking_div {
 		foreach ($bookings['bookings'] as $uid => $row) {
 			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
 				$bookedDays[$d]['booked']++ ;
-				$bookedDays[$d]['uid'] = $uid;
 			}
 			$bookedDays[$row['startdate']]['isStart']++;
 			$bookedDays[$row['enddate']]['isEnd']++;
@@ -100,7 +167,7 @@ class tx_abbooking_div {
 			else
 				$bookedDaysCSS[$d]=' Day';
 
-			if ($bookedDays[$d]['booked']>0) {
+			if ($bookedDays[$d]['booked'] > 0) {
 				$bookedDaysCSS[$d].=' booked';
 				if ($bookedDays[$d]['isStart'] == $bookedDays[$d]['booked'])
 					$bookedDaysCSS[$d].=' Start';
@@ -109,9 +176,9 @@ class tx_abbooking_div {
 			}
 			else
 				$bookedDaysCSS[$d].=' vacant';
-
+			if ($prices[$d] == 'noPrice') 
+				$bookedDaysCSS[$d].=' noPrices';
 		}
-
 		return $bookedDaysCSS;
 	}
 
@@ -144,8 +211,9 @@ class tx_abbooking_div {
 		$interval['startList'] = $interval['startDate'];
 		$interval['endList'] = $interval['endDate'];
 
+		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $interval);
+		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
 
 		if (empty($this->lConf['ProductID']) && empty($uid)) {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
@@ -261,8 +329,11 @@ class tx_abbooking_div {
 				$params = array (
 					$this->prefixId.'[ABx]' => $params_united,
 				);
-				if ($this->lConf['enableCalendarBookingLink'] && strtotime($year.'-'.$mon.'-'.$d) >= strtotime(strftime("%Y-%m-%d")) &&
-					(strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) )
+				if ($this->lConf['enableCalendarBookingLink'] // show booking links
+					&& strtotime($year.'-'.$mon.'-'.$d) >= strtotime(strftime("%Y-%m-%d"))	// only future dates
+					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
+					&& (! strstr($cssClass, 'noPrices'))
+					)
 					$out .= '<td class="'.$cssClass.'">'.$this->pi_linkTP($d, $params, 0, $this->lConf['gotoPID']).'</td>';
 				else
 					$out .= '<td class="'.$cssClass.'">'.$d.'</td>';
@@ -312,8 +383,9 @@ class tx_abbooking_div {
 			$interval['endList'] = $interval['endDate'];
 		}
 
+		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $interval);
+		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
 
 		$out .= '<div class="availabilityCalendar">';
 		$out .= '<ul class="DayNames">';
@@ -334,8 +406,10 @@ class tx_abbooking_div {
 
 			$cssClass .= $myBooked[$d];
 
-			if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d")) &&
-				(strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) ) {
+			if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
+					&& (! strstr($cssClass, 'noPrices'))
+				) {
 				// set default numNights = 2, numPersons = 2
 				//#### 2_2 durch $this->lConf['numNights'] und $this->lConf['numPersons'] ersetzt ###
 				$params_united = $d.'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';

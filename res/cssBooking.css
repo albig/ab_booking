@@ -62,6 +62,10 @@
 	border: 2px solid #008000;
 }
 
+.tx-abbooking-pi1 .noPrices {
+	border: 2px solid #aaa;
+}
+
 .tx-abbooking-pi1 .Start {
 	border-right: 2px solid #d30000;
 	border-bottom: 2px solid #d30000;
@@ -222,6 +226,9 @@ input[type="checkbox"].jscalendar_cb {
 td.vacant:hover {
 	background-color: #ad8;
 }
+td.noPrices:hover {
+	background-color: #ddd;
+}
 
 textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	border: 1px solid #aa0000;
@@ -284,6 +291,10 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 }
 .tx-abbooking-pi1  span.priceDescription {
 	float: left;
+	clear: right;
+}
+.tx-abbooking-pi1  span.priceDates {
+/* 	float: left; */
 	clear: right;
 }
 .tx-abbooking-pi1  span.priceValue {
