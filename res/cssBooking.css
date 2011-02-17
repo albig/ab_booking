@@ -98,8 +98,7 @@
 }
 
 .tx-abbooking-pi1 div.availabilityCalendar {
-	position: relative;
-/* 	min-height: 80px; */
+	float: left;
 }
 .tx-abbooking-pi1 ul.Bookings  {
 	position: absolute;
@@ -121,14 +120,21 @@
 /* 	position: absolute; */
 /* 	top: 0px; */
 }
-.tx-abbooking-pi1 ul.DayNames li {
-/*  	border: 2px solid #aa0000; */
-	list-style-type: none;
+.tx-abbooking-pi1 ul.CalendarLine {
 	float: left;
-	padding: 2px;
-	margin: 0 3px 26px;
+	margin-left: 0;
+}
+.tx-abbooking-pi1 ul.CalendarLine li {
+	padding: 2pt;
+	margin: 2pt;
 	width: 1.4em;
-	text-align: left;
+	text-align: center;
+	list-style-type: none;
+}
+
+.tx-abbooking-pi1 ul.CalendarLine li.DayNames {
+	border: none;
+	margin: 0 4px;
 }
 
 input {
@@ -289,18 +295,31 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	list-style-type: none;
 	margin: 0;
 }
+.tx-abbooking-pi1  .priceDetails li {
+	padding: 2pt 0;
+}
+.tx-abbooking-pi1  .priceDetails li.first {
+/* 	background-color: #ddd; */
+}
+.tx-abbooking-pi1  .priceDetails li.odd {
+	border-top: 1px dashed #ccc;
+}
+.tx-abbooking-pi1  .priceDetails li.even {
+	border-top: 1px dashed #ccc;
+}
 .tx-abbooking-pi1  span.priceDescription {
-	float: left;
 	clear: right;
 }
 .tx-abbooking-pi1  span.priceDates {
-/* 	float: left; */
-	clear: right;
+	font-size: 100%;
+	font-family: Courier, monospace;
+	font-weight: bold;
 }
+
 .tx-abbooking-pi1  span.priceValue {
 	float: right;
 	clear: right;
 }
-.tx-abbooking-pi1  .priceTotal {
+.tx-abbooking-pi1  div.priceTotal {
 	margin-bottom: 1em;
 }

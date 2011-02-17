@@ -382,29 +382,28 @@ class tx_abbooking_div {
 			$interval['startList'] = $interval['startDate'];
 			$interval['endList'] = $interval['endDate'];
 		}
+		$interval['startList'] = strtotime( 'last monday', $interval['startList'] );
+		$interval['endList'] = strtotime( 'next sunday', $interval['endList'] );
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
 		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
 
-		$out .= '<div class="availabilityCalendar">';
-		$out .= '<ul class="DayNames">';
+		$printDayNames = 1;
 		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+			if (date(w, $d) == 1) // open div on monday
+				$out .= '<div class="availabilityCalendar">';
+			$out .= '<ul class="CalendarLine">';
 			unset($cssClass);
-			if ($d<$interval['startDate'] || $d > $interval['endDate'])
-				$cssClass = 'transp';
-			$out .= '<li class="'.$cssClass.'">'.strftime("%a", $d).'</li>';
-		}
-		$out .= '</ul>';
-
-		$out .= '<ul class="Bookings">';
-		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
-			unset($cssClass);
-
 			if ($d<$interval['startDate'] || $d > $interval['endDate'])
 				$cssClass = 'transp';
 
 			$cssClass .= $myBooked[$d];
+
+			 // print only in first line
+			if ($printDayNames == 1) {
+				$out .= '<li class="'.$cssClass.' DayNames">'.strftime("%a", $d).'</li>';
+			}
 
 			if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
@@ -420,10 +419,13 @@ class tx_abbooking_div {
 			}
 			else
 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
+			$out .= '</ul>';
+			if (date(w, $d) == 0) {// close div after sunday
+				$out .= '</div>';
+				$printDayNames = 0;
+			}
 		}
 
-		$out .= '</ul>';
-		$out .= '</div>';
 
 		return $out;
 	}
@@ -514,7 +516,7 @@ class tx_abbooking_div {
 
 			if ($product['maxAvailable'] > 0) {
 				$offers['numOffers']++;
-				$offers[$i] .= '<li class="offerList">'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b><br /> '; //.$this->pi_getLL('up_to');
+				$offers[$i] .= '<li class="offerList"><div>'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div><br /> '; //.$this->pi_getLL('up_to');
 				$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
 // 				$offers[$i] .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
 				if ($product['maxAvailable'] < $this->piVars['ABnumNights']) {
@@ -528,7 +530,7 @@ class tx_abbooking_div {
 
 				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
 			} else {
-				$offers[$i] .= '<li class="offerList"><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> ';
+				$offers[$i] .= '<li class="offerList"><div><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
 			}
 
 			// show calendar list only up to the vacant day

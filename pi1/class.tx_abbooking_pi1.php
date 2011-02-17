@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 - 2010 Alexander Bigga <linux@bigga.de>
+*  (c) 2009 - 2011 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -951,6 +951,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// step through prices to find maximum availability
  		foreach ($this->lConf['productDetails'] as $uid => $product) {
+			if (!isset($item[$uid]['maxAvailable']))
+				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
+
 			for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
 				if ($product['prices'][$d] == 'noPrice') {
 					if ($d > $startDate && ((int)date("d",$d - $startDate) - 1) < $item[$uid]['available'])
@@ -1275,7 +1278,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// cleanup at the end
 				if (strtotime('+1 day', $d) == strtotime('+'.$period.' day', $this->lConf['startDateStamp'])) {
 					if (! empty($usedPrices[$cur_title]['dateStart'])) {
-						if ($usedPrices[$cur_title]['rateUsed'] > 1)
+// 						if ($usedPrices[$cur_title]['rateUsed'] > 1)
+						if ($usedPrices[$cur_title]['dateStart'] < $d) 
 							$usedPrices[$cur_title]['rateDates'][] = strftime('%a %x', $usedPrices[$cur_title]['dateStart']).' - '.strftime('%a %x', $d);
 						else
 							$usedPrices[$cur_title]['rateDates'][] = strftime('%a %x', $d);
@@ -1367,12 +1371,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$content .= '<div class="priceDetails">';
 					$content .= '<ul>';
 						foreach ($rates['priceDetails'] as $id => $priceLine) {
+							if ($id%2 == 0)
+								$cssExtra = "even";
+							else
+								$cssExtra = "odd";
+							if ($id == 0)
+								$cssExtra = "first";
 							$lengthOfDescription=strlen($priceLine['description'])+2+strlen($priceLine['value']);
-							$content .= '<li><span class="priceDescription">'.$priceLine['description'].'</span>';
+							$content .= '<li class="'.$cssExtra.'"><span class="priceDescription">'.$priceLine['description'].'</span>';
+							$content .= '<span class="priceValue">'.$priceLine['value'].'</span>';
 							foreach($priceLine['dates'] as $id => $dateString){
 								$content .= '<br /><span class="priceDates">'.$dateString.'</span>';
 							}
-							$content .= '<span class="priceValue">'.$priceLine['value'].'</span></li>';
+							$content .= '</li>';
 						}
 					$content .= '</ul></div>';
 				}
@@ -1392,6 +1403,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						for ($i=(50-$lengthOfDescription); $i>0; $i--)
 							$content.= ' ';
 						$content .= $priceLine['value']."\n";
+						foreach($priceLine['dates'] as $id => $dateString){
+							$content .= $dateString."\n";
+						}
 					}
 					$content .= "---------------------------------------------------------\n";
 				}
