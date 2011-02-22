@@ -390,9 +390,10 @@ class tx_abbooking_div {
 		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
 
 		$printDayNames = 1;
+		$out = '<div class="availabilityCalendar">';
 		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
 			if (date(w, $d) == 1) // open div on monday
-				$out .= '<div class="availabilityCalendar">';
+				$out .= '<div class="calendarWeek">';
 			$out .= '<ul class="CalendarLine">';
 			unset($cssClass);
 			if ($d<$interval['startDate'] || $d > $interval['endDate'])
@@ -425,8 +426,7 @@ class tx_abbooking_div {
 				$printDayNames = 0;
 			}
 		}
-
-
+		$out .= '</div>';
 		return $out;
 	}
 

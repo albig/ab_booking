@@ -151,12 +151,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$out .= $this->request_form($conf, $product, $stage = 1);
 						break;
 					case 'bor1':
-						$out .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
-						$out .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
-						$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-						$out .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
-						$out .= '</p><br />';
-
 						$out .= $this->request_form($conf, $product, $stage = 1);
 						break;
 					case 'bor2':
@@ -178,16 +172,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$result= $this->send_confirmation_email($product['uid'], $send_errors);
 							if ($result == 2) {
 								if (isset($this->lConf['textSayThankYou']))
-									$out .= '<p>'.nl2br($this->lConf['textSayThankYou']).'</p>';
+									$out .= '<div class="requestForm"><p>'.nl2br($this->lConf['textSayThankYou']).'</p></div>';
 								else
-									$out .= '<p>'.nl2br($this->pi_getLL('send_success')).'</p>';
+									$out .= '<div class="requestForm"><p>'.nl2br($this->pi_getLL('send_success')).'</p></div>';
 
 								// only insert booking if successfully sent both mails
 								$this->insert_booking(0);
 							} else {
-								$out .= '<p><b>'.nl2br($this->pi_getLL('send_failure')).'</b><br />'.$result.'</p>';
-								$out .= "<br/>&nbsp;<br/>";
+								$out .= '<div class="requestForm"><p><b>'.nl2br($this->pi_getLL('send_failure')).'</b><br />'.$result.'</p>';
+								$out .= '<br/>&nbsp;<br/>';
 								$out .= $send_errors;
+								$out .= '</div>';
 							}
 
 						} else {
@@ -375,16 +370,23 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$interval['startDate'] = $this->lConf['startDateStamp'];
 		$interval['endDate'] = $this->lConf['endDateStamp'];
 		$interval['startList'] = strtotime('-2 day', $interval['startDate']);
-		$interval['endList'] = strtotime('+10 day', $interval['startDate']);
+		$interval['endList'] = strtotime('+2 day', $interval['startDate']);
 
-		$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
 
 		$content .= tx_abbooking_div::printBookingStep($stage);
 
-		$content.='<div class="requestForm">';
+		$content .='<div class="requestForm">';
+
+		$content .='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
+
+		$content .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
+		$content .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
+		$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
+		$content .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
+		$content .= '</p><br />';
+		$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
 
 
-		$content.='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
 
 		$selected='selected="selected"';
 		if (isset($this->lConf['numPersons']))
@@ -404,46 +406,53 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// if stage=0 forget all errors!
 		if ($stage > 0) {
+			if (sizeof($this->form_errors)>0) {
+			print_r($this->form_errors);
+			$content.='<div class="errorForm">';
+			$content.='<ul>';
 			/* handle errors */
-			if (isset($this->form_errors['email'])) {
-				$ErrorEmail='class="error"';
-				$content.='<h2><b>'.$this->form_errors['email'].'</b></h2>';
-			}
 			if (isset($this->form_errors['name'])) {
 				$ErrorName='class="error"';
-				$content.='<h2><b>'.$this->form_errors['name'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['name'].'</li>';
 			}
 			if (isset($this->form_errors['street'])) {
 				$ErrorStreet='class="error"';
-				$content.='<h2><b>'.$this->form_errors['street'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['street'].'</li>';
+			}
+			if (isset($this->form_errors['email'])) {
+				$ErrorEmail='class="error"';
+				$content.='<li>'.$this->form_errors['email'].'</li>';
 			}
 			if (isset($this->form_errors['town'])) {
 				$ErrorTown='class="error"';
-				$content.='<h2><b>'.$this->form_errors['town'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['town'].'</li>';
 			}
 			if (isset($this->form_errors['PLZ'])) {
 				$ErrorPLZ='class="error"';
-				$content.='<h2><b>'.$this->form_errors['PLZ'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['PLZ'].'</li>';
 			}
 			if (isset($this->form_errors['vacancies'])) {
 				$ErrorVacancies='class="error"';
-				$content.='<h2><b>'.$this->form_errors['vacancies'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['vacancies'].'</li>';
 			}
 			if (isset($this->form_errors['vacancies_limited'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<h2><b>'.$this->form_errors['vacancies_limited'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
 			}
 			if (isset($this->form_errors['startDateInThePast'])) {
 				$ErrorVacancies='class="error"';
-				$content.='<h2><b>'.$this->form_errors['startDateInThePast'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
 			}
 			if (isset($this->form_errors['endDateNotValid'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<h2><b>'.$this->form_errors['endDateNotValid'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
 			}
 			if (isset($this->form_errors['numNightsNotValid'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<h2><b>'.$this->form_errors['numNightsNotValid'].'</b></h2>';
+				$content.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
+			}
+			$content.='</ul>';
+			$content.='</div>';
 			}
 		}
 
@@ -454,13 +463,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		/* handle stages */
 		if ($stage == 3) {
-			$content.='<h2><b>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</b></h2>';
-// 			$ReadOnly='class=readonly readonly="readonly"';
+			$content.='<div class="noteForm"><p>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</p></div>';
+			
 			$SubmitButtonEdit=htmlspecialchars($this->pi_getLL('submit_button_edit'));
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_final'));
 
-			$content.='<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-					<b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b>
+			$content.='<form class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
+
+					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['name']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($this->piVars['name']).'" >
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['street']).'</p>
@@ -472,25 +483,36 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<input  type="hidden" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($this->piVars['email']).'" >
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['telefon']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[telefon]" value="'.htmlspecialchars($this->piVars['telefon']).'" >
-
-					<b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b>
+					</div>
+					
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></div>
+					<div class="noteForm">
 					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[ABstartDateStamp]" value="'.$this->lConf['startDateStamp'].'" >
+					</div>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_abreise')).'</b>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_abreise')).'</b></div>
+					<div class="noteForm">
 					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']).'</p>
+					</div>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).':</b>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).':</b></div>
+					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['ABnumNights']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[ABnumNights]" value="'.htmlspecialchars($this->lConf['numNights']).'" >
+					</div>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_personen')).':</b>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).':</b></div>
+					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['ABnumPersons']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[ABnumPersons]" value="'.htmlspecialchars($this->piVars['ABnumPersons']).'" >
+					</div>
 
-					'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'
+					<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
+					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['mitteilung']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">';
+					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">
+					</div>';
 
 					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['ABnumNights'], 1);
 
@@ -516,24 +538,24 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			else
 				$startdate = time();
 
-			$content.='<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-					<b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b><br/>
+			$content.='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
 					<input '.$ErrorName.' type="text" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($this->piVars['name']).'" ><br/>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_street')).'</b><br/>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_street')).'</b></div>
 					<input '.$ErrorStreet.' type="text" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($this->piVars['street']).'" ><br/>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_plz')).' '.htmlspecialchars($this->pi_getLL('feld_town')).'</b><br/>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_plz')).' '.htmlspecialchars($this->pi_getLL('feld_town')).'</b></div>
 					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[plz]" value="'.htmlspecialchars($this->piVars['plz']).'" >
 					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($this->piVars['town']).'"><br/>
 
-					<b>'.htmlspecialchars($this->pi_getLL('feld_email')).'</b><br/>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_email')).'</b></div>
 					<input '.$ErrorEmail.' type="text" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($this->piVars['email']).'" ><br/>
 					'.htmlspecialchars($this->pi_getLL('feld_telefon')).'<br/><input type="text" name="'.$this->prefixId.'[telefon]" value="'.htmlspecialchars($this->piVars['telefon']).'" ><br/>
 					<b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b><br/>';
 			$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[ABstartDate]', $startdate, $ErrorVacancies);
 			$content .= '<br/>
-					<b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b><br/>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></div>
 						<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[ABnumNights]" size="1">';
 					/* how many days/nights are available? */
 					for ($i = 1; $i<=$product['maxAvailable']; $i++) {
@@ -541,7 +563,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$content.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
 					}
 					$content .= '</select><br/>
-					<b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b><br/>
+					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></div>
 						<select name="'.$this->prefixId.'[ABnumPersons]" size="1">';
 					/* how many persons are possible? */
 					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
@@ -559,10 +581,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 					$content .= '</select><br/>';
 
-					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['ABnumNights'], 1);
+					$content .= $this->printCalculatedRates($product['uid'], $this->lConf['numNights'], 1);
 					
 					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-					$content .= 	htmlspecialchars($this->pi_getLL('feld_mitteilung')).'<br/>
+					$content .= '<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
 							<textarea name="'.$this->prefixId.'[mitteilung]" rows=5 cols=30 wrap="PHYSICAL">'.htmlspecialchars($this->piVars['mitteilung']).'</textarea><br/>
 							<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 							<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">

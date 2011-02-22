@@ -98,8 +98,28 @@
 }
 
 .tx-abbooking-pi1 div.availabilityCalendar {
+	margin: 0 auto;
+	width: 80%;
+}
+
+
+.tx-abbooking-pi1 .calendarWeek .legend {
+/* 	width: 120px; */
+/* 	font-family: arial; */
+	font-size: 100%;
+	border: 0px;
+	text-align: left;
+}
+.tx-abbooking-pi1 .calendarWeek .ABmonthname {
+	background-color: #e0e0e0;
+	border: 0px;
+}
+
+.tx-abbooking-pi1 div.calendarWeek {
 	float: left;
 }
+
+
 .tx-abbooking-pi1 ul.Bookings  {
 	position: absolute;
 	top: 20px;
@@ -139,7 +159,6 @@
 
 input {
 	border: 1px solid #aa0000;
-	margin: 1px;
 }
 
 input.error {
@@ -153,7 +172,8 @@ input.readonly {
 }
 
 input.edit {
-	padding: 5px 0px;
+	padding: 5px;
+	float: left;
 	border: 1px solid #aa0000;
 	background-color: #fffa79;
 	font-size: 100%;
@@ -165,15 +185,17 @@ div.buttons {
 }
 
 input.submit_final {
-	padding: 5px 0px;
-/*  	border: 2px solid #17a500; */
+	padding: 5px;
+	float: right;
+	margin: 0px;
 	font-size: 140%;
 	background-color: #aadd88;
 }
 
 input.submit {
-	padding: 5px 0px;
-/* 	border: 2px solid #17a500; */
+	padding: 5px;
+	float: right;
+	margin: 0px;
 	font-size: 140%;
 	background-color: #aadd88;
 }
@@ -211,6 +233,23 @@ input[type="checkbox"].jscalendar_cb {
   	border: 1px solid #aaa;
 	width: 95%;
 }
+.tx-abbooking-pi1  div.noteForm
+ {
+	float: left;
+	list-style-type: none;
+ 	margin: 5px 0 5px 0;
+ 	padding: 5px;
+  	border: 1px solid #080;
+	color: black;
+	font-weight: bold;
+	width: 95%;
+	background-color: #ddd;
+}
+.tx-abbooking-pi1  div.noteForm p {
+	font-size: 120%;
+	font-weight: normal;
+}
+
 .tx-abbooking-pi1  div.requestForm {
 	float: left;
 	list-style-type: none;
@@ -218,6 +257,24 @@ input[type="checkbox"].jscalendar_cb {
  	padding: 10px;
   	border: 1px solid #aaa;
 	width: 95%;
+}
+.tx-abbooking-pi1  form.requestForm {
+	float: left;
+	border-top: 1px solid #aaa;
+	width: 100%;
+	padding-top: 10px;
+}
+.tx-abbooking-pi1  div.errorForm {
+	float: left;
+	border: 3px solid #aa0000;
+	background-color: #fffa79;
+	width: 100%;
+	font-weight: bold;
+	color: black;
+}
+.tx-abbooking-pi1  div.errorForm ul {
+	margin: 0;
+	padding-left: 1em;
 }
 .tx-abbooking-pi1 img.date2cal_img_cal  {
 	text-align: right;
@@ -290,6 +347,7 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	border-bottom: 1px solid #aaa;
 	float: left;
 	width: 100%;
+	margin: 10px 0;
 }
 .tx-abbooking-pi1  .priceDetails ul {
 	list-style-type: none;
