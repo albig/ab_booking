@@ -407,7 +407,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// if stage=0 forget all errors!
 		if ($stage > 0) {
 			if (sizeof($this->form_errors)>0) {
-			print_r($this->form_errors);
 			$content.='<div class="errorForm">';
 			$content.='<ul>';
 			/* handle errors */
