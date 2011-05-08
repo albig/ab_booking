@@ -137,6 +137,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'starttime' => array (		## WOP:[tables][2][add_starttime]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
 			'config'  => array (
@@ -149,6 +150,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'endtime' => array (		## WOP:[tables][2][add_endtime]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.endtime',
 			'config'  => array (
@@ -169,6 +171,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'capacitymin' => array (		## WOP:[tables][2][fields][2][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][2][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.capacitymin',		## WOP:[tables][2][fields][2][title]
 			'config' => array (
@@ -179,6 +182,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'capacitymax' => array (		## WOP:[tables][2][fields][3][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][3][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.capacitymax',		## WOP:[tables][2][fields][3][title]
 			'config' => array (
@@ -189,6 +193,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'filterprice' => array (		## WOP:[tables][2][fields][3][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][3][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.filterprice',		## WOP:[tables][2][fields][3][title]
 
@@ -199,6 +204,7 @@ $TCA['tx_abbooking_product'] = array (
 			)
 		),
 		'priceid' => array (		## WOP:[tables][2][fields][4][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][4][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.priceid',		## WOP:[tables][2][fields][4][title]
 			'config' => array (
@@ -248,10 +254,42 @@ $TCA['tx_abbooking_product'] = array (
 $TCA['tx_abbooking_price'] = array (
 	'ctrl' => $TCA['tx_abbooking_price']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'title,hidden,adult1,adult2,adult3,adult4,child,teen,discount,discountPeriod, singleComponent1, singleComponent2, seasonid'
+		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,child,teen,discount,discountPeriod, singleComponent1, singleComponent2, seasonid',
+		'always_description' => 1
 	),
 	'feInterface' => $TCA['tx_abbooking_price']['feInterface'],
 	'columns' => array (
+		'sys_language_uid' => array (		## WOP:[tables][2][localization]
+			'exclude' => 1,
+			'label'  => 'LLL:EXT:lang/locallang_general.xml:LGL.language',
+			'config' => array (
+				'type'                => 'select',
+				'foreign_table'       => 'sys_language',
+				'foreign_table_where' => 'ORDER BY sys_language.title',
+				'items' => array(
+					array('LLL:EXT:lang/locallang_general.xml:LGL.allLanguages', -1),
+					array('LLL:EXT:lang/locallang_general.xml:LGL.default_value', 0)
+				)
+			)
+		),
+		'l10n_parent' => array (		## WOP:[tables][2][localization]
+			'displayCond' => 'FIELD:sys_language_uid:>:0',
+			'exclude'     => 1,
+			'label'       => 'LLL:EXT:lang/locallang_general.xml:LGL.l18n_parent',
+			'config'      => array (
+				'type'  => 'select',
+				'items' => array (
+					array('', 0),
+				),
+				'foreign_table'       => 'tx_abbooking_price',
+				'foreign_table_where' => 'AND tx_abbooking_price.pid=###CURRENT_PID### AND tx_abbooking_price.sys_language_uid IN (-1,0)',
+			)
+		),
+		'l10n_diffsource' => array (		## WOP:[tables][2][localization]
+			'config' => array (
+				'type' => 'passthrough'
+			)
+		),
 		'hidden' => array (		## WOP:[tables][3][add_hidden]
 			'exclude' => 1,
 			'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
@@ -269,6 +307,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'currency' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.currency',		## WOP:[tables][2][fields][1][title]
 			'config' => array (
@@ -278,6 +317,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'adult1' => array (		## WOP:[tables][3][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][1][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult1',		## WOP:[tables][3][fields][1][title]
 			'config' => array (
@@ -288,6 +328,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'adult2' => array (		## WOP:[tables][3][fields][2][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][2][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult2',		## WOP:[tables][3][fields][2][title]
 			'config' => array (
@@ -298,6 +339,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'adult3' => array (		## WOP:[tables][3][fields][3][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][3][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult3',		## WOP:[tables][3][fields][3][title]
 			'config' => array (
@@ -308,6 +350,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'adult4' => array (		## WOP:[tables][3][fields][4][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][4][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult4',		## WOP:[tables][3][fields][4][title]
 			'config' => array (
@@ -318,6 +361,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'child' => array (		## WOP:[tables][3][fields][5][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][5][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.child',		## WOP:[tables][3][fields][5][title]
 			'config' => array (
@@ -328,6 +372,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'teen' => array (		## WOP:[tables][3][fields][6][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][6][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.teen',		## WOP:[tables][3][fields][6][title]
 			'config' => array (
@@ -338,6 +383,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'discount' => array (		## WOP:[tables][3][fields][6][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][6][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.discount',		## WOP:[tables][3][fields][6][title]
 			'config' => array (
@@ -348,6 +394,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'discountPeriod' => array (		## WOP:[tables][3][fields][6][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][6][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.discountPeriod',		## WOP:[tables][3][fields][6][title]
 			'config' => array (
@@ -358,6 +405,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'singleComponent1' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.singleComponent1',		## WOP:[tables][2][fields][1][title]
 			'config' => array (
@@ -368,6 +416,7 @@ $TCA['tx_abbooking_price'] = array (
 			)
 		),
 		'singleComponent2' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.singleComponent2',		## WOP:[tables][2][fields][1][title]
 			'config' => array (
@@ -377,24 +426,24 @@ $TCA['tx_abbooking_price'] = array (
 				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][4][conf_eval] / [tables][3][fields][4][conf_stripspace]
 			)
 		),
-        'seasonid' => array (        ## WOP:[tables][4][fields][1][fieldname]
-            'exclude' => 0,        ## WOP:[tables][4][fields][1][excludeField]
-            'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.seasonid',        ## WOP:[tables][4][fields][1][title]
-            'config' => array (
-                'type' => 'select',    ## WOP:[tables][4][fields][1][conf_rel_type]
-                'internal_type' => 'db',    ## WOP:[tables][4][fields][1][conf_rel_type]
-                'allowed' => 'tx_abbooking_seasons',    ## WOP:[tables][4][fields][1][conf_rel_table]
-                'size' => 5,    ## WOP:[tables][4][fields][1][conf_relations_selsize]
-                'minitems' => 0,
-                'maxitems' => 100,    ## WOP:[tables][4][fields][1][conf_relations]
-                "MM" => "tx_abbooking_seasons_priceid_mm",    ## WOP:[tables][4][fields][1][conf_relations_mm]
- 		'foreign_table' => 'tx_abbooking_seasons',
-            )
-        ),
-
+		'seasonid' => array (        ## WOP:[tables][4][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,        ## WOP:[tables][4][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.seasonid',        ## WOP:[tables][4][fields][1][title]
+			'config' => array (
+				'type' => 'select',    ## WOP:[tables][4][fields][1][conf_rel_type]
+				'internal_type' => 'db',    ## WOP:[tables][4][fields][1][conf_rel_type]
+				'allowed' => 'tx_abbooking_seasons',    ## WOP:[tables][4][fields][1][conf_rel_table]
+				'size' => 5,    ## WOP:[tables][4][fields][1][conf_relations_selsize]
+				'minitems' => 0,
+				'maxitems' => 100,    ## WOP:[tables][4][fields][1][conf_relations]
+				"MM" => "tx_abbooking_seasons_priceid_mm",    ## WOP:[tables][4][fields][1][conf_relations_mm]
+				'foreign_table' => 'tx_abbooking_seasons',
+			)
+		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2, seasonid')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2, seasonid')
 	),
 );
 $TCA['tx_abbooking_seasons'] = array (

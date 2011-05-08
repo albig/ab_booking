@@ -18,7 +18,7 @@
 			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
-			<label index="ab_booking.pi_flexform.sheetBookingOptions">Booking</label>
+			<label index="ab_booking.pi_flexform.sheetMailSettings">Mail Settings</label>
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
@@ -32,18 +32,11 @@
 			<label index="ab_booking.pi_flexform.PIDbooking">PID of Booking Page</label>
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
 			<label index="ab_booking.pi_flexform.CheckProductID">Check Products for Availablitity</label>
-			<label index="ab_booking.pi_flexform.useSwiftMailer">Use ab_swiftmailer for Email Transport</label>
-			<label index="ab_booking.pi_flexform.EmailAddress">Email Address if NOT using ab_swiftmailer</label>
-			<label index="ab_booking.pi_flexform.EmailRealname">Realname if NOT using ab_swiftmailer</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer">Use ab_swiftmailer for Email Transport (DEPRECATED in TYPO3 4.5)</label>
+			<label index="ab_booking.pi_flexform.EmailAddress">Email Address</label>
+			<label index="ab_booking.pi_flexform.EmailRealname">Realname</label>
 			<label index="ab_booking.pi_flexform.textSayThankYou">Thank You Text after final Booking</label>
 			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Confirmation Email</label>
-			<label index="ab_booking.pi_flexform.sheetRemoteOptions">Remote Options</label>
-			<label index="ab_booking.pi_flexform.remoteSettingsEnable">Use Remote Settings</label>
-			<label index="ab_booking.pi_flexform.remoteURL">Remote URL (incl. http://[..]/)</label>
-			<label index="ab_booking.pi_flexform.remoteType">Page Type Number</label>
-			<label index="ab_booking.pi_flexform.remoteStoragePID">Remote Storage PID of all Bookings, Products, Prices</label>
-			<label index="ab_booking.pi_flexform.remoteProductUIDs">Remote Product UIDs to query (comma separated)</label>
-			<label index="ab_booking.pi_flexform.dynField">dynamic list field</label>
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ab_booking.pi_flexform.sheetDisplayOptions">Anzeige Optionen</label>
@@ -55,7 +48,7 @@
 			<label index="ab_booking.pi_flexform.itemDescription">Kurzbeschreibung</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Kalender</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Verfügbarkeits Prüfung</label>
-			<label index="ab_booking.pi_flexform.sheetBookingOptions">Buchung</label>
+			<label index="ab_booking.pi_flexform.sheetMailSettings">Email Einstellungen</label>
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Link im Kalender aktivieren</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Link in Angebots-Liste aktivieren</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>
@@ -69,18 +62,11 @@
 			<label index="ab_booking.pi_flexform.PIDbooking">PID der Buchungsseite</label>
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
 			<label index="ab_booking.pi_flexform.CheckProductID">Produkt auf Verfügbarkeit prüfen</label>
-			<label index="ab_booking.pi_flexform.useSwiftMailer">ab_swiftmailer für den Email-Versand nutzen</label>
-			<label index="ab_booking.pi_flexform.EmailAddress">Email Adresse, wenn ab_swiftmailer NICHT benutzt wird</label>
-			<label index="ab_booking.pi_flexform.EmailRealname">Name, wenn ab_swiftmailer NICHT benutzt wird</label>
+			<label index="ab_booking.pi_flexform.useSwiftMailer">ab_swiftmailer für den Email-Versand nutzen (veraltet in TYPO3 4.5)</label>
+			<label index="ab_booking.pi_flexform.EmailAddress">Email Adresse</label>
+			<label index="ab_booking.pi_flexform.EmailRealname">Name</label>
 			<label index="ab_booking.pi_flexform.textSayThankYou">Danksagung nach Absenden der Buchung</label>
 			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Bestätigungs-Email</label>
-			<label index="ab_booking.pi_flexform.sheetRemoteOptions">Fernabfrage</label>
-			<label index="ab_booking.pi_flexform.remoteSettingsEnable">Fernabfrage aktivieren</label>
-			<label index="ab_booking.pi_flexform.remoteURL">URL (inkl. http://[..]/)</label>
-			<label index="ab_booking.pi_flexform.remoteType">Seiten Type Nummer</label>
-			<label index="ab_booking.pi_flexform.remoteStoragePID">PID des Sysfolders mit den Buchungen, Produkten, Preisen</label>
-			<label index="ab_booking.pi_flexform.remoteProductUIDs">abzufragende Produkt UIDs (Komma separiert)</label>
-			<label index="ab_booking.pi_flexform.dynField">dynamic list field</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

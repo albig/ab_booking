@@ -68,6 +68,9 @@ $TCA['tx_abbooking_price'] = array (
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
+		'languageField'            => 'sys_language_uid',	## WOP:[tables][2][localization]
+		'transOrigPointerField'    => 'l10n_parent',	## WOP:[tables][2][localization]
+		'transOrigDiffSourceField' => 'l10n_diffsource',	## WOP:[tables][2][localization]
 		'default_sortby' => 'ORDER BY adult1',	## WOP:[tables][3][sorting] / [tables][3][sorting_field] / [tables][3][sorting_desc]
 		'delete' => 'deleted',	## WOP:[tables][3][add_deleted]
 		'enablecolumns' => array (		## WOP:[tables][3][add_hidden] / [tables][3][add_starttime] / [tables][3][add_endtime] / [tables][3][add_access]
@@ -132,7 +135,6 @@ t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexfor
 t3lib_extMgm::addStaticFile($_EXTKEY,'static/','Default CSS ab_booking');
 
 include_once(t3lib_extMgm::extPath($_EXTKEY).'lib/class.tx_abbooking_remote.php');
-// include_once(t3lib_extMgm::extPath($_EXTKEY).'pi1/class.tx_abbooking_pi1.php');
 
 t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_product','EXT:'.$_EXTKEY.'/locallang_csh_product.xml');
 ?>

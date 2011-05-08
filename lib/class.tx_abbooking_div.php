@@ -31,6 +31,57 @@
  */
 class tx_abbooking_div {
 
+	function getRecordRaw($table, $pid, $uid, $where_extra = '', $ignore_array = array(), $select = '*') {
+
+		$out = array();
+
+		// the parent field name changed somewhen in TYPO3. tt_content
+		// still has l18n_parent (which is wrong) but new extenions have l10n_parent
+		if ($table == 'tt_content')
+			$l10n_parent = 'l18n_parent';
+		else
+			$l10n_parent = 'l10n_parent';
+
+		// we try to get the default language entry (normal behaviour) or, if not possible, currently the needed language (fallback if no default language entry is available)
+// 		$where = 'pid='.$pid.' AND uid IN('.$uid.') AND (sys_language_uid IN (-1,0) OR (sys_language_uid = ' .$GLOBALS['TSFE']->sys_language_uid. ' AND '.$l10n_parent.' = 0))';
+		$where = 'pid='.$pid.' AND uid IN('.$uid.') AND (sys_language_uid IN (-1,0) OR (sys_language_uid = ' .$GLOBALS['TSFE']->sys_language_uid. '))';
+		// use the TYPO3 default function for adding hidden = 0, deleted = 0, group and date statements
+		$where  .= $GLOBALS['TSFE']->sys_page->enableFields($table, $show_hidden = 0, $ignore_array);
+		if (!empty($where_extra))
+			$where  .= ' AND '.$where_extra;
+		$order = '';
+		$group = '';
+		$limit = '';
+//~ print_r($table."--".$pid."----------\n");
+//~ print_r($where);
+//~ print_r("------------\n");
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select, $table, $where, $group, $order, $limit);
+		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+// print_r($row);
+			// check for language overlay if:
+			// * row is valid
+			// * row language is different from currently needed language
+			// * sys_language_contentOL is set
+			if (is_array($row) && $row['sys_language_uid'] != $GLOBALS['TSFE']->sys_language_content && $GLOBALS['TSFE']->sys_language_contentOL) {
+				$rowL = $GLOBALS['TSFE']->sys_page->getRecordOverlay($table, $row, $GLOBALS['TSFE']->sys_language_content, $GLOBALS['TSFE']->sys_language_contentOL);
+				// only overwrite "title" - all other settings take from the default language
+				if (!empty($rowL)) {
+					if ($table != 'tt_content')
+						$row['title'] = $rowL['title'];
+					else
+						$row = $rowL;
+				}
+			}
+			if ($row) {
+				// get correct language uid for translated realurl link
+				$link_uid = ($row['_LOCALIZED_UID']) ? $row['_LOCALIZED_UID'] : $row['uid'];
+// print_r("the link_uid is ".$link_uid."\n");
+			}
+			$out[$row['uid']] = $row;
+		}
+		return $out;
+	}
+
 	/**
 	 * Get Booked Periods for an Interval
 	 *
@@ -71,7 +122,7 @@ class tx_abbooking_div {
 	}
 
 	/**
-	 * Get prices per day
+	 * Get cals per day
 	 *
 	 * @param	string		$uid
 	 * @param	array		$interval: ...
@@ -91,14 +142,23 @@ class tx_abbooking_div {
 
 		if ($uid !='') {
 			// SELECT
-		
-			// 1. get priceid for uid
+
+			// 1. get priceid for uid (old way)
 			$myquery= 'pid='.$this->lConf['PIDstorage'].' AND uid IN ('.$uid.') AND capacitymax>0 AND deleted=0 AND hidden=0';
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, priceid','tx_abbooking_product',$myquery,'','','');
 			// one array for start and end dates. one for each pid
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				$priceids = $row['priceid'];
 			};
+
+			// 1. get priceid for uid (new way)
+			$where_extra = "capacitymax>0 ";
+			$mrow = tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $uid, $where_extra);
+
+			foreach ($mrow as $muid => $mproduct) {
+//~ 				$priceids =  $mrow[$uid]['priceid'];
+				$priceids =  $mproduct['priceid'];
+			}
 
 			// 2. get prices for priceid in interval
 			$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$priceids.') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
@@ -111,13 +171,24 @@ class tx_abbooking_div {
 			$myquery .= ' AND ((tx_abbooking_seasons.starttime <='. $interval['endList'].' OR tx_abbooking_seasons.starttime = 0) ';
 			$myquery .= ' AND (tx_abbooking_seasons.endtime > '.$interval['startList'].' OR tx_abbooking_seasons.endtime = 0))';
 
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
-
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid, tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
 			$p = 0;
+
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				$pricesAvailable[$p] = $row;
+//~ print_r($row);
+				$languageOverlay =  tx_abbooking_div::getRecordRaw('tx_abbooking_price', $this->lConf['PIDstorage'], $row['uid']);
+				// overwrite price title
+				$pricesAvailable[$p]['title'] = $languageOverlay[$row['uid']]['title'];
+//~ print_r($languageOverlay);
 				$p++;
 			};
+
+//~ 			foreach ( $newPrices as $id => $rate ) {
+//~ 				$pricesAvailable[$p] = $rate;
+//~ 				$p++;
+//~ 			};
+//~ print_r($pricesAvailable);
 
 			// get the valid prices per day
 			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
@@ -134,8 +205,9 @@ class tx_abbooking_div {
 			}
 
 
-			
+
 		}
+//~ 		print_r($pricePerDay);
  		return $pricePerDay;
 
 	}
@@ -161,7 +233,7 @@ class tx_abbooking_div {
 		};
 
 		// make ready to print css class like "[Day|Weekend] [booked|vacant] [Start|End]"
-		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+		for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
 			if (date("w", $d)== 0 || date("w", $d)== 6)
 				$bookedDaysCSS[$d]=' Weekend';
 			else
@@ -176,7 +248,7 @@ class tx_abbooking_div {
 			}
 			else
 				$bookedDaysCSS[$d].=' vacant';
-			if ($prices[$d] == 'noPrice') 
+			if ($prices[$d] == 'noPrice')
 				$bookedDaysCSS[$d].=' noPrices';
 		}
 		return $bookedDaysCSS;
@@ -488,6 +560,7 @@ class tx_abbooking_div {
 				continue; // skip because empty or OffTimeProductID
 			$i++;
 			$offers[$i] = '';
+			unset($interval);
 			unset($linkBookNow);
 			if (sizeof($this->lConf['OffTimeProductIDs']) > 0)
 				$offTimeProducts = ','.implode(',', $this->lConf['OffTimeProductIDs']);
@@ -539,8 +612,8 @@ class tx_abbooking_div {
 			else
 				$interval['endDate'] = $this->lConf['endDateStamp'];
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-			$interval['startList'] = strtotime('-2 day', $interval['startDate']);
-			$interval['endList'] = strtotime('+2 day', $interval['endDate']);
+// 			$interval['startList'] = strtotime('-2 day', $interval['startDate']);
+// 			$interval['endList'] = strtotime('+2 day', $interval['endDate']);
 
 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
@@ -563,20 +636,25 @@ class tx_abbooking_div {
 	 */
 	function getJSCalendarInput($name, $value, $error = '') {
 
+
 		if (class_exists('JSCalendar')) {
+			// unfortunately, the jscalendar doesn't recognize %x as dateformat
+			if ($GLOBALS['TSFE']->config['config']['language'] == 'de')
+				$dateFormat = '%d.%m.%Y';
+			else
+				$dateFormat = '%Y-%m-%d';
 			$JSCalendar = JSCalendar::getInstance();
 			// datetime format (default: time)
-// 			$userParameters['inputField']['id'] = $name;
-                        $JSCalendar->setDateFormat(false, "%d.%m.%Y");
+                        $JSCalendar->setDateFormat(false, $dateFormat);
 			$JSCalendar->setNLP(false);
                         $JSCalendar->setInputField($name);
-
-			$out .= $JSCalendar->render(strftime("%d.%m.%Y", $value), $userParameters);
+			$JSCalendar->setConfigOption('ifFormat', $dateFormat);
+			$out .= $JSCalendar->render(strftime($dateFormat, $value));
 			if (($jsCode = $JSCalendar->getMainJS()) != '') {
 				$GLOBALS['TSFE']->additionalHeaderData['abbooking_jscalendar'] = $jsCode;
 			}
 		} else {
-			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'" value="'.strftime("%d.%m.%Y", $value).'" ><br/>';
+			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'" value="'.strftime('%x', $value).'" ><br/>';
 		}
 
 		if (isset($error)) {

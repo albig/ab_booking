@@ -1,49 +1,101 @@
-.tx-abbooking-pi1 .theYears td {
-	font-family: arial;
-	font-size: 14pt;
-	color: black;
-}
-.tx-abbooking-pi1 .theYears td.selected {
-	font-family: arial;
-	font-size: 14pt;
-	font-weight: bold;
-	color: blue;
-}
+/*
+ * (c) 2008-2011 Alexander Bigga <linux@bigga.de>
+ * 
+ */
+
+
+/*
+ * Calendar Table Settings
+ *
+ */
 
 .tx-abbooking-pi1 .listlegend td {
-/* 	font-family: arial; */
 	font-size: 100%;
-/* 	border: 2px solid #666666; */
  	width: 14px;
 	text-align: center;
 }
 .tx-abbooking-pi1 .listlegend td.legend {
-/* 	 border: 0px; */
-/* 	 width: 100px; */
 	 text-align: left;
 }
-.tx-abbooking-pi1 .availabilityCalendar td.ABmonth {
-	vertical-align: top;
-}
-.tx-abbooking-pi1 .availabilityCalendar .ABcalendar td {
-/* 	font-family: arial; */
-	font-size: 100%;
-/* 	width: 14px; */
-	text-align: center;
-}
 
-.tx-abbooking-pi1 .availabilityCalendar .noDay {
-/* 	font-family: arial; */
+/*.tx-abbooking-pi1 .availabilityCalendar .legend {
 	font-size: 100%;
 	border: 0px;
-/* 	width: 14px; */
-	text-align: center;
-
+	text-align: left;
+}*/
+.tx-abbooking-pi1 table.availabilityCalendar .ABmonthname {
+	background-color: #e0e0e0;
+	border: 0px;
 }
 
-.tx-abbooking-pi1 .transp {
+.tx-abbooking-pi1 table.availabilityCalendar td.ABmonth {
+	vertical-align: top;
+}
+.tx-abbooking-pi1 table.availabilityCalendar .ABcalendar td {
+	font-size: 100%;
+	text-align: center;
+}
+
+.tx-abbooking-pi1 table.availabilityCalendar .noDay {
+	font-size: 100%;
+	border: 0px;
+	text-align: center;
+}
+
+
+
+/*
+ * Calendar Line View
+ */
+
+.tx-abbooking-pi1 div.availabilityCalendar {
+	margin: 0 auto;
+	width: 80%;
+}
+
+/* transparency for Calendar Line View */
+.tx-abbooking-pi1 div.availabilityCalendar .transp {
 	opacity: .4;
 }
+
+
+.tx-abbooking-pi1 div.availabilityCalendar div.calendarWeek {
+	float: left;
+}
+
+.tx-abbooking-pi1 div.availabilityCalendar .calendarWeek .legend {
+	font-size: 100%;
+	border: 0px;
+	text-align: left;
+}
+.tx-abbooking-pi1 div.availabilityCalendar .calendarWeek .ABmonthname {
+	background-color: #e0e0e0;
+	border: 0px;
+}
+
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine {
+	float: left;
+	margin-left: 0;
+	padding-left: 0;
+}
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li {
+	padding: 2pt;
+	margin: 2pt;
+	width: 1.4em;
+	text-align: center;
+	list-style-type: none;
+}
+
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.DayNames {
+	border: none;
+	margin: 0 4px;
+}
+
+
+/*
+ * shared classes by Calendar Line and Calendar View
+ */
+
 .tx-abbooking-pi1 .Day {
 /* 	background-color: #fff; */
 }
@@ -85,78 +137,10 @@
 	font-weight: bold;
 }
 
-.tx-abbooking-pi1 .availabilityCalendar .legend {
-/* 	width: 120px; */
-/* 	font-family: arial; */
-	font-size: 100%;
-	border: 0px;
-	text-align: left;
-}
-.tx-abbooking-pi1 .availabilityCalendar .ABmonthname {
-	background-color: #e0e0e0;
-	border: 0px;
-}
 
-.tx-abbooking-pi1 div.availabilityCalendar {
-	margin: 0 auto;
-	width: 80%;
-}
-
-
-.tx-abbooking-pi1 .calendarWeek .legend {
-/* 	width: 120px; */
-/* 	font-family: arial; */
-	font-size: 100%;
-	border: 0px;
-	text-align: left;
-}
-.tx-abbooking-pi1 .calendarWeek .ABmonthname {
-	background-color: #e0e0e0;
-	border: 0px;
-}
-
-.tx-abbooking-pi1 div.calendarWeek {
-	float: left;
-}
-
-
-.tx-abbooking-pi1 ul.Bookings  {
-	position: absolute;
-	top: 20px;
-}
-
-.tx-abbooking-pi1 ul.Bookings  li {
-/* 	border: 2px solid #fff; */
-	float: left;
-	padding: 2px;
-	margin: 0 1px 22px;
-	width: 1.4em;
-	text-align: center;
-	list-style-type: none;
-}
-
-.tx-abbooking-pi1 ul.DayNames {
-	float: left;
-/* 	position: absolute; */
-/* 	top: 0px; */
-}
-.tx-abbooking-pi1 ul.CalendarLine {
-	float: left;
-	margin-left: 0;
-}
-.tx-abbooking-pi1 ul.CalendarLine li {
-	padding: 2pt;
-	margin: 2pt;
-	width: 1.4em;
-	text-align: center;
-	list-style-type: none;
-}
-
-.tx-abbooking-pi1 ul.CalendarLine li.DayNames {
-	border: none;
-	margin: 0 4px;
-}
-
+/*
+ * general form settings
+ */
 input {
 	border: 1px solid #aa0000;
 }
@@ -202,11 +186,12 @@ input.submit {
 
 /* get rid of checkbox of date2calendar extension */
 input[type="checkbox"].jscalendar_cb {
-	border: 0;
-	width: 0px;
-	height: 0px;
-	margin: 0px;
+	display: none;
 }
+
+/*
+ * Offer List View
+ */
 
 .tx-abbooking-pi1 div.offer {
 	padding: 5px;
@@ -249,6 +234,10 @@ input[type="checkbox"].jscalendar_cb {
 	font-size: 120%;
 	font-weight: normal;
 }
+
+/*
+ * Request Form
+ */
 
 .tx-abbooking-pi1  div.requestForm {
 	float: left;
@@ -299,17 +288,19 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	width: 100%;
 }
 
+/*
+ * Booking Steps on top of the Request Form
+ */
+
 .tx-abbooking-pi1 div.bookingSteps {
 	position: relative;
 	float: left;
 	width: 95%;
 	border: 1px solid #aaa;
 	padding: 10px;
-/* 	min-height: 80px; */
 }
 
 .tx-abbooking-pi1 div.bookingSteps ul li {
-/* 	border: 2px solid #fff; */
 	float: left;
 	padding: 2px;
 	margin: 0;
