@@ -18,7 +18,7 @@
 			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
-			<label index="ab_booking.pi_flexform.sheetMailSettings">Mail Settings</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions">Mail Settings</label>
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
@@ -48,7 +48,7 @@
 			<label index="ab_booking.pi_flexform.itemDescription">Kurzbeschreibung</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Kalender</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Verfügbarkeits Prüfung</label>
-			<label index="ab_booking.pi_flexform.sheetMailSettings">Email Einstellungen</label>
+			<label index="ab_booking.pi_flexform.sheetBookingOptions">Email Einstellungen</label>
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Link im Kalender aktivieren</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Link in Angebots-Liste aktivieren</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>

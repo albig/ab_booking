@@ -81,7 +81,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (t3lib_extMgm::isLoaded('date2cal', 0)) {
 			include_once(t3lib_extMgm::extPath('date2cal') . '/src/class.jscalendar.php');
 		}
-		if (version_compare(TYPO3_version, '4.5', '<')) 
+		if (version_compare(TYPO3_version, '4.5', '<'))
 			if (t3lib_extMgm::isLoaded('ab_swiftmailer', 0)) {
 				require_once(t3lib_extMgm::extPath('ab_swiftmailer').'pi1/class.tx_abswiftmailer_pi1.php'); // load swift lib
 			}
@@ -457,7 +457,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// check if configured email is present
-		if (version_compare(TYPO3_version, '4.5', '<')) 
+		if (version_compare(TYPO3_version, '4.5', '<'))
 			if ((!class_exists('tx_abswiftmailer_pi1') || !$this->lConf['useSwiftMailer']) && empty($this->lConf['EmailAddress'])) {
 				$content.= '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noEmailConfigured').'</b></h2>';
 			}
@@ -1146,7 +1146,7 @@ print_r($product);*/
 			// does tx_abswiftmailer_pi1 exists?
 			if (class_exists('tx_abswiftmailer_pi1') && $this->lConf['useSwiftMailer']) {
 				$this->swift = t3lib_div::makeInstance('tx_abswiftmailer_pi1');
-				
+
 				// send booking mail to owner
 				$result = $this->swift->swift_send_message($email_customer,
 					$subject_owner,
@@ -1171,19 +1171,19 @@ print_r($product);*/
 				foreach ($email_customer as $emailAddress => $emailName) {
 					$email_customer_string = $emailName.' <'.$emailAddress.'>';
 				}
-				
+
 				// send booking mail to owner, reply-to customer
 				t3lib_div::plainMailEncoded($email_owner_string,
 						$this->pi_getLL('email_new_booking').' '.$this->piVars['name'].' ('.$this->piVars['email'].')',
 						$text_plain_mail,
 						'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->piVars['email']);
-						
+
 				// send acknolewdge mail to customer
 				t3lib_div::plainMailEncoded($email_customer_string,
 						$this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']),
 						$text_plain_mail,
 						'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->lConf['EmailAddress']);
-						
+
 				// assume everything went ok because there is no return value of plainMailEncoded())
 				$send_success = 2;
 			}
@@ -1193,6 +1193,7 @@ print_r($product);*/
 			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 			$mail->setFrom($email_owner);
 			$mail->setTo($email_owner);
+			$mail->setReplyTo($email_customer);
 			$mail->setSubject($subject_owner);
 			$mail->setBody($text_html_mail, 'text/html', 'utf-8');
 			$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
@@ -1202,7 +1203,7 @@ print_r($product);*/
 
 			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 			$mail->setFrom($email_owner);
-			$mail->setTo(array($this->piVars['email'] => $this->piVars['name']));
+			$mail->setTo($email_customer);
 			$mail->setSubject($subject_customer);
 			$mail->setBody($text_html_mail, 'text/html', 'utf-8');
 			$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');

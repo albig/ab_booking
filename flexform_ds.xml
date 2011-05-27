@@ -237,10 +237,10 @@
 	</ROOT>
 </sheetAvailabilityOptions>
 
-<sheetMailSettings>
+<sheetBookingOptions>
 	<ROOT>
 		<TCEforms>
-			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetMailSettings</sheetTitle>
+			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetBookingOptions</sheetTitle>
 		</TCEforms>
 		<type>array</type>
 		<el>
@@ -249,7 +249,7 @@
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.useSwiftMailer</label>
 					<config>
 						<type>check</type>
-						<default>1</default>
+						<default>0</default>
 					</config>
 				</TCEforms>
 			</useSwiftMailer>
@@ -309,7 +309,7 @@
 			</textConfirmEmail>
 		</el>
 	</ROOT>
-</sheetMailSettings>
+</sheetBookingOptions>
 
 </sheets>
 </T3DataStructure>
