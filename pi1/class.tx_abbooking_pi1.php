@@ -30,12 +30,12 @@
  *   62: class tx_abbooking_pi1 extends tslib_pibase
  *   74:     function main($content, $conf)
  *  239:     function init()
- *  361:     public function request_form($conf, $product, $stage)
- *  571:     public function availability_form()
+ *  361:     public function formUserData($conf, $product, $stage)
+ *  571:     public function formCheckAvailability()
  *  665:     function print_request_overview($conf)
  *  800:     public function get_product_properties($ProductUID)
  *  879:     function check_availability($storagePid)
- *  945:     function check_form_input()
+ *  945:     function formVerifyUserInput()
  * 1027:     function log_request($logFile)
  * 1051:     function send_confirmation_email($key, &$send_errors)
  * 1127:     function insert_booking($request)
@@ -142,32 +142,32 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 							return $this->pi_wrapInBaseClass($out);
 						}
-						$out .= $this->availability_form();
+						$out .= $this->formCheckAvailability();
 						return $this->pi_wrapInBaseClass($out);
 						break;
 					case 'bor0':
 						/* ------------------------- */
 						/* booking request formular  */
 						/* ------------------------- */
-						$out .= $this->request_form($conf, $product, $stage = 1);
+						$out .= $this->formUserData($conf, $product, $stage = 1);
 						break;
 					case 'bor1':
-						$out .= $this->request_form($conf, $product, $stage = 1);
+						$out .= $this->formUserData($conf, $product, $stage = 1);
 						break;
 					case 'bor2':
-						$numErrors = $this->check_form_input();
+						$numErrors = $this->formVerifyUserInput();
 						if ($numErrors > 0) {
-							$out .= $this->request_form($conf, $product, $stage = 1);
+							$out .= $this->formUserData($conf, $product, $stage = 1);
 						}
 						else {
-							$out .= $this->request_form($conf, $product, $stage = 3);
+							$out .= $this->formUserData($conf, $product, $stage = 3);
 						}
 						break;
 					case 'bor3':
 						/* --------------------------- */
 						/* booking final - send mails  */
 						/* --------------------------- */
-						$numErrors = $this->check_form_input();
+						$numErrors = $this->formVerifyUserInput();
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
 							$result= $this->send_confirmation_email($product['uid'], $send_errors);
@@ -187,7 +187,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							}
 
 						} else {
-							$out .= $this->request_form($conf, $product, $stage = 2);
+							$out .= $this->formUserData($conf, $product, $stage = 2);
 						}
 
 						break;
@@ -203,7 +203,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			default:
 				switch ($this->lConf['what_to_display']) {
 					case 'AVAILABILITY CHECK':
-						$out .= $this->availability_form();
+						$out .= $this->formCheckAvailability();
 						break;
 					case 'CALENDAR':
 						$out .= tx_abbooking_div::printAvailabilityCalendar($this->lConf['ProductID']);
@@ -315,8 +315,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// check flexform data
 		// ---------------------------------
 		// maximum of availability check
-		if (! isset($this->lConf['maxavailable']))
-			$this->lConf['maxavailable'] = $this->lConf['numCheckMaxInterval'];
+		if (! isset($this->lConf['numCheckMinInterval']))
+			$this->lConf['numCheckMinInterval'] = 1;
+
+		if (! isset($this->lConf['numCheckMaxInterval']))
+			$this->lConf['numCheckMaxInterval'] = 21;
 
 		if (is_numeric($this->lConf['PIDbooking']))
 			$this->lConf['gotoPID'] = $this->lConf['PIDbooking'];
@@ -359,7 +362,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * @param	[type]		$stage: ...
 	 * @return	HTML		form with booking details
 	 */
-	public function request_form($conf, $product, $stage) {
+	public function formUserData($conf, $product, $stage) {
 
 		$interval = array();
 
@@ -405,55 +408,68 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else
 			$selNumNights[2] = $selected;
 
-		// if stage=0 forget all errors!
+		$contentError = '';
+		// if stage=0 forget most errors!
 		if ($stage > 0) {
-			if (sizeof($this->form_errors)>0) {
-			$content.='<div class="errorForm">';
-			$content.='<ul>';
 			/* handle errors */
 			if (isset($this->form_errors['name'])) {
 				$ErrorName='class="error"';
-				$content.='<li>'.$this->form_errors['name'].'</li>';
+				$contentError.='<li>'.$this->form_errors['name'].'</li>';
 			}
 			if (isset($this->form_errors['street'])) {
 				$ErrorStreet='class="error"';
-				$content.='<li>'.$this->form_errors['street'].'</li>';
+				$contentError.='<li>'.$this->form_errors['street'].'</li>';
 			}
 			if (isset($this->form_errors['email'])) {
 				$ErrorEmail='class="error"';
-				$content.='<li>'.$this->form_errors['email'].'</li>';
+				$contentError.='<li>'.$this->form_errors['email'].'</li>';
 			}
 			if (isset($this->form_errors['town'])) {
 				$ErrorTown='class="error"';
-				$content.='<li>'.$this->form_errors['town'].'</li>';
+				$contentError.='<li>'.$this->form_errors['town'].'</li>';
 			}
 			if (isset($this->form_errors['PLZ'])) {
 				$ErrorPLZ='class="error"';
-				$content.='<li>'.$this->form_errors['PLZ'].'</li>';
+				$contentError.='<li>'.$this->form_errors['PLZ'].'</li>';
 			}
 			if (isset($this->form_errors['vacancies'])) {
 				$ErrorVacancies='class="error"';
-				$content.='<li>'.$this->form_errors['vacancies'].'</li>';
+				$contentError.='<li>'.$this->form_errors['vacancies'].'</li>';
 			}
 			if (isset($this->form_errors['vacancies_limited'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
+				$contentError.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
 			}
 			if (isset($this->form_errors['startDateInThePast'])) {
 				$ErrorVacancies='class="error"';
-				$content.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
+				$contentError.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
 			}
 			if (isset($this->form_errors['endDateNotValid'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
+				$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
 			}
 			if (isset($this->form_errors['numNightsNotValid'])) {
 				$ErrorVacanciesLimited='class="error"';
-				$content.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
+				$contentError.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
 			}
+		}
+
+		if ($product['minimumStay'] > $product['maxAvailable']) {
+			$ErrorVacanciesLimited='class="error"';
+			if ($product['minimumStay'] == 1)
+				$text_periods = ' '.$this->pi_getLL('period');
+			else
+				$text_periods = ' '.$this->pi_getLL('periods');
+			
+			$contentError.='<li>'.$this->pi_getLL('error_minimumStay').': '.$product['minimumStay'].' '.$text_periods.'</li>';
+		}
+		
+		if (!empty($contentError)) {
+			$content.='<div class="errorForm">';
+			$content.='<ul>';
+			$content.= $contentError;
 			$content.='</ul>';
 			$content.='</div>';
-			}
 		}
 
 		// check if configured email is present
@@ -558,18 +574,20 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$content .= '<br/>
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></div>
 						<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[ABnumNights]" size="1">';
+
 					/* how many days/nights are available? */
-					for ($i = 1; $i<=$product['maxAvailable']; $i++) {
+					for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i++) {
 							$endDate = strtotime('+'.$i.' day', $startdate);
 							$content.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
 					}
 					$content .= '</select><br/>
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></div>
 						<select name="'.$this->prefixId.'[ABnumPersons]" size="1">';
+						
 					/* how many persons are possible? */
 					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
-						if ($this->lConf['maxavailable'] < $this->piVars['ABnumNights'])
-							$numNights = $this->lConf['maxavailable'];
+						if ($this->lConf['numCheckMaxInterval'] < $this->piVars['ABnumNights'])
+							$numNights = $this->lConf['numCheckMaxInterval'];
 						else
 							$numNights = $this->piVars['ABnumNights'];
 						$content.='<option '.$selNumPersons[$i].' value='.$i.'>'.$i.' </option>';
@@ -601,7 +619,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 *
 	 * @return	HTML		form to check availability
 	 */
-	public function availability_form() {
+	public function formCheckAvailability() {
+
+		// assume that only one valid uid and and some offTimeProducts in ProductID..
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 
 		if (empty($this->lConf['productDetails'])) {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
@@ -657,7 +678,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= '<br />
 				<label for="fieldNumNights"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
 				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[ABnumNights]" id="fieldNumNights" size="1">';
-		for ($i = 1; $i<=$this->lConf['maxavailable']; $i++) {
+		for ($i = $this->lConf['numCheckMinInterval']; $i<=$this->lConf['numCheckMaxInterval']; $i++) {
 			$content.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.'</option>';
 		}
 		$content .= '</select><br/>';
@@ -826,7 +847,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * get all properties of a product with the given UID
 	 *
-	 * @param	[type]		$storagePid: ...
 	 * @param	[type]		$ProductUID: ...
 	 * @return	[type]		...
 	 */
@@ -855,8 +875,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
  				$product_properties[$row['uid']] = $row;
 			};*/
 
-/*				$ignore_array['starttime'] = 1;
-				$ignore_array['endtime'] = 1;*/
 			$where_extra = 'capacitymax > 0 ';
 			$product_properties =  tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $ProductUID, $where_extra);
 
@@ -866,9 +884,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$availableProductIDs[$pi] = $uid;
 				$pi++;
 
+				// get all prices for given UID and given dates
 				$product['prices'] = tx_abbooking_div::getPrices($uid, $interval);
-
-
 
 				$product['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 /*print_r("get_product_properties\n");
@@ -900,8 +917,10 @@ print_r($product);*/
 	/**
 	 * Check vacancies for given date
 	 *
+	 * all information is filled in global $this->lConf['productDetails'] array
+	 *
 	 * @param	[type]		$storagePid: ...
-	 * @return	0		on success, 1 on error
+	 * @return				0 on success, 1 on error
 	 */
 	function check_availability($storagePid) {
 		$item = array();
@@ -925,7 +944,7 @@ print_r($product);*/
 			$interval['endList'] = $endDate;
 		}
 
-		// step through bookings to find maximum availability
+		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $storagePid, $interval);
 		foreach ($bookings['bookings'] as $key => $row) {
 			if (!isset($item[$row['uid_foreign']]['maxAvailable']))
@@ -943,7 +962,7 @@ print_r($product);*/
 				$item[$row['uid_foreign']]['maxAvailable'] = $item[$row['uid_foreign']]['available'];
 		}
 
-		// step through prices to find maximum availability
+		// 2. step through prices to find maximum availability
  		foreach ($this->lConf['productDetails'] as $uid => $product) {
 			if (!isset($item[$uid]['maxAvailable']))
 				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
@@ -955,26 +974,46 @@ print_r($product);*/
 					else
 						$item[$uid]['available'] = 0;
 				}
+				// reduce available days by blockDaysAfterBooking value
+				if ($product['prices'][$d]['blockDaysAfterBooking'] > $item[$uid]['blockDaysAfterBooking']) {
+					$item[$uid]['blockDaysAfterBooking'] = $product['prices'][$d]['blockDaysAfterBooking'];
+				}
+				// reduce available days by minimumStay value
+				if ($product['prices'][$d]['minimumStay'] > $item[$uid]['minimumStay']) {
+					$item[$uid]['minimumStay'] = $product['prices'][$d]['minimumStay'];
+				}
+
 			}
 			// find maximum available period for item[UID]
 			if ($item[$uid]['available'] < $item[$uid]['maxAvailable'])
 				$item[$uid]['maxAvailable'] = $item[$uid]['available'];
 		}
 
-		//look for off-times and reduce maxAvailable for all items
+		// 3. look for off-times and reduce maxAvailable for all items
 		$maxAvailableAll = $this->lConf['numCheckMaxInterval'];
 		foreach($this->lConf['OffTimeProductIDs'] as $id => $offTimeID) {
 			if (isset($item[$offTimeID]['maxAvailable']) && $item[$offTimeID]['maxAvailable'] < $maxAvailableAll)
 				$maxAvailableAll = $item[$offTimeID]['maxAvailable'];
 		}
 
-
+		// join all information from step 1. to 3. into array
 		foreach($this->lConf['AvailableProductIDs'] as $id => $productID) {
 			if (is_numeric($item[$productID]['maxAvailable']))
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $item[$productID]['maxAvailable'];
 
+			if (is_numeric($item[$productID]['minimumStay']))
+				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$uid]['minimumStay'];
+
+			if (is_numeric($item[$productID]['blockDaysAfterBooking']))
+				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'];
+
 			if ($maxAvailableAll < $this->lConf['productDetails'][$productID]['maxAvailable'])
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $maxAvailableAll;
+
+			if ($item[$uid]['minimumStay'] >= $this->lConf['productDetails'][$productID]['maxAvailable']) {
+				$this->lConf['productDetails'][$productID]['maxAvailable'] = 0;
+			}
+
 		}
 
 		return 0;
@@ -986,7 +1025,7 @@ print_r($product);*/
 	 *
 	 * @return	amount		of errors found
 	 */
-	function check_form_input() {
+	function formVerifyUserInput() {
 
 		$this->pi_loadLL();
 		$this->form_errors = array();
@@ -1223,11 +1262,13 @@ print_r($product);*/
 	 */
 	function insert_booking($request) {
 
-		$product = $this->lConf['productDetails'];
+		// assume that only one valid uid and and some offTimeProducts in ProductID..
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 
 		$startDate = $this->lConf['startDateStamp'];
+
 		if (isset($this->lConf['numNights']))
-			$endDate = strtotime('+'.$this->lConf['numNights'].' day', $startDate);
+			$endDate = strtotime('+'.($this->lConf['numNights']+$product['prices'][$startDate]['blockDaysAfterBooking']).' day', $startDate);
 		else
 			$endDate = $startDate;
 
@@ -1262,7 +1303,7 @@ print_r($product);*/
 			'uid_local' => $id_inserted,
 			'uid_foreign' => implode(',', $this->lConf['AvailableProductIDs']),
 		);
-		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_productid_mm', $fields_values);
+  		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_productid_mm', $fields_values);
 
 		$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
@@ -1294,8 +1335,8 @@ print_r($this->lConf['productDetails']);*/
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
 		for ($i=1; $i<=$this->lConf['numPersons'] && $i<=$product['capacitymax']; $i++) {
-/*print_r("i: ".$i.", numPersons: ".$this->lConf['numPersons'].", capacitymax: ".$product['capacitymax']."\n");
-print_r("i: ".$i.", startDateStamp: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");*/
+//print_r("i: ".$i.", numPersons: ".$this->lConf['numPersons'].", capacitymax: ".$product['capacitymax']."\n");
+//print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
 			if ($product['prices'][$this->lConf['startDateStamp']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$this->lConf['startDateStamp']]['adult'.$i];
 				$max_persons = $i;

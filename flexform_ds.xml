@@ -180,6 +180,17 @@
 					</config>
 				</TCEforms>
 			</numCheckNextMonths>
+			<numCheckMinInterval>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMinInterval</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</numCheckMinInterval>
 			<numCheckMaxInterval>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxInterval</label>

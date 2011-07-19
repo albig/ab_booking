@@ -91,6 +91,10 @@ CREATE TABLE tx_abbooking_price (
 	singleComponent1 double(11,2) DEFAULT '0.00' NOT NULL,
 	singleComponent2 double(11,2) DEFAULT '0.00' NOT NULL,
 
+	minimumStay int(11) DEFAULT '1' NOT NULL,
+	blockDaysAfterBooking int(11) DEFAULT '0' NOT NULL,
+	checkInWeekdays tinytext,
+
 	seasonid int(11) DEFAULT '0' NOT NULL,
 	PRIMARY KEY (uid),
 	KEY parent (pid)

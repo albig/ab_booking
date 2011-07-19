@@ -122,7 +122,7 @@ class tx_abbooking_div {
 	}
 
 	/**
-	 * Get cals per day
+	 * Get rates per day
 	 *
 	 * @param	string		$uid
 	 * @param	array		$interval: ...
@@ -171,7 +171,7 @@ class tx_abbooking_div {
 			$myquery .= ' AND ((tx_abbooking_seasons.starttime <='. $interval['endList'].' OR tx_abbooking_seasons.starttime = 0) ';
 			$myquery .= ' AND (tx_abbooking_seasons.endtime > '.$interval['startList'].' OR tx_abbooking_seasons.endtime = 0))';
 
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid, tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid, tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
 			$p = 0;
 
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
@@ -553,11 +553,13 @@ class tx_abbooking_div {
 		$i = 0;
 
 		$productIds=explode(',', $this->lConf['ProductID']);
+
 		foreach ( $productIds as $key => $uid ) {
 			if (!empty($this->lConf['productDetails'][$uid]))
 				$product = $this->lConf['productDetails'][$uid];
 			else
 				continue; // skip because empty or OffTimeProductID
+
 			$i++;
 			$offers[$i] = '';
 			unset($interval);
@@ -565,7 +567,16 @@ class tx_abbooking_div {
 			if (sizeof($this->lConf['OffTimeProductIDs']) > 0)
 				$offTimeProducts = ','.implode(',', $this->lConf['OffTimeProductIDs']);
 
-			$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+			if ($product['maxAvailable'] < $this->lConf['numNights']) {
+				$interval['limitedVacancies'] = $availableMaxDate;
+				$limitedVacancies = '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
+				$bookNights = $product['maxAvailable'];
+			} else {
+				$bookNights = $this->lConf['numNights'];
+				$limitedVacancies = '';
+			}
+
+			$params_united = $this->lConf['startDateStamp'].'_'.$bookNights.'_'.$this->lConf['numPersons'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 			$params = array (
 				$this->prefixId.'[ABx]' => $params_united,
 			);
@@ -592,11 +603,11 @@ class tx_abbooking_div {
 				$offers[$i] .= '<li class="offerList"><div>'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div><br /> '; //.$this->pi_getLL('up_to');
 				$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
 // 				$offers[$i] .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
-				if ($product['maxAvailable'] < $this->piVars['ABnumNights']) {
-					$interval['limitedVacancies'] = $availableMaxDate;
-					$offers[$i] .= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
-				}
-				$offers[$i] .= '<br />';
+//~ 				if ($product['maxAvailable'] < $this->piVars['ABnumNights']) {
+//~ 					$interval['limitedVacancies'] = $availableMaxDate;
+//~ 					$offers[$i] .= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
+//~ 				}
+				$offers[$i] .= $limitedVacancies.'<br />';
 				$offers[$i] .= $bodytext;
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $product['maxAvailable'], 1);

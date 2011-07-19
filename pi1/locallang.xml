@@ -75,6 +75,7 @@
 			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
 			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
 			<label index="error_numNightsNotValid">Number of Nights is not valid!</label>
+			<label index="error_minimumStay">There is a minimum stay set of </label>
 
 
 			<label index="product_title">Description</label>
@@ -171,6 +172,8 @@
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
 			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht gültig!</label>
+			<label index="error_minimumStay">Es ist eine Mindestaufenthaltsdauer gesetzt von </label>
+			
 
 			<label index="product_title">Bezeichnung</label>
 			<label index="total_amount">Gesamtpreis (inkl. MwSt.)</label>

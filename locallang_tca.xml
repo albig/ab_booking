@@ -22,6 +22,7 @@
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
+			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.numDefaultNights">Default Amount of Days to Book</label>
 			<label index="ab_booking.pi_flexform.numDefaultPersons">Default Amount of Persons to Book</label>
@@ -52,6 +53,7 @@
 			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Link im Kalender aktivieren</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Link in Angebots-Liste aktivieren</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>
+			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimaler Buchungszeitraum (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximaler Buchungszeitraum (Tage)</label>
 			<label index="ab_booking.pi_flexform.numDefaultNights">Standard-Wert Buchungstage</label>
 			<label index="ab_booking.pi_flexform.numDefaultPersons">Standard-Wert Personen</label>
