@@ -30,7 +30,7 @@
  *   62: class tx_abbooking_pi1 extends tslib_pibase
  *   74:     function main($content, $conf)
  *  239:     function init()
- *  361:     public function formUserData($conf, $product, $stage)
+ *  361:     public function formBookingUserData($conf, $product, $stage)
  *  571:     public function formCheckAvailability()
  *  665:     function print_request_overview($conf)
  *  800:     public function get_product_properties($ProductUID)
@@ -149,19 +149,20 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* ------------------------- */
 						/* booking request formular  */
 						/* ------------------------- */
-						$out .= $this->formUserData($conf, $product, $stage = 1);
+						$out .= $this->formBookingUserData($conf, $product, $stage = 1);
 						break;
 					case 'bor1':
-						$out .= $this->formUserData($conf, $product, $stage = 1);
+						$out .= $this->formBookingUserData($conf, $product, $stage = 1);
 						break;
 					case 'bor2':
-						$numErrors = $this->formVerifyUserInput();
-						if ($numErrors > 0) {
-							$out .= $this->formUserData($conf, $product, $stage = 1);
-						}
-						else {
-							$out .= $this->formUserData($conf, $product, $stage = 3);
-						}
+//~ 						$numErrors = $this->formVerifyUserInput();
+//~ 						if ($numErrors > 0) {
+//~ 							$out .= $this->formBookingUserData($conf, $product, $stage = 1);
+//~ 						}
+//~ 						else {
+//~ 							$out .= $this->formBookingUserData($conf, $product, $stage = 3);
+//~ 						}
+						$out .= $this->formBookingUserData($conf, $product, $stage = 2);
 						break;
 					case 'bor3':
 						/* --------------------------- */
@@ -187,7 +188,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							}
 
 						} else {
-							$out .= $this->formUserData($conf, $product, $stage = 2);
+							$out .= $this->formBookingUserData($conf, $product, $stage = 2);
 						}
 
 						break;
@@ -350,19 +351,32 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (intval($this->conf['showPriceDetails']) > 0)
 			$this->lConf['showPriceDetails'] = $this->conf['showPriceDetails'];
 
+		// save session data
+		if (isset($this->piVars['name'])) {
+			$customerData["address_name"] = $this->piVars['name'];
+			$customerData["address_street"] = $this->piVars['street'];
+			$customerData["address_postalcode"] = $this->piVars['plz'];
+			$customerData["address_town"] = $this->piVars['town'];
+			$customerData["address_email"] = $this->piVars['email'];
+			$customerData["address_telephone"] = $this->piVars['telephone'];
+			$GLOBALS["TSFE"]->fe_user->setKey("ses","customData", $customerData);
+		} else {
+			$customerData = $GLOBALS["TSFE"]->fe_user->getKey("ses","customData");
+		}
+		$this->lConf['customerData'] = $customerData;
 	}
 
 
 	/**
 	 * Request Formular
-	 * The customer enters his address and sends the form.
+	 * The customer enters his personal data and submits the form.
 	 *
 	 * @param	[type]		$conf: ...
 	 * @param	integer		$stage of booking process
 	 * @param	[type]		$stage: ...
 	 * @return	HTML		form with booking details
 	 */
-	public function formUserData($conf, $product, $stage) {
+	public function formBookingUserData($conf, $product, $stage) {
 
 		$interval = array();
 
@@ -376,6 +390,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$interval['startList'] = strtotime('-2 day', $interval['startDate']);
 		$interval['endList'] = strtotime('+2 day', $interval['startDate']);
 
+		if ($stage > 1) {
+			$numErrors = $this->formVerifyUserInput();
+			if ($stage == 2 && $numErrors > 0)
+					$stage = 1;
+			else
+					$stage = 3;
+			if ($stage == 3 && $numErrors > 0)
+					$stage = 2;
+		}
+		$customer = $this->lConf['customerData'];
 
 		$content .= tx_abbooking_div::printBookingStep($stage);
 
@@ -409,49 +433,46 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$selNumNights[2] = $selected;
 
 		$contentError = '';
-		// if stage=0 forget most errors!
-		if ($stage > 0) {
-			/* handle errors */
-			if (isset($this->form_errors['name'])) {
-				$ErrorName='class="error"';
-				$contentError.='<li>'.$this->form_errors['name'].'</li>';
-			}
-			if (isset($this->form_errors['street'])) {
-				$ErrorStreet='class="error"';
-				$contentError.='<li>'.$this->form_errors['street'].'</li>';
-			}
-			if (isset($this->form_errors['email'])) {
-				$ErrorEmail='class="error"';
-				$contentError.='<li>'.$this->form_errors['email'].'</li>';
-			}
-			if (isset($this->form_errors['town'])) {
-				$ErrorTown='class="error"';
-				$contentError.='<li>'.$this->form_errors['town'].'</li>';
-			}
-			if (isset($this->form_errors['PLZ'])) {
-				$ErrorPLZ='class="error"';
-				$contentError.='<li>'.$this->form_errors['PLZ'].'</li>';
-			}
-			if (isset($this->form_errors['vacancies'])) {
-				$ErrorVacancies='class="error"';
-				$contentError.='<li>'.$this->form_errors['vacancies'].'</li>';
-			}
-			if (isset($this->form_errors['vacancies_limited'])) {
-				$ErrorVacanciesLimited='class="error"';
-				$contentError.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
-			}
-			if (isset($this->form_errors['startDateInThePast'])) {
-				$ErrorVacancies='class="error"';
-				$contentError.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
-			}
-			if (isset($this->form_errors['endDateNotValid'])) {
-				$ErrorVacanciesLimited='class="error"';
-				$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
-			}
-			if (isset($this->form_errors['numNightsNotValid'])) {
-				$ErrorVacanciesLimited='class="error"';
-				$contentError.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
-			}
+		/* handle errors */
+		if (isset($this->form_errors['name'])) {
+			$ErrorName='class="error"';
+			$contentError.='<li>'.$this->form_errors['name'].'</li>';
+		}
+		if (isset($this->form_errors['street'])) {
+			$ErrorStreet='class="error"';
+			$contentError.='<li>'.$this->form_errors['street'].'</li>';
+		}
+		if (isset($this->form_errors['email'])) {
+			$ErrorEmail='class="error"';
+			$contentError.='<li>'.$this->form_errors['email'].'</li>';
+		}
+		if (isset($this->form_errors['town'])) {
+			$ErrorTown='class="error"';
+			$contentError.='<li>'.$this->form_errors['town'].'</li>';
+		}
+		if (isset($this->form_errors['PLZ'])) {
+			$ErrorPLZ='class="error"';
+			$contentError.='<li>'.$this->form_errors['PLZ'].'</li>';
+		}
+		if (isset($this->form_errors['vacancies'])) {
+			$ErrorVacancies='class="error"';
+			$contentError.='<li>'.$this->form_errors['vacancies'].'</li>';
+		}
+		if (isset($this->form_errors['vacancies_limited'])) {
+			$ErrorVacanciesLimited='class="error"';
+			$contentError.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
+		}
+		if (isset($this->form_errors['startDateInThePast'])) {
+			$ErrorVacancies='class="error"';
+			$contentError.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
+		}
+		if (isset($this->form_errors['endDateNotValid'])) {
+			$ErrorVacanciesLimited='class="error"';
+			$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
+		}
+		if (isset($this->form_errors['numNightsNotValid'])) {
+			$ErrorVacanciesLimited='class="error"';
+			$contentError.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
 		}
 
 		if ($product['minimumStay'] > $product['maxAvailable']) {
@@ -460,10 +481,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$text_periods = ' '.$this->pi_getLL('period');
 			else
 				$text_periods = ' '.$this->pi_getLL('periods');
-			
-			$contentError.='<li>'.$this->pi_getLL('error_minimumStay').': '.$product['minimumStay'].' '.$text_periods.'</li>';
+
+			$contentError.='<li>'.$this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods.'</li>';
 		}
-		
+
 		if (!empty($contentError)) {
 			$content.='<div class="errorForm">';
 			$content.='<ul>';
@@ -489,17 +510,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
 
 					<div class="noteForm">
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['name']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($this->piVars['name']).'" >
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['street']).'</p>
-					<input  type="hidden" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($this->piVars['street']).'" >
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['plz']).' '.htmlspecialchars($this->piVars['town']).'</p>
-					<input  type="hidden" size="5" maxlength="10" name="'.$this->prefixId.'[plz]" value="'.htmlspecialchars($this->piVars['plz']).'" >
-					<input  type="hidden" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($this->piVars['town']).'">
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['email']).'</p>
-					<input  type="hidden" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($this->piVars['email']).'" >
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['telefon']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[telefon]" value="'.htmlspecialchars($this->piVars['telefon']).'" >
+					<p class="yourSettings">'.htmlspecialchars($customer['address_name']).'</p>
+					<input type="hidden" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($customer['address_name']).'" >
+					<p class="yourSettings">'.htmlspecialchars($customer['address_street']).'</p>
+					<input  type="hidden" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" >
+					<p class="yourSettings">'.htmlspecialchars($customer['address_postalcode']).' '.htmlspecialchars($customer['address_town']).'</p>
+					<input  type="hidden" size="5" maxlength="10" name="'.$this->prefixId.'[plz]" value="'.htmlspecialchars($customer['address_postalcode']).'" >
+					<input  type="hidden" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($customer['address_town']).'">
+					<p class="yourSettings">'.htmlspecialchars($customer['address_email']).'</p>
+					<input  type="hidden" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" >
+					<p class="yourSettings">'.htmlspecialchars($customer['address_telephone']).'</p>
+					<input type="hidden" name="'.$this->prefixId.'[telephone]" value="'.htmlspecialchars($customer['address_telephone']).'" >
 					</div>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></div>
@@ -557,18 +578,18 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 			$content.='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
-					<input '.$ErrorName.' type="text" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($this->piVars['name']).'" ><br/>
+					<input '.$ErrorName.' type="text" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($customer['address_name']).'" ><br/>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_street')).'</b></div>
-					<input '.$ErrorStreet.' type="text" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($this->piVars['street']).'" ><br/>
+					<input '.$ErrorStreet.' type="text" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" ><br/>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_plz')).' '.htmlspecialchars($this->pi_getLL('feld_town')).'</b></div>
-					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[plz]" value="'.htmlspecialchars($this->piVars['plz']).'" >
-					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($this->piVars['town']).'"><br/>
+					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[plz]" value="'.htmlspecialchars($customer['address_postalcode']).'" >
+					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($customer['address_town']).'"><br/>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_email')).'</b></div>
-					<input '.$ErrorEmail.' type="text" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($this->piVars['email']).'" ><br/>
-					'.htmlspecialchars($this->pi_getLL('feld_telefon')).'<br/><input type="text" name="'.$this->prefixId.'[telefon]" value="'.htmlspecialchars($this->piVars['telefon']).'" ><br/>
+					<input '.$ErrorEmail.' type="text" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" ><br/>
+					'.htmlspecialchars($this->pi_getLL('feld_telephone')).'<br/><input type="text" name="'.$this->prefixId.'[telephone]" value="'.htmlspecialchars($customer['address_telephone']).'" ><br/>
 					<b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b><br/>';
 			$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[ABstartDate]', $startdate, $ErrorVacancies);
 			$content .= '<br/>
@@ -583,7 +604,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$content .= '</select><br/>
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></div>
 						<select name="'.$this->prefixId.'[ABnumPersons]" size="1">';
-						
+
 					/* how many persons are possible? */
 					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
 						if ($this->lConf['numCheckMaxInterval'] < $this->piVars['ABnumNights'])
@@ -614,6 +635,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content.='</div>';
 		return $content;
 	}
+
 	/**
 	 * availability prices form ;-)
 	 *
@@ -845,10 +867,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	}
 
 	/**
-	 * get all properties of a product with the given UID
+	 * get all properties, description text and prices of a product
+	 * with the given UID
 	 *
 	 * @param	[type]		$ProductUID: ...
-	 * @return	[type]		...
+	 * @return	[type]		array of properties..
 	 */
 	public function get_product_properties($ProductUID) {
 
@@ -862,7 +885,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 		if (!isset($interval['startList']) && !isset($interval['endList'])) {
 			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = $interval['endDate'];
+			$interval['endList'] = strtotime('+'.$this->lConf['numCheckMaxInterval'].' day', $this->lConf['startDateStamp']);
 		}
 
 
@@ -1005,7 +1028,7 @@ print_r($product);*/
 				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$uid]['minimumStay'];
 
 			if (is_numeric($item[$productID]['blockDaysAfterBooking']))
-				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'];
+				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'] - 1;
 
 			if ($maxAvailableAll < $this->lConf['productDetails'][$productID]['maxAvailable'])
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $maxAvailableAll;
@@ -1041,6 +1064,8 @@ print_r($product);*/
 			}
 		}
 
+		$customer = $this->lConf['customerData'];
+
 		// check for limited vacancies...
 		if ($product['maxAvailable'] < $this->lConf['numNights']) {
 			$this->form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited')."<br/>";
@@ -1052,33 +1077,33 @@ print_r($product);*/
 		$motif1.="@";
 		$motif1.="[[:alnum:]]([[:alnum:]\._-]{0,})[\.]{1}([[:alpha:]]{2,})$#";
 
-		if (preg_match($motif1, $this->piVars['email'])){
-			list($user, $domain)=preg_split('/@/', $this->piVars['email'], 2);
+		if (preg_match($motif1, $customer['address_email'])){
+			list($user, $domain)=preg_split('/@/', $customer['address_email'], 2);
 			$dns_ok=checkdnsrr($domain, "MX");
 			// nobody of this domain will write an email - expect spamers...
 			if ($domain == $mail_from_domain)
 				$dns_ok = 0;
 		}
-		if (!$dns_ok || !t3lib_div::validEmail($this->piVars['email'])){
+		if (!$dns_ok || !t3lib_div::validEmail($customer['address_email'])){
 			$this->form_errors['email'] = $this->pi_getLL('error_email')."<br/>";
 			$numErrors++;
 		}
 
 
 
-		if (empty($this->piVars['name'])) {
+		if (empty($customer['address_name'])) {
 			$this->form_errors['name'] = $this->pi_getLL('error_empty_name')."<br/>";
 			$numErrors++;
 		}
-		if (empty($this->piVars['street'])) {
+		if (empty($customer['address_street'])) {
 			$this->form_errors['street'] = $this->pi_getLL('error_empty_street')."<br/>";
 			$numErrors++;
 		}
-		if (empty($this->piVars['town'])) {
+		if (empty($customer['address_town'])) {
 			$this->form_errors['town'] = $this->pi_getLL('error_empty_town')."<br/>";
 			$numErrors++;
 		}
-		if (empty($this->piVars['plz'])) {
+		if (empty($customer['address_postalcode'])) {
 			$this->form_errors['PLZ'] = $this->pi_getLL('error_empty_plz')."<br/>";
 			$numErrors++;
 		}
@@ -1137,14 +1162,16 @@ print_r($product);*/
 
 		$product = $this->lConf['productDetails'][$key];
 
+		$customer = $this->lConf['customerData'];
+
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
-		$text_mail .= $this->pi_getLL('feld_name').": ".$this->piVars['name']."\n";
-		$text_mail .= $this->pi_getLL('feld_street').": ".$this->piVars['street']."\n";
+		$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
+		$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
 		$text_mail .= $this->pi_getLL('feld_plz').": ".$this->piVars['plz']."\n";
-		$text_mail .= $this->pi_getLL('feld_town').": ".$this->piVars['town']."\n\n";
-		$text_mail .= $this->pi_getLL('feld_email').": ".$this->piVars['email']."\n";
-		$text_mail .= $this->pi_getLL('feld_telefon').": ".$this->piVars['telefon']."\n\n";
+		$text_mail .= $this->pi_getLL('feld_town').": ".$customer['address_town']."\n\n";
+		$text_mail .= $this->pi_getLL('feld_email').": ".$customer['address_email']."\n";
+		$text_mail .= $this->pi_getLL('feld_telephone').": ".$customer['address_telephone']."\n\n";
 
 		$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
 		$text_mail .= $this->pi_getLL('feld_anreise').": ".strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp'])."\n";
@@ -1163,7 +1190,7 @@ print_r($product);*/
 
 		// text for text/html mail part
 		$text_html_mail = str_replace("\n", "<br />", $text_mail);
-		$text_html_mail .= $this->printCalculatedRates($key, $this->lConf['numNights'], 0);
+		$text_html_mail .= str_replace("\n", "<br />", $this->printCalculatedRates($key, $this->lConf['numNights'], 0));
 		$text_html_mail .= "===<br/>";
 
 
@@ -1176,9 +1203,9 @@ print_r($product);*/
 			$email_owner = array($this->lConf['EmailAddress'] => $this->lConf['EmailRealname']);
 		else
 			$email_owner = t3lib_utility_Mail::getSystemFrom();
-		$email_customer = array($this->piVars['email'] => $this->piVars['name']);
+		$email_customer = array($customer['address_email'] => $customer['address_name']);
 		$subject_customer = $this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']);
-		$subject_owner = $this->pi_getLL('email_new_booking').' '.$this->piVars['name'].' ('.$this->piVars['email'].')';
+		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].' ('.$customer['address_email'].')';
 
 		if (version_compare(TYPO3_version, '4.5', '<')) {
 			// send mail for TYPO3 4.4.x....
@@ -1213,9 +1240,9 @@ print_r($product);*/
 
 				// send booking mail to owner, reply-to customer
 				t3lib_div::plainMailEncoded($email_owner_string,
-						$this->pi_getLL('email_new_booking').' '.$this->piVars['name'].' ('.$this->piVars['email'].')',
+						$this->pi_getLL('email_new_booking').' '.$customer['address_name'].' ('.$customer['address_email'].')',
 						$text_plain_mail,
-						'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->piVars['email']);
+						'From: '.$email_owner_string.chr(10).'Reply-To: '.$customer['address_email']);
 
 				// send acknolewdge mail to customer
 				t3lib_div::plainMailEncoded($email_customer_string,
@@ -1273,7 +1300,7 @@ print_r($product);*/
 			$endDate = $startDate;
 
 		if ($request == 0) {
-			$title = strftime('%Y%m%d', $startDate).', '.$this->piVars['name'].', '.$this->piVars['town'];
+			$title = strftime('%Y%m%d', $startDate).', '.$customer['address_name'].', '.$customer['address_town'];
 			$editCode = md5($title.$this->lConf['ProductID']);
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
@@ -1317,7 +1344,7 @@ print_r($product);*/
 	 * @param	[type]		$maxAvailable: ...
 	 * @return	string		with amount, currency...
 	 */
-	function calcRates($key, $maxAvailable) {
+	function calcRates($key, $period) {
 
 		$priceDetails = array();
 /*print_r("calcRates--key:".$key."--------------\n");
@@ -1325,27 +1352,26 @@ print_r($this->lConf['productDetails']);*/
 		$product = $this->lConf['productDetails'][$key];
  //print_r($product);
 
-		if ($maxAvailable < $this->lConf['numNights'])
-			$period = $maxAvailable;
-		else
-			$period = $this->lConf['numNights'];
-
+		$periodDateStamp = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
 		$max_amount = 0;
-		// asuming every adult costs more;
+		// assuming every adult costs more;
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
-		for ($i=1; $i<=$this->lConf['numPersons'] && $i<=$product['capacitymax']; $i++) {
-//print_r("i: ".$i.", numPersons: ".$this->lConf['numPersons'].", capacitymax: ".$product['capacitymax']."\n");
-//print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
+		for ($i=1; $i<=$product['capacitymax']; $i++) {
+//~ print_r("i: ".$i.", numPersons: ".$this->lConf['numPersons'].", capacitymax: ".$product['capacitymax']."\n");
+//~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
 			if ($product['prices'][$this->lConf['startDateStamp']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$this->lConf['startDateStamp']]['adult'.$i];
 				$max_persons = $i;
 			}
+			if ($max_amount > 0 && $i >= $this->lConf['numPersons'])
+					break;
 		}
+
 		// step through days from startdate to (enddate | maxAvailable) and add rate for every day
 		$total_amount = 0;
 		for ($d = $this->lConf['startDateStamp'];
-			$d < $this->lConf['endDateStamp'] && $d < strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
+			$d < $periodDateStamp;
 				$d = strtotime('+1 day', $d)) {
 				$total_amount += $product['prices'][$d]['adult'.$max_persons];
 				$cur_title = $product['prices'][$d]['title'];
@@ -1443,9 +1469,9 @@ print_r($this->lConf['productDetails']);*/
 	/**
 	 * Print the calculates rates
 	 *
-	 * @param	array		$rates
+	 * @param	array		$product key
+	 * @param	int			$period: ...
 	 * @param	bool		$printHTML: ...
-	 * @param	[type]		$printHTML: ...
 	 * @return	string		string for output...
 	 */
 	function printCalculatedRates($key, $period, $printHTML = 1) {
