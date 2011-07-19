@@ -891,13 +891,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!empty($ProductUID)) {
 			// SELECT:
-/*			$myquery= 'pid='.$this->lConf['PIDstorage'].' AND uid IN ('.$ProductUID.') AND capacitymax>0 AND deleted=0 AND hidden=0';
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('uid, title, capacitymin, capacitymax, priceid, uiddetails','tx_abbooking_product',$myquery,'','','');
-			// one array for start and end dates. one for each pid
-			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
- 				$product_properties[$row['uid']] = $row;
-			};*/
-
 			$where_extra = 'capacitymax > 0 ';
 			$product_properties =  tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $ProductUID, $where_extra);
 
@@ -915,18 +908,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 print_r($product);*/
 				// get uid and pid of the detailed description content element
 				$uidpid = explode("#", $product['uiddetails']);
-// print_r($uidpid);
 				if (is_numeric($uidpid[0])) {
-//  					$product['detailsRaw'] = $this->getRecordRaw($uid);
-/*					$product['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND sys_language_uid='.$GLOBALS['TSFE']->sys_language_uid.' AND deleted=0 AND hidden=0','header,bodytext');
-					// if there is no detailed description in current language, try default...
-					if (empty($product['detailsRaw']))
-						$product['detailsRaw']=t3lib_BEfunc::getRecordRaw(tt_content,'pid='.$uidpid[0].' AND deleted=0 AND hidden=0','header,bodytext');*/
-
 					$product['detailsRaw'] =  array_shift(tx_abbooking_div::getRecordRaw('tt_content', $uidpid[0], $uidpid[1]));
-// print_r($product);
   				}
-			$product_properties_return[$uid] = $product;
+				$product_properties_return[$uid] = $product;
 			}
 		}
 
@@ -1025,7 +1010,7 @@ print_r($product);*/
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $item[$productID]['maxAvailable'];
 
 			if (is_numeric($item[$productID]['minimumStay']))
-				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$uid]['minimumStay'];
+				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$productID]['minimumStay'];
 
 			if (is_numeric($item[$productID]['blockDaysAfterBooking']))
 				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'] - 1;

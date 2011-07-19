@@ -176,19 +176,11 @@ class tx_abbooking_div {
 
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				$pricesAvailable[$p] = $row;
-//~ print_r($row);
 				$languageOverlay =  tx_abbooking_div::getRecordRaw('tx_abbooking_price', $this->lConf['PIDstorage'], $row['uid']);
 				// overwrite price title
 				$pricesAvailable[$p]['title'] = $languageOverlay[$row['uid']]['title'];
-//~ print_r($languageOverlay);
 				$p++;
 			};
-
-//~ 			foreach ( $newPrices as $id => $rate ) {
-//~ 				$pricesAvailable[$p] = $rate;
-//~ 				$p++;
-//~ 			};
-//~ print_r($pricesAvailable);
 
 			// get the valid prices per day
 			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
@@ -207,7 +199,6 @@ class tx_abbooking_div {
 
 
 		}
-//~ 		print_r($pricePerDay);
  		return $pricePerDay;
 
 	}
@@ -613,11 +604,6 @@ class tx_abbooking_div {
 				$offers['numOffers']++;
 				$offers[$i] .= '<li class="offerList"><div>'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div><br /> '; //.$this->pi_getLL('up_to');
 				$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-// 				$offers[$i] .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
-//~ 				if ($product['maxAvailable'] < $this->piVars['ABnumNights']) {
-//~ 					$interval['limitedVacancies'] = $availableMaxDate;
-//~ 					$offers[$i] .= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
-//~ 				}
 				$offers[$i] .= $contentError.'<br />';
 				$offers[$i] .= $bodytext;
 
@@ -629,15 +615,9 @@ class tx_abbooking_div {
 			}
 
 			// show calendar list only up to the vacant day
-//~ 			if (isset($interval['limitedVacancies']))
-//~ 				$interval['endDate'] = $interval['limitedVacancies'];
-//~ 			else
-//~ 				$interval['endDate'] = $this->lConf['endDateStamp'];
 			$interval['startDate'] = $this->lConf['startDateStamp'];
 			
 			$interval['endDate'] = strtotime('+'.$bookNights.' day', $this->lConf['startDateStamp']);
-// 			$interval['startList'] = strtotime('-2 day', $interval['startDate']);
-//~  			$interval['endList'] = strtotime('+2 day', $interval['endDate']);
 
 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
