@@ -1012,18 +1012,17 @@ print_r($product);*/
 			if (is_numeric($item[$productID]['minimumStay']))
 				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$productID]['minimumStay'];
 
-			if (is_numeric($item[$productID]['blockDaysAfterBooking']))
+			if (is_numeric($item[$productID]['blockDaysAfterBooking']) && $item[$productID]['blockDaysAfterBooking'] > 1)
 				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'] - 1;
 
 			if ($maxAvailableAll < $this->lConf['productDetails'][$productID]['maxAvailable'])
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $maxAvailableAll;
 
-			if ($item[$uid]['minimumStay'] >= $this->lConf['productDetails'][$productID]['maxAvailable']) {
+			if ($item[$uid]['minimumStay'] > $this->lConf['productDetails'][$productID]['maxAvailable']) {
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = 0;
 			}
 
 		}
-
 		return 0;
 	}
 
