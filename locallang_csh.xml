@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description>CSH labels</description>
+		<type>CSH</type>
+		<csh_table></csh_table>
+		<fileId>EXT:ab_booking/locallang_csh.xml</fileId>
+		<labelContext type="array">
+		</labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="what_to_display.description">Define the view</label>
+			<label index="what_to_display.details"><![CDATA[ On this TAB you enter
+						<ul>
+							<li><b>Calendar</b>: Show Calendar for one ore more Product IDs</li>
+							<li><b>Availability Form</b>: Show Form to Check the Availability</li>
+							<li><b>Booking</b>: Form for entering the user data and to do the booking.</li>
+						</ul>
+						 ]]></label>
+			<label index="ProductID.description">Select the products you want to be used in this plugin.</label>
+			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box, 
+			you first have to enter the storage pid and you have to add products, 
+			prices and seasons into this storage folder.
+					]]></label>
+		</languageKey>
+
+		<languageKey index="de" type="array">
+			<label index="what_to_display.description">Define the view</label>
+			<label index="what_to_display.details"><![CDATA[ On this TAB you enter
+						<ul>
+							<li>Calendar: Show Calendar for one ore more Product IDs</li>
+							<li>Availability Form: Show Form to Check the Availability</li>
+							<li>Booking: Form for entering the user data and to do the booking.</li>
+						</ul>
+						 ]]></label>
+			<label index="ProductID.description">Select the products you want to be used in this plugin.</label>
+			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box, 
+				you first have to enter the storage pid and you have to add products, 
+				prices and seasons into this storage folder.
+					]]></label>
+		</languageKey>
+				
+		
+	</data>
+</T3locallang>

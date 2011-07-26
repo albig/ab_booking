@@ -4,7 +4,7 @@
     <langDisable>1</langDisable>
   </meta>
   <sheets>
-<sheetGeneralOptions>
+	<sheetGeneralOptions>
        <ROOT>
 	    <TCEforms>
 		    <sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetGeneralOptions</sheetTitle>
@@ -42,6 +42,16 @@
 					<itemListStyle>width:250px</itemListStyle>
 				</config>
 			</TCEforms>
+		<description>
+				<TCEforms>
+				<label>LLL:EXT:chgallery/locallang_db.xml:description</label>
+					<config>
+						<type>user</type>
+						<userFunc>tx_abbooking_tca->user_chgallerydescr</userFunc>
+					</config>
+				</TCEforms>
+			</description>
+			
 		</what_to_display>
 		<ProductID>
 			<TCEforms>
@@ -95,6 +105,7 @@
 	<ROOT>
 		<TCEforms>
 			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetCalendarOptions</sheetTitle>
+			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
 		</TCEforms>
 		<type>array</type>
 		<el>
@@ -157,6 +168,7 @@
 	<ROOT>
 		<TCEforms>
 			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetAvailabilityOptions</sheetTitle>
+			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
 		</TCEforms>
 		<type>array</type>
 		<el>
@@ -252,6 +264,7 @@
 	<ROOT>
 		<TCEforms>
 			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetBookingOptions</sheetTitle>
+			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
 		</TCEforms>
 		<type>array</type>
 		<el>

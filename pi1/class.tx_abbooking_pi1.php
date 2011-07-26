@@ -1275,6 +1275,8 @@ print_r($product);*/
 
 		// assume that only one valid uid and and some offTimeProducts in ProductID..
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
+		$customer = $this->lConf['customerData'];
+
 
 		$startDate = $this->lConf['startDateStamp'];
 
@@ -1284,7 +1286,7 @@ print_r($product);*/
 			$endDate = $startDate;
 
 		if ($request == 0) {
-			$title = strftime('%Y%m%d', $startDate).', '.$customer['address_name'].', '.$customer['address_town'];
+			$title = strftime('%Y%m%d', $startDate).', '.$customer['address_name'].', '.$customer['address_town'].', '.$customer['address_email'];
 			$editCode = md5($title.$this->lConf['ProductID']);
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];
