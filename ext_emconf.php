@@ -11,7 +11,7 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'Simple booking extension',
+	'title' => 'Simple Booking Extension',
 	'description' => 'An availability calendar is presentable for each item/room. You may check the date and enter your details for booking.
 Another view is an availability check.',
 	'category' => 'plugin',

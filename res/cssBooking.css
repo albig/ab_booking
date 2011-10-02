@@ -1,6 +1,6 @@
 /*
  * (c) 2008-2011 Alexander Bigga <linux@bigga.de>
- * 
+ *
  */
 
 
@@ -91,6 +91,66 @@
 	margin: 0 4px;
 }
 
+/*
+ * Calendar Line View
+ */
+
+.tx-abbooking-pi1 div.calendarCheckinOverview {
+	margin: 0 auto;
+	width: 80em;
+}
+
+/* transparency for Calendar Line View */
+.tx-abbooking-pi1 div.calendarCheckinOverview .transp {
+	opacity: .4;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview ul.CalendarLine {
+	float: left;
+	margin-left: 0;
+	padding-left: 0;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview ul.CalendarLine li {
+	padding: 2pt;
+	margin: 2pt;
+	width: 10em;
+	text-align: center;
+	list-style-type: none;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview div.calendarWeek {
+	float: left;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview .booked {
+	border: 2px solid #d30000;
+	text-decoration: none;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview .vacant {
+	border: 2px solid #008000;
+}
+
+.tx-abbooking-pi1 div.calendarCheckinOverview .DayNames {
+	border: 2px solid #ccc;
+	text-decoration: none;
+}
+
+.tx-abbooking-pi1 div.calendarCheckinOverview .bookingInfos {
+	border-bottom: 1px solid #ccc;
+	text-decoration: none;
+}
+
+.tx-abbooking-pi1 div.calendarCheckinOverview .bookingInfos #depature {
+	color: #aa000;
+	font-weight: bold;
+	text-decoration: none;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview .bookingInfos #arrival {
+	color: green;
+	font-weight: bold;
+	text-decoration: none;
+}
+.tx-abbooking-pi1 div.calendarCheckinOverview .bookingInfos #stay {
+	border-bottom: 1px solid #ccc;
+	text-decoration: none;
+}
 
 /*
  * shared classes by Calendar Line and Calendar View
@@ -348,27 +408,43 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	padding: 2pt 0;
 }
 .tx-abbooking-pi1  .priceDetails li.first {
+	clear: both;
 /* 	background-color: #ddd; */
 }
 .tx-abbooking-pi1  .priceDetails li.odd {
+	clear: both;
 	border-top: 1px dashed #ccc;
 }
 .tx-abbooking-pi1  .priceDetails li.even {
+	clear: both;
 	border-top: 1px dashed #ccc;
 }
+.tx-abbooking-pi1  .priceDetails input {
+	float: left;
+	margin-right: 6pt;
+}
+
 .tx-abbooking-pi1  span.priceDescription {
 	clear: right;
+}
+.tx-abbooking-pi1  span.priceDeselected {
+	opacity: 0.6;
+	font-style: oblique;
+	float: left;
 }
 .tx-abbooking-pi1  span.priceDates {
 	font-size: 100%;
 	font-family: Courier, monospace;
 	font-weight: bold;
+	float: left;
 }
 
-.tx-abbooking-pi1  span.priceValue {
+.tx-abbooking-pi1 span.priceValue {
+	width: 12em;
+	text-align: right;
 	float: right;
-	clear: right;
 }
+
 .tx-abbooking-pi1  div.priceTotal {
 	margin-bottom: 1em;
 }

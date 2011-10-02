@@ -33,6 +33,10 @@
 							<numIndex index="0">CALENDAR LINE</numIndex>
 							<numIndex index="1">CALENDAR LINE</numIndex>
 						</numIndex>
+						<numIndex index="4" type="array">
+							<numIndex index="0">CHECKIN OVERVIEW</numIndex>
+							<numIndex index="1">CHECKIN OVERVIEW</numIndex>
+						</numIndex>
 					</items>
 					<size>4</size>
 					<maxitems>1</maxitems>

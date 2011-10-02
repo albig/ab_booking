@@ -254,7 +254,7 @@ $TCA['tx_abbooking_product'] = array (
 $TCA['tx_abbooking_price'] = array (
 	'ctrl' => $TCA['tx_abbooking_price']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,child,teen,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid',
+		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,adultX,child,teen,extraComponent1,extraComponent2,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid',
 		'always_description' => 1
 	),
 	'feInterface' => $TCA['tx_abbooking_price']['feInterface'],
@@ -322,9 +322,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult1',		## WOP:[tables][3][fields][1][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][1][type]
-				'size' => '10',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][1][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+ 				'eval' => 'nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
 			)
 		),
 		'adult2' => array (		## WOP:[tables][3][fields][2][fieldname]
@@ -333,9 +333,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult2',		## WOP:[tables][3][fields][2][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][2][type]
-				'size' => '10',	## WOP:[tables][3][fields][2][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][2][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'adult3' => array (		## WOP:[tables][3][fields][3][fieldname]
@@ -344,9 +344,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult3',		## WOP:[tables][3][fields][3][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][3][type]
-				'size' => '10',	## WOP:[tables][3][fields][3][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][3][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][3][conf_eval] / [tables][3][fields][3][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'adult4' => array (		## WOP:[tables][3][fields][4][fieldname]
@@ -355,9 +355,20 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adult4',		## WOP:[tables][3][fields][4][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
-				'size' => '10',	## WOP:[tables][3][fields][4][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][4][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][4][conf_eval] / [tables][3][fields][4][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
+			)
+		),
+		'adultX' => array (		## WOP:[tables][3][fields][4][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,		## WOP:[tables][3][fields][4][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.adultX',		## WOP:[tables][3][fields][4][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][3][fields][4][type]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'child' => array (		## WOP:[tables][3][fields][5][fieldname]
@@ -366,9 +377,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.child',		## WOP:[tables][3][fields][5][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][5][type]
-				'size' => '10',	## WOP:[tables][3][fields][5][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][5][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][5][conf_eval] / [tables][3][fields][5][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'teen' => array (		## WOP:[tables][3][fields][6][fieldname]
@@ -377,9 +388,31 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.teen',		## WOP:[tables][3][fields][6][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][6][type]
-				'size' => '10',	## WOP:[tables][3][fields][6][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][6][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][6][conf_eval] / [tables][3][fields][6][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
+			)
+		),
+		'extraComponent1' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.extraComponent1',		## WOP:[tables][2][fields][1][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][3][fields][4][type]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
+			)
+		),
+		'extraComponent2' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.extraComponent2',		## WOP:[tables][2][fields][1][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][3][fields][4][type]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'discount' => array (		## WOP:[tables][3][fields][6][fieldname]
@@ -410,9 +443,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.singleComponent1',		## WOP:[tables][2][fields][1][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
-				'size' => '10',	## WOP:[tables][3][fields][4][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][4][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][4][conf_eval] / [tables][3][fields][4][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'singleComponent2' => array (		## WOP:[tables][2][fields][1][fieldname]
@@ -421,9 +454,9 @@ $TCA['tx_abbooking_price'] = array (
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.singleComponent2',		## WOP:[tables][2][fields][1][title]
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
-				'size' => '10',	## WOP:[tables][3][fields][4][conf_size]
-				'max' => '6',	## WOP:[tables][3][fields][4][conf_max]
-				'eval' => 'double2,nospace',	## WOP:[tables][3][fields][4][conf_eval] / [tables][3][fields][4][conf_stripspace]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'minimumStay' => array (		## WOP:[tables][3][fields][1][fieldname]
@@ -431,10 +464,10 @@ $TCA['tx_abbooking_price'] = array (
 			'exclude' => 0,		## WOP:[tables][3][fields][1][excludeField]
 			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.minimumStay',		## WOP:[tables][3][fields][1][title]
 			'config' => array (
-				'type' => 'input',	## WOP:[tables][3][fields][1][type]
-				'size' => '10',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '31',	## WOP:[tables][3][fields][1][conf_max]
-				'eval' => 'int,nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
+				'type' => 'input',	## WOP:[tables][3][fields][4][type]
+				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
 		'blockDaysAfterBooking' => array (		## WOP:[tables][3][fields][1][fieldname]
@@ -476,7 +509,7 @@ $TCA['tx_abbooking_price'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, adultX, child, teen, extraComponent1, extraComponent2, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid')
 	),
 );
 $TCA['tx_abbooking_seasons'] = array (

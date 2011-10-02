@@ -107,7 +107,7 @@ class tx_abbooking_div {
 			// 2. get for bookings for these uids/pids
 			$query= 'pid IN ('. $storagePid .') AND uid_foreign IN ('.$uid.') AND deleted=0 AND hidden=0 AND request=0 AND uid=uid_local AND ( enddate >=('.$interval['startList'].') AND startdate <=('.$interval['endList'].'))';
 
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('DISTINCT uid_foreign, startdate, enddate','tx_abbooking_booking, tx_abbooking_booking_productid_mm',$query,'','startdate','');
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('DISTINCT uid_foreign as uid, startdate, enddate, title','tx_abbooking_booking, tx_abbooking_booking_productid_mm',$query,'','startdate','');
 
 			// one array for start and end dates. one for each pid
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
@@ -171,7 +171,14 @@ class tx_abbooking_div {
 			$myquery .= ' AND ((tx_abbooking_seasons.starttime <='. $interval['endList'].' OR tx_abbooking_seasons.starttime = 0) ';
 			$myquery .= ' AND (tx_abbooking_seasons.endtime > '.$interval['startList'].' OR tx_abbooking_seasons.endtime = 0))';
 
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid, tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_price.title as title, currency, adult1, adult2, adult3, adult4, child, teen, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays','tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
+			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid,
+			tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime,
+			tx_abbooking_price.title as title, currency,
+			adult1, adult2, adult3, adult4, adultX, child, teen,
+			extraComponent1, extraComponent2, discount, discountPeriod,
+			singleComponent1, singleComponent2, minimumStay,
+			blockDaysAfterBooking, checkInWeekdays',
+			'tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
 			$p = 0;
 
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
@@ -203,6 +210,7 @@ class tx_abbooking_div {
 
 	}
 
+	
 	/**
 	 * Calculate Booked Days-Array for Calendar View
 	 *
@@ -210,41 +218,69 @@ class tx_abbooking_div {
 	 * @param	[type]		$interval: ...
 	 * @return	array		with booking periods
 	 */
-	function calcBookedPeriods($bookings, $prices, $interval) {
+	function cssClassBookedPeriods($bookings, $prices, $interval) {
 
 		$bookedDays = array();
 		$bookedDaysCSS = array();
 
-		foreach ($bookings['bookings'] as $uid => $row) {
-			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
+		foreach ($bookings['bookings'] as $id => $singleBooking) {
+			for ($d = $singleBooking['startdate']; $d <= $singleBooking['enddate']; $d=strtotime("+ 1day", $d)) {
 				$bookedDays[$d]['booked']++ ;
 			}
-			$bookedDays[$row['startdate']]['isStart']++;
-			$bookedDays[$row['enddate']]['isEnd']++;
-		};
+			$bookedDays[$singleBooking['startdate']]['isStart']++;
+			$bookedDays[$singleBooking['enddate']]['isEnd']++;
+		}
 
 		// make ready to print css class like "[Day|Weekend] [booked|vacant] [Start|End]"
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
 			if (date("w", $d)== 0 || date("w", $d)== 6)
-				$bookedDaysCSS[$d]=' Weekend';
+				$bookedDaysCSS[$d] =' Weekend';
 			else
-				$bookedDaysCSS[$d]=' Day';
+				$bookedDaysCSS[$d] =' Day';
 
 			if ($bookedDays[$d]['booked'] > 0) {
-				$bookedDaysCSS[$d].=' booked';
+				$bookedDaysCSS[$d].= ' booked';
 				if ($bookedDays[$d]['isStart'] == $bookedDays[$d]['booked'])
-					$bookedDaysCSS[$d].=' Start';
+					$bookedDaysCSS[$d] .= ' Start';
 				else if ($bookedDays[$d]['isEnd'] == $bookedDays[$d]['booked'])
-					$bookedDaysCSS[$d].=' End';
+					$bookedDaysCSS[$d] .= ' End';
 			}
 			else
-				$bookedDaysCSS[$d].=' vacant';
+				$bookedDaysCSS[$d] .= ' vacant';
 			if ($prices[$d] == 'noPrice')
-				$bookedDaysCSS[$d].=' noPrices';
+				$bookedDaysCSS[$d] .= ' noPrices';
 		}
 		return $bookedDaysCSS;
 	}
 
+	/**
+	 * Calculate Booked Days-Array for Calendar View
+	 *
+	 * @param	array		$bookings
+	 * @param	[type]		$interval: ...
+	 * @return	array		with booking periods
+	 */
+	function cssClassBookedCheckInView($bookings, $interval) {
+
+		$bookedDays = array();
+		$bookedDaysCSS = array();
+		$uids = array();
+
+		foreach ($bookings['bookings'] as $id => $singleBooking) {
+			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+				if (empty($bookedDays[$d][$singleBooking['uid']]))
+					$bookedDays[$d][$singleBooking['uid']][$id] = 'vacant';
+			}
+			for ($d = $singleBooking['startdate']; $d <= $singleBooking['enddate']; $d=strtotime("+ 1day", $d)) {
+				$bookedDays[$d][$singleBooking['uid']][$id] = 'booked';
+			}
+			$bookedDays[$singleBooking['startdate']][$singleBooking['uid']][$id] .= ' Start';
+			$bookedDays[$singleBooking['enddate']][$singleBooking['uid']][$id] .= ' End';
+			$uids[] = $singleBooking['uid'];
+		}
+
+		return $bookedDays;
+	}
 
 	/**
 	 * Display the availability calendar for one or more months depending on flexform configuration
@@ -276,7 +312,7 @@ class tx_abbooking_div {
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
+		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
 		if (empty($this->lConf['ProductID']) && empty($uid)) {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
@@ -290,7 +326,7 @@ class tx_abbooking_div {
 		$out .= '<table class="availabilityCalendar">';
 		$out .= '<tr>';
 
-		// runs for 18 times for 18 months
+		// runs $rows * $columns times
 		for ($i=0; $i<$months; $i++) {
 			$days = 0;
 			if ($i % $columns == 0 && $i != 0 && $i != $months) {
@@ -422,6 +458,163 @@ class tx_abbooking_div {
 	}
 
 	/**
+	 * Display the availability calendar for one or more months depending on flexform configuration
+	 *
+	 * @param	integer		$uid: ...
+	 * @param	[type]		$interval: ...
+	 * @return	HTML-table		with calendar view
+	 */
+	function printCheckinOverview($uid, $interval = array()) {
+
+		$this->pi_loadLL();
+		$myBooked = array();
+		$rows = (int)$this->lConf['numMonthsRows'];
+		$columns = (int)$this->lConf['numMonthsCols'];
+		$weeks = 3;
+
+
+		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
+			$today = strtotime(strftime("%Y-%m-%d"));
+			$interval['startDate'] = $today;
+			$interval['endDate'] = strtotime('+3 days', $today);
+		}
+		$interval['startList'] = $interval['startDate'];
+		$interval['endList'] = $interval['endDate'];
+
+		$prices = tx_abbooking_div::getPrices($uid, $interval);
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
+		// keep uids in fixed order...
+		function cmpUIDs($a, $b)
+		{
+			if ($a['uid'] == $b['uid']) {
+				if ($a['startdate'] == $b['startdate'])
+					return 0;
+				else if ($a['startdate'] < $b['startdate'])
+					return -1;
+				else
+					return 1;
+			}
+			return ($a['uid'] < $b['uid']) ? -1 : 1;
+		}
+		usort($bookedPeriods['bookings'], "cmpUIDs");
+
+		$myBooked = tx_abbooking_div::cssClassBookedCheckInView($bookedPeriods, $interval);
+
+		if (empty($this->lConf['ProductID']) && empty($uid)) {
+			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
+		}
+		
+		foreach ($bookedPeriods['bookings'] as $id => $row) {
+			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
+				$tilearray = explode(',', $row['title']);
+				$product = $this->lConf['productDetails'][$row['uid']];
+				$bookingInfos[$d]['title'] .= '<div class="bookingInfos">'.$product['title'].': ';
+				if (strpos($myBooked[$d][$row['uid']][$id], 'Start') !== FALSE) 
+					$bookingInfos[$d]['title'] .= '<div id="arrival">'.$this->pi_getLL("arrival");
+				else if (strpos($myBooked[$d][$row['uid']][$id], 'End') !== FALSE) 
+					$bookingInfos[$d]['title'] .= '<div id="depature">'.$this->pi_getLL("depature");
+				else 
+					$bookingInfos[$d]['title'] .= '<div id="stay">';
+				$bookingInfos[$d]['title'] .= $tilearray[1] .'</div></div>';
+			}
+		};
+
+		$out = '<div class="calendarCheckinOverview">';	
+		// step from last monday to next sunday through the list.
+		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+//~ 		for ($i = 0; $i < (($interval['endList']-$interval['startList'])/86400)/7; $i++) {
+//~ 				for ($k = 0; $k < 7; $k++) {	
+//~ 					$d = (7*$i)*86400 + $interval['startList'] + $k*86400;
+					if (date(w, $d) == 1 || $d == $interval['startList']) {// open div on monday
+						$out .= '<div class="calendarWeek">';
+					}
+					$out .= '<ul class="CalendarLine">';
+					unset($cssClass);
+					
+					// show vacant as default, 
+					// only booked items of any uid are marked "booked" as long as they are no "booked End"
+					$cssClass = 'vacant';
+					foreach ($myBooked[$d] as $uid => $cssClassBookingUID) {
+						foreach ($cssClassBookingUID as $id => $cssClassBooking) {
+							if (strpos($cssClassBooking, 'booked')!==FALSE && strpos($cssClassBooking, 'booked End')===FALSE)
+								$cssClass = 'booked';
+						}
+					}
+					if ($d < $today || $d > $interval['endDate'])
+						$cssClass .= ' transp';
+
+					$out .= '<li class="'.$cssClass.' DayNames">'.strftime("%a, %x", $d).'</li>';
+					
+					unset($infoField);
+
+					$infoField = ' '.$bookingInfos[$d]['title'];
+					$out .= '<li class="'.$cssClass.'">'.$infoField.'</li>';
+					$out .= '</ul>';
+
+					if (date(w, $d) == 0 || $d == $interval['endList']) {// close div after sunday
+						$out .= '</div>';
+					}
+//~ 				}	
+		}
+		$out .= '</div>';
+		
+		
+//~ 		$out .= '<table class="listlegend"><tr>';
+//~ 		$out .= '<td class="vacant">&nbsp;</td><td class="legend">' . $this->pi_getLL('vacant day') .'</td>';
+//~ 		$out .= '<td class="booked">&nbsp;</td><td class="legend">'.	$this->pi_getLL('booked day').' </td>';
+//~ 		$out .= '</tr></table>';
+//~ 
+//~ 		$out .= '<table class="availabilityCalendar">';
+//~ 		$out .= '<tr>';
+//~ 
+//~ 		// runs for 18 times for 18 months
+//~ 		for ($i=0; $i<$weeks; $i++) {
+//~ 			$days = 0;
+//~ 			if ($i % $columns == 0 && $i != 0 && $i != $months) {
+//~ 				$out .= '</tr><tr>';
+//~ 			}
+//~ 			// adding leading zero
+//~ 			$m = ( $i + date(m) ) % 12 ;
+//~ 			$mon = (int)(($m == 0) ? 12 : $m);
+//~ 			$year = (int)date(Y) + (int)( ( $i + date(m) - 1) / 12 ) ;
+//~ 
+//~ 			$out .= '<td class="ABmonth">';
+//~ 			$out .= '<h3 class="ABmonthname">'. $this->pi_getLL(date("M", strtotime( $year . "-".$mon."-01"))).' '. $year .'</h3>';
+//~ 			$out .= '<table class="ABcalendar">';
+//~ 
+//~ 			$out .= '<tr>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mon").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tus").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("Wed").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Thu").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fri").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sat").'</td>
+//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Sun").'</td>
+//~ 			</tr>';
+//~ 			$rowsCalendar = 7;
+//~ 			
+//~ 			$out .= '<tr>';
+//~ 
+//~ 			for ($d=$today; $d <= strtotime('+1 week'); $d=strtotime('+1 day', $d)) {
+//~ 
+//~ 				$cssClass = $myBooked[$d];
+//~ 		print_r($bookingInfos);
+//~ 
+//~ 				$out .= '<td class="'.$cssClas.'">'.$cssClass.': '.$bookingInfos[$d]['title'].'</td>';
+//~ 
+//~ 			}
+//~ 
+//~ 			$out .= '</tr>';
+//~ 			$out .= '</table></td>';
+//~ 			$out .= "\n";
+//~ 		}
+//~ 
+//~ 		$out .= '</tr></table>';
+
+		return $out;
+	}
+	
+	/**
 	 * Display the availability calendar as single line for a given interval
 	 *
 	 * @param	integer		$uid: ...
@@ -450,7 +643,7 @@ class tx_abbooking_div {
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		$myBooked = tx_abbooking_div::calcBookedPeriods($bookedPeriods, $prices, $interval);
+		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
 		$printDayNames = 1;
 		$out = '<div class="availabilityCalendar">';
@@ -459,7 +652,7 @@ class tx_abbooking_div {
 				$out .= '<div class="calendarWeek">';
 			$out .= '<ul class="CalendarLine">';
 			unset($cssClass);
-			if ($d<$interval['startDate'] || $d > $interval['endDate'])
+			if ($d < $interval['startDate'] || $d > $interval['endDate'])
 				$cssClass = 'transp';
 
 			$cssClass .= $myBooked[$d];
@@ -563,7 +756,7 @@ class tx_abbooking_div {
 				$interval['limitedVacancies'] = $availableMaxDate;
 				$contentError.= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
 				$bookNights = $product['maxAvailable'];
-			} 
+			}
 			else {
 				$bookNights = $this->lConf['numNights'];
 			}
@@ -576,7 +769,7 @@ class tx_abbooking_div {
 				$contentError.='<br /><i>'.$this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods.'</i><br />';
 				if ($bookNights < $product['minimumStay'])
 				$bookNights = $product['minimumStay'];
-			}			
+			}
 
 			$params_united = $this->lConf['startDateStamp'].'_'.$bookNights.'_'.$this->lConf['numPersons'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 			$params = array (
@@ -607,22 +800,34 @@ class tx_abbooking_div {
 				$offers[$i] .= $contentError.'<br />';
 				$offers[$i] .= $bodytext;
 
-				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1);
+				if ($this->lConf['enableCheckBookingLink'] == 1)
+					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
-				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
+				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
+
+				if ($this->lConf['enableCheckBookingLink'] == 1)
+				$linkBookNow .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
+								<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
+								<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
+								</form>
+				';
+
+//~ 				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
 			} else {
 				$offers[$i] .= '<li class="offerList"><div><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
 			}
 
 			// show calendar list only up to the vacant day
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-			
+
 			$interval['endDate'] = strtotime('+'.$bookNights.' day', $this->lConf['startDateStamp']);
 
 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
 			if ($this->lConf['enableCheckBookingLink'] == 1)
 				$offers[$i] .= $linkBookNow;
+			else
+				$offers[$i] .= '</form>';
 			// close list item...
 			$offers[$i] .= '</li>';
 		}

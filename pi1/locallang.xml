@@ -105,8 +105,11 @@
 			<label index="send_failure">There was an error sending your request. Please call us or send us an e-mail!</label>
 			<label index="email_new_booking">Booking Request by</label>
 			<label index="email_your_booking">Your Booking Request from</label>
-
-</languageKey>
+			
+			<label index="arrival">Arrival</label>
+			<label index="depature">Depature</label>		
+		</languageKey>
+		
 		<languageKey index="de" type="array">
 			<label index="vacant day">frei</label>
 			<label index="booked day">gebucht</label>
@@ -202,7 +205,105 @@
 			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
 			<label index="email_new_booking">Buchungsanfrage von</label>
 			<label index="email_your_booking">Ihre Buchungsanfrage vom</label>
+			
+			<label index="arrival">Anreise</label>
+			<label index="depature">Abreise</label>
+			
 		</languageKey>
+		<languageKey index="nl" type="array">
+			<label index="vacant day">Vrij</label>
+			<label index="booked day">Bezet</label>
+			<label index="overbooked">Overboekt</label>
+			<label index="Jan">Januari</label>
+			<label index="Feb">Februari</label>
+			<label index="Mar">Maart</label>
+			<label index="Apr">April</label>
+			<label index="May">Mei</label>
+			<label index="Jun">Juni</label>
+			<label index="Jul">Juli</label>
+			<label index="Aug">Augustus</label>
+			<label index="Sep">September</label>
+			<label index="Oct">Oktober</label>
+			<label index="Nov">November</label>
+			<label index="Dec">December</label>
+			<label index="booking calendar">Boekingskalender</label>
+			<label index="Mon">Maandag</label>
+			<label index="Tus">Dinsdag</label>
+			<label index="Wed">Woensdag</label>
+			<label index="Thu">Donderdag</label>
+			<label index="Fri">Vrijdag</label>
+			<label index="Sat">Zaterdag</label>
+			<label index="Sun">Zondag</label>
+			<label index="Mo">Ma</label>
+			<label index="Tu">Di</label>
+			<label index="We">Wo</label>
+			<label index="Th">Do</label>
+			<label index="Fr">Vr</label>
+			<label index="Sa">Za</label>
+			<label index="Su">Zo</label>
+			<label index="back">Terug</label>
+
+			<label index="feld_name">Voornaam Achternaam</label>
+			<label index="feld_street">Straat Huisnummer</label>
+			<label index="feld_town">Woonplaats</label>
+			<label index="feld_plz">Postcode</label>
+
+			<label index="feld_email">Email</label>
+			<label index="feld_telefon">Telefoon</label>
+			<label index="feld_anreise">Van</label>
+			<label index="feld_abreise">Tot</label>
+			<label index="feld_naechte">Aantal dagen</label>
+			<label index="feld_personen">Aantal Personen</label>
+			<label index="feld_mitteilung">Opmerking</label>
+			<label index="submit_button_label">Versturen</label>
+			<label index="submit_button_check">Controleren</label>
+
+			<label index="title_request">Boekingsformulier</label>
+			<label index="title_availability">Beschikbaarheid</label>
+
+			<label index="error_noEmailConfigured">Geen Email Adres geconfigureerd!</label>
+			<label index="error_noProductSelected">Geen Product geselecteerd!</label>
+			<label index="error_noPriceSelected">geen Prijs bekend!</label>
+			<label index="error_email">Controleer uw Email-Adres!</label>
+			<label index="error_empty_name">Uw naam invullen aub!</label>
+			<label index="error_empty_street">De straat invullen aub!</label>
+			<label index="error_empty_town">De woonplaats invullen aub!</label>
+			<label index="error_empty_plz">De postcode invullen aub!</label>
+			<label index="error_no_vacancies">Helaas is de camper in deze periode bezet!</label>
+			<label index="error_vacancies_limited">Alleen voor de aangegeven periode is de camper beschikbaar!</label>
+			<label index="error_startDateInThePast">De eerste dag ligt in het verleden!</label>
+			<label index="error_endDateNotValid">De laatste dag is niet geldig!</label>
+			<label index="error_tooFarInFuture">De boeking ligt te ver in de toekomst!</label>
+			<label index="error_numNightsNotValid">Aantal dagen is niet valide!</label>
+
+			<label index="product_title">Titel</label>
+			<label index="total_amount">Totaal prijs (incl. BTW)</label>
+			<label index="person">Persoon</label>
+			<label index="persons">Personen</label>
+			<label index="period">Dat</label>
+			<label index="periods">Dagen</label>
+			<label index="please_confirm">Controleer uw opgave en sluit de boeking.</label>
+			<label index="submit_button_edit">Gegevens veranderen</label>
+			<label index="submit_button_final">Boeking sliten</label>
+			<label index="bookNow">Online Boeken</label>
+
+			<label index="booking_step_1">Ingeven</label>
+			<label index="booking_step_2">Contoleren</label>
+			<label index="booking_step_3">Klaar</label>
+
+			<label index="result_available">Beschikbaar</label>
+			<label index="result_occupied">Bezet</label>
+			<label index="we_may_offer">We hebben de volgende opties:</label>
+			<label index="no_offer">Helaas is er geen camper beschikbaar voor deze periode.</label>
+			<label index="up_to">tot</label>
+
+			<label index="link_availability_check">Beschikbaarheid controleren</label>
+
+			<label index="send_success">Dank voor uw bericht. U ontvangt binnen 24 uur een Antwoord van ons. Sollten Sie nichts von uns hören ist u.U. Ihre Email-Adresse nicht korrekt. Bitte rufen Sie uns in diesem Fall bitte an.</label>
+			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
+			<label index="email_new_booking">Reserveringsverzoek vanaf</label>
+			<label index="email_your_booking">Uw reserveringsverzoek</label>
+</languageKey>		
 
 	</data>
 </T3locallang>
