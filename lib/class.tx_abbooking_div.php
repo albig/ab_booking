@@ -210,7 +210,7 @@ class tx_abbooking_div {
 
 	}
 
-	
+
 	/**
 	 * Calculate Booked Days-Array for Calendar View
 	 *
@@ -472,14 +472,33 @@ class tx_abbooking_div {
 		$columns = (int)$this->lConf['numMonthsCols'];
 		$weeks = 3;
 
-
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
-			$today = strtotime(strftime("%Y-%m-%d"));
-			$interval['startDate'] = $today;
-			$interval['endDate'] = strtotime('+3 days', $today);
+			if ($this->lConf['startDateStamp']>0)
+				$interval['startDate'] = $this->lConf['startDateStamp'];
+			else {
+				$today = strtotime(strftime("%Y-%m-%d"));
+				$interval['startDate'] = $today;
+			}
+			$interval['endDate'] = strtotime('+3 days', $interval['startDate']);
 		}
 		$interval['startList'] = $interval['startDate'];
 		$interval['endList'] = $interval['endDate'];
+
+//				<label for="'.$this->prefixId.'[ABstartDate]'.'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label>
+		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
+				<label for="'.$this->prefixId.'[ABstartDate]'.'_cb">&nbsp;</label><br/>';
+
+		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[ABstartDate]', $interval['startDate'], $ErrorVacancies);
+
+		if (!$this->isRobot())
+			$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+		$content .= '</form>
+			<br />
+		';
+
+		$out = $content;
+
+
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
@@ -503,117 +522,61 @@ class tx_abbooking_div {
 		if (empty($this->lConf['ProductID']) && empty($uid)) {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 		}
-		
+
 		foreach ($bookedPeriods['bookings'] as $id => $row) {
 			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1day", $d)) {
 				$tilearray = explode(',', $row['title']);
 				$product = $this->lConf['productDetails'][$row['uid']];
 				$bookingInfos[$d]['title'] .= '<div class="bookingInfos">'.$product['title'].': ';
-				if (strpos($myBooked[$d][$row['uid']][$id], 'Start') !== FALSE) 
+				if (strpos($myBooked[$d][$row['uid']][$id], 'Start') !== FALSE)
 					$bookingInfos[$d]['title'] .= '<div id="arrival">'.$this->pi_getLL("arrival");
-				else if (strpos($myBooked[$d][$row['uid']][$id], 'End') !== FALSE) 
+				else if (strpos($myBooked[$d][$row['uid']][$id], 'End') !== FALSE)
 					$bookingInfos[$d]['title'] .= '<div id="depature">'.$this->pi_getLL("depature");
-				else 
+				else
 					$bookingInfos[$d]['title'] .= '<div id="stay">';
 				$bookingInfos[$d]['title'] .= $tilearray[1] .'</div></div>';
 			}
 		};
 
-		$out = '<div class="calendarCheckinOverview">';	
+		$out .= '<div class="calendarCheckinOverview">';
 		// step from last monday to next sunday through the list.
 		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
-//~ 		for ($i = 0; $i < (($interval['endList']-$interval['startList'])/86400)/7; $i++) {
-//~ 				for ($k = 0; $k < 7; $k++) {	
-//~ 					$d = (7*$i)*86400 + $interval['startList'] + $k*86400;
-					if (date(w, $d) == 1 || $d == $interval['startList']) {// open div on monday
-						$out .= '<div class="calendarWeek">';
-					}
-					$out .= '<ul class="CalendarLine">';
-					unset($cssClass);
-					
-					// show vacant as default, 
-					// only booked items of any uid are marked "booked" as long as they are no "booked End"
-					$cssClass = 'vacant';
-					foreach ($myBooked[$d] as $uid => $cssClassBookingUID) {
-						foreach ($cssClassBookingUID as $id => $cssClassBooking) {
-							if (strpos($cssClassBooking, 'booked')!==FALSE && strpos($cssClassBooking, 'booked End')===FALSE)
-								$cssClass = 'booked';
-						}
-					}
-					if ($d < $today || $d > $interval['endDate'])
-						$cssClass .= ' transp';
+			if (date(w, $d) == 1 || $d == $interval['startList']) {// open div on monday
+				$out .= '<div class="calendarWeek">';
+			}
+			$out .= '<ul class="CalendarLine">';
+			unset($cssClass);
 
-					$out .= '<li class="'.$cssClass.' DayNames">'.strftime("%a, %x", $d).'</li>';
-					
-					unset($infoField);
+			// show vacant as default,
+			// only booked items of any uid are marked "booked" as long as they are no "booked End"
+			$cssClass = 'vacant';
+			if (is_array($myBooked[$d]))
+			foreach ($myBooked[$d] as $uid => $cssClassBookingUID) {
+				foreach ($cssClassBookingUID as $id => $cssClassBooking) {
+					if (strpos($cssClassBooking, 'booked')!==FALSE && strpos($cssClassBooking, 'booked End')===FALSE)
+						$cssClass = 'booked';
+				}
+			}
+			if ($d < $today || $d > $interval['endDate'])
+				$cssClass .= ' transp';
 
-					$infoField = ' '.$bookingInfos[$d]['title'];
-					$out .= '<li class="'.$cssClass.'">'.$infoField.'</li>';
-					$out .= '</ul>';
+			$out .= '<li class="'.$cssClass.' DayNames">'.strftime("%a, %x", $d).'</li>';
 
-					if (date(w, $d) == 0 || $d == $interval['endList']) {// close div after sunday
-						$out .= '</div>';
-					}
-//~ 				}	
+			unset($infoField);
+
+			$infoField = ' '.$bookingInfos[$d]['title'];
+			$out .= '<li class="'.$cssClass.'">'.$infoField.'</li>';
+			$out .= '</ul>';
+
+			if (date(w, $d) == 0 || $d == $interval['endList']) {// close div after sunday
+				$out .= '</div>';
+			}
 		}
 		$out .= '</div>';
-		
-		
-//~ 		$out .= '<table class="listlegend"><tr>';
-//~ 		$out .= '<td class="vacant">&nbsp;</td><td class="legend">' . $this->pi_getLL('vacant day') .'</td>';
-//~ 		$out .= '<td class="booked">&nbsp;</td><td class="legend">'.	$this->pi_getLL('booked day').' </td>';
-//~ 		$out .= '</tr></table>';
-//~ 
-//~ 		$out .= '<table class="availabilityCalendar">';
-//~ 		$out .= '<tr>';
-//~ 
-//~ 		// runs for 18 times for 18 months
-//~ 		for ($i=0; $i<$weeks; $i++) {
-//~ 			$days = 0;
-//~ 			if ($i % $columns == 0 && $i != 0 && $i != $months) {
-//~ 				$out .= '</tr><tr>';
-//~ 			}
-//~ 			// adding leading zero
-//~ 			$m = ( $i + date(m) ) % 12 ;
-//~ 			$mon = (int)(($m == 0) ? 12 : $m);
-//~ 			$year = (int)date(Y) + (int)( ( $i + date(m) - 1) / 12 ) ;
-//~ 
-//~ 			$out .= '<td class="ABmonth">';
-//~ 			$out .= '<h3 class="ABmonthname">'. $this->pi_getLL(date("M", strtotime( $year . "-".$mon."-01"))).' '. $year .'</h3>';
-//~ 			$out .= '<table class="ABcalendar">';
-//~ 
-//~ 			$out .= '<tr>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mon").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tus").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("Wed").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Thu").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fri").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sat").'</td>
-//~ 			<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Sun").'</td>
-//~ 			</tr>';
-//~ 			$rowsCalendar = 7;
-//~ 			
-//~ 			$out .= '<tr>';
-//~ 
-//~ 			for ($d=$today; $d <= strtotime('+1 week'); $d=strtotime('+1 day', $d)) {
-//~ 
-//~ 				$cssClass = $myBooked[$d];
-//~ 		print_r($bookingInfos);
-//~ 
-//~ 				$out .= '<td class="'.$cssClas.'">'.$cssClass.': '.$bookingInfos[$d]['title'].'</td>';
-//~ 
-//~ 			}
-//~ 
-//~ 			$out .= '</tr>';
-//~ 			$out .= '</table></td>';
-//~ 			$out .= "\n";
-//~ 		}
-//~ 
-//~ 		$out .= '</tr></table>';
 
 		return $out;
 	}
-	
+
 	/**
 	 * Display the availability calendar as single line for a given interval
 	 *

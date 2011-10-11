@@ -693,15 +693,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		$content .='<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-				<label for="'.$this->prefixId.'[ABstartDate]'.'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label>
-				<label for="'.$this->prefixId.'[ABstartDate]'.'_cb">&nbsp;</label><br/>';
+				<label for="'.$this->prefixId.'[ABstartDate]'.$this->lConf['uidpid'].'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label>
+				<label for="'.$this->prefixId.'[ABstartDate]'.$this->lConf['uidpid'].'_cb">&nbsp;</label><br/>';
 
 		if (isset($this->lConf['startDateStamp']))
 			$startdate = $this->lConf['startDateStamp'];
 		else
 			$startdate = time();
 
-		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[ABstartDate]', $startdate, $ErrorVacancies);
+		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[ABstartDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
 
 		$content .= '<br />
 				<label for="fieldNumNights"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
@@ -1215,7 +1215,7 @@ print_r($product);*/
 		$valueDetails = explode(',', $minimumStay);
 		
 		$today = strtotime(strftime("%Y-%m-%d"));
-		$period = strftime("%d", $startDate - $today);
+		$period = (int)(($startDate - $today)/86400);
 
 		$valueArray['standardValue'] = $valueDetails[0];
 
@@ -1230,8 +1230,9 @@ print_r($product);*/
 
 		if (sizeof($valueArray)>0)
 			foreach ($valueArray as $days => $value) {
-				if ($period >= $days)
-					$minimumStayToApply = $value;
+				if (is_numeric($days))
+					if ($period <= $days)
+						$minimumStayToApply = $value;
 			}
 
 		if (is_numeric($minimumStayToApply)) {

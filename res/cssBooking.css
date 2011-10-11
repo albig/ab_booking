@@ -244,6 +244,12 @@ input.submit {
 	background-color: #aadd88;
 }
 
+input.submit_dateSelect {
+	padding: 5px;
+	margin: 0px;
+	background-color: #aadd88;
+}
+
 /* get rid of checkbox of date2calendar extension */
 input[type="checkbox"].jscalendar_cb {
 	display: none;
