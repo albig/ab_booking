@@ -1068,8 +1068,8 @@ print_r($product);*/
 		else
 			$email_owner = t3lib_utility_Mail::getSystemFrom();
 		$email_customer = array($customer['address_email'] => $customer['address_name']);
-		$subject_customer = $this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']);
-		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].' ('.$customer['address_email'].')';
+		$subject_customer = $this->pi_getLL('email_your_booking').': '.$product['title'].' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']);
+		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']);
 
 		if (version_compare(TYPO3_version, '4.5', '<')) {
 			// send mail for TYPO3 4.4.x....
@@ -1166,7 +1166,7 @@ print_r($product);*/
 			$endDate = $startDate;
 
 		if ($request == 0) {
-			$title = strftime('%Y%m%d', $startDate).', '.$customer['address_name'].', '.$customer['address_town'].', '.$customer['address_email'];
+			$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['address_name']).', '.str_replace(',', ' ', $customer['address_town']).', '.$customer['address_email'];
 			$editCode = md5($title.$this->lConf['ProductID']);
 		} else {
 			$ip = $_SERVER['REMOTE_ADDR'];

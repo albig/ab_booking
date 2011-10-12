@@ -104,7 +104,7 @@
 			<label index="send_success">Thank you for your booking. We will contact you by mail during the next 24 hours. If you receive no mail from us, please contact us by mail or phone!</label>
 			<label index="send_failure">There was an error sending your request. Please call us or send us an e-mail!</label>
 			<label index="email_new_booking">Booking Request by</label>
-			<label index="email_your_booking">Your Booking Request from</label>
+			<label index="email_your_booking">Your Booking Request</label>
 			
 			<label index="arrival">Arrival</label>
 			<label index="depature">Depature</label>		
@@ -204,7 +204,7 @@
 			<label index="send_success">Vielen Dank für Ihre Nachricht. Sie erhalten innerhalb von 24 Stunden eine Antwort von uns. Sollten Sie nichts von uns hören ist u.U. Ihre Email-Adresse nicht korrekt. Bitte rufen Sie uns in diesem Fall bitte an.</label>
 			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
 			<label index="email_new_booking">Buchungsanfrage von</label>
-			<label index="email_your_booking">Ihre Buchungsanfrage vom</label>
+			<label index="email_your_booking">Ihre Buchungsanfrage</label>
 			
 			<label index="arrival">Anreise</label>
 			<label index="depature">Abreise</label>
