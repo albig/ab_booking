@@ -27,23 +27,24 @@
  *
  *
  *
- *   62: class tx_abbooking_pi1 extends tslib_pibase
- *   74:     function main($content, $conf)
- *  239:     function init()
- *  361:     public function formBookingUserData($conf, $product, $stage)
- *  571:     public function formCheckAvailability()
- *  665:     function print_request_overview($conf)
- *  800:     public function get_product_properties($ProductUID)
- *  879:     function check_availability($storagePid)
- *  945:     function formVerifyUserInput()
- * 1027:     function log_request($logFile)
- * 1051:     function send_confirmation_email($key, &$send_errors)
- * 1127:     function insert_booking($request)
- * 1182:     function calcRates($key, $maxAvailable)
- * 1277:     function printCalculatedRates($key, $period, $printHTML = 1)
- * 1335:     function isRobot()
+ *   63: class tx_abbooking_pi1 extends tslib_pibase
+ *   75:     function main($content, $conf)
+ *  232:     function init()
+ *  384:     public function formBookingUserData($conf, $product, $stage)
+ *  649:     public function formCheckAvailability()
+ *  748:     public function get_product_properties($ProductUID)
+ *  805:     function check_availability($storagePid)
+ *  914:     function formVerifyUserInput()
+ *  998:     function log_request($logFile)
+ * 1024:     function send_confirmation_email($key, &$send_errors)
+ * 1153:     function insert_booking()
+ * 1204:     function getMinimumStay($minimumStay, $startDate)
+ * 1244:     function getDiscountRate($rate, $period)
+ * 1285:     function calcRates($key, $period)
+ * 1477:     function printCalculatedRates($key, $period, $printHTML = 1, $printForm = 1)
+ * 1562:     function isRobot()
  *
- * TOTAL FUNCTIONS: 14
+ * TOTAL FUNCTIONS: 15
  * (This index is automatically created/updated by the extension "extdeveval")
  *
  */
@@ -100,7 +101,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				$this->check_availability($this->lConf['PIDstorage']);
 
-				// in case of the booking request formular only
 				// one product is allowed at a time:
 				foreach ( $this->lConf['productDetails'] as $key => $val ) {
 					$product = $val;
@@ -112,7 +112,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						// DEBUG - log requests only if enableDebug in extConf is selected
 						if ($this->lConf['enableDebug'] == 1) {
 							$this->log_request($this->lConf['debugLogFile']);
-//~ 							$this->insert_booking(1);
 						}
 
  						$offers = tx_abbooking_div::printOfferList();
@@ -176,7 +175,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 									$out .= '<div class="requestForm"><p>'.nl2br($this->pi_getLL('send_success')).'</p></div>';
 
 								// only insert booking if successfully sent both mails
-								$this->insert_booking(0);
+								$this->insert_booking();
 							} else {
 								$out .= '<div class="requestForm"><p><b>'.nl2br($this->pi_getLL('send_failure')).'</b><br />'.$result.'</p>';
 								$out .= '<br/>&nbsp;<br/>';
@@ -801,7 +800,7 @@ print_r($product);*/
 	 * all information is filled in global $this->lConf['productDetails'] array
 	 *
 	 * @param	[type]		$storagePid: ...
-	 * @return				0 on success, 1 on error
+	 * @return	0		on success, 1 on error
 	 */
 	function check_availability($storagePid) {
 		$item = array();
@@ -891,7 +890,7 @@ print_r($product);*/
 				$this->lConf['productDetails'][$productID]['minimumStay'] = $item[$productID]['minimumStay'];
 			else
 				$this->lConf['productDetails'][$productID]['minimumStay'] = 1;
-				
+
 			if (is_numeric($item[$productID]['blockDaysAfterBooking']) && $item[$productID]['blockDaysAfterBooking'] > 1)
 				$this->lConf['productDetails'][$productID]['maxAvailable'] -= $item[$productID]['blockDaysAfterBooking'] - 1;
 
@@ -1068,8 +1067,8 @@ print_r($product);*/
 		else
 			$email_owner = t3lib_utility_Mail::getSystemFrom();
 		$email_customer = array($customer['address_email'] => $customer['address_name']);
-		$subject_customer = $this->pi_getLL('email_your_booking').': '.$product['title'].' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']);
-		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']);
+		$subject_customer = $this->pi_getLL('email_your_booking').': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
+		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %A, %d.%m.%Y", $this->lConf['endDateStamp']);
 
 		if (version_compare(TYPO3_version, '4.5', '<')) {
 			// send mail for TYPO3 4.4.x....
@@ -1151,7 +1150,7 @@ print_r($product);*/
 	 * @param	[type]		$request: ...
 	 * @return	inserted		ID
 	 */
-	function insert_booking($request) {
+	function insert_booking() {
 
 		// assume that only one valid uid and and some offTimeProducts in ProductID..
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
@@ -1165,15 +1164,8 @@ print_r($product);*/
 		else
 			$endDate = $startDate;
 
-		if ($request == 0) {
-			$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['address_name']).', '.str_replace(',', ' ', $customer['address_town']).', '.$customer['address_email'];
-			$editCode = md5($title.$this->lConf['ProductID']);
-		} else {
-			$ip = $_SERVER['REMOTE_ADDR'];
-			$longisp = @gethostbyaddr($ip);
-			$title = 'request,'.$ip.','.$longisp;
-			$editCode = "request";
-		}
+		$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['address_name']).', '.str_replace(',', ' ', $customer['address_town']).', '.$customer['address_email'].', '.str_replace(',', ' ', $customer['address_telephone']);
+		$editCode = md5($title.$this->lConf['ProductID']);
 
 		$fields_values = array(
 			'pid' => $this->lConf['PIDstorage'],
@@ -1183,8 +1175,7 @@ print_r($product);*/
 			'enddate' => $endDate,
 			'title' => $title,
 			'editcode' => $editCode,
-			'deleted' => $request,
-			'request' => $request,
+			'deleted' => 0,
 		);
 
 		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking', $fields_values);
@@ -1213,7 +1204,7 @@ print_r($product);*/
 	function getMinimumStay($minimumStay, $startDate) {
 
 		$valueDetails = explode(',', $minimumStay);
-		
+
 		$today = strtotime(strftime("%Y-%m-%d"));
 		$period = (int)(($startDate - $today)/86400);
 
@@ -1478,8 +1469,9 @@ print_r($product);*/
 	 * Print the calculates rates
 	 *
 	 * @param	array		$product key
-	 * @param	int			$period: ...
+	 * @param	int		$period: ...
 	 * @param	bool		$printHTML: ...
+	 * @param	[type]		$printForm: ...
 	 * @return	string		string for output...
 	 */
 	function printCalculatedRates($key, $period, $printHTML = 1, $printForm = 1) {

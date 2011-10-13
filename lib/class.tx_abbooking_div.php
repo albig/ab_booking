@@ -156,7 +156,6 @@ class tx_abbooking_div {
 			$mrow = tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $uid, $where_extra);
 
 			foreach ($mrow as $muid => $mproduct) {
-//~ 				$priceids =  $mrow[$uid]['priceid'];
 				$priceids =  $mproduct['priceid'];
 			}
 
@@ -215,6 +214,7 @@ class tx_abbooking_div {
 	 * Calculate Booked Days-Array for Calendar View
 	 *
 	 * @param	array		$bookings
+	 * @param	[type]		$interval: ...
 	 * @param	[type]		$interval: ...
 	 * @return	array		with booking periods
 	 */
