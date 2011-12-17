@@ -10,6 +10,7 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
+			<label index="tstitle.description">Title of the Typoscript Element</label>
 			<label index="what_to_display.description">Define the view</label>
 			<label index="what_to_display.details"><![CDATA[ On this TAB you enter
 						<ul>

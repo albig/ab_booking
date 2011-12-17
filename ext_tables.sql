@@ -52,6 +52,7 @@ CREATE TABLE tx_abbooking_product (
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
 	title tinytext,
+	tstitle tinytext,
 	capacitymin int(11) DEFAULT '0' NOT NULL,
 	capacitymax int(11) DEFAULT '0' NOT NULL,
 	filterprice tinytext,

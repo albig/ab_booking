@@ -43,7 +43,7 @@
 			<label index="feld_name">Name</label>
 			<label index="feld_street">Street</label>
 			<label index="feld_town">Town</label>
-			<label index="feld_plz">Area Code</label>
+			<label index="feld_zip">Area Code</label>
 
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Phone</label>
@@ -64,13 +64,14 @@
 			<label index="error_noEmailConfigured">No Email Address has been configured!</label>
 			<label index="error_noProductSelected">No product has been selected!</label>
 			<label index="error_noPriceSelected">No price has been associated to the product!</label>
+			<label index="error_required">This field is required!</label>
 			<label index="error_email">Please check your email-address!</label>
 			<label index="error_empty_name">Please enter your name!</label>
 			<label index="error_empty_street">Please enter your street!</label>
 			<label index="error_empty_town">Please enter your town!</label>
-			<label index="error_empty_plz">Please enter your area code!</label>
+			<label index="error_empty_zip">Please enter your zip code!</label>
 			<label index="error_no_vacancies">Unfortunately, the room is already booked!</label>
-			<label index="error_vacancies_limited">Please note: the availability is limited!</label>
+			<label index="error_no_checkIn_on">Sorry, Checkin is not possible on</label>
 			<label index="error_startDateInThePast">Your seleted start date is in the past!</label>
 			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
 			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
@@ -84,6 +85,8 @@
 			<label index="persons">Persons</label>
 			<label index="period">Night</label>
 			<label index="periods">Nights</label>
+			<label index="week">Week</label>
+			<label index="weeks">Weeks</label>
 			<label index="please_confirm">Please confirm your details.</label>
 			<label index="submit_button_edit">Change Details</label>
 			<label index="submit_button_final">Complete Booking</label>
@@ -105,11 +108,11 @@
 			<label index="send_failure">There was an error sending your request. Please call us or send us an e-mail!</label>
 			<label index="email_new_booking">Booking Request by</label>
 			<label index="email_your_booking">Your Booking Request</label>
-			
+
 			<label index="arrival">Arrival</label>
-			<label index="depature">Depature</label>		
+			<label index="depature">Depature</label>
 		</languageKey>
-		
+
 		<languageKey index="de" type="array">
 			<label index="vacant day">frei</label>
 			<label index="booked day">gebucht</label>
@@ -146,7 +149,7 @@
 			<label index="feld_name">Vorname Name</label>
 			<label index="feld_street">Straße Hausnummer</label>
 			<label index="feld_town">Wohnort</label>
-			<label index="feld_plz">Postleitzahl</label>
+			<label index="feld_zip">Postleitzahl</label>
 
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Telefon</label>
@@ -164,13 +167,15 @@
 			<label index="error_noEmailConfigured">Es wurde keine Email Adresse konfiguriert!</label>
 			<label index="error_noProductSelected">Es wurde kein Produkt ausgewählt!</label>
 			<label index="error_noPriceSelected">Dem Produkt wurde kein Preis zugeordnet!</label>
+			<label index="error_required">Dies ist ein Pflichtfeld!</label>
 			<label index="error_email">Bitte überprüfen Sie Ihre Email-Adresse!</label>
 			<label index="error_empty_name">Bitte geben Sie Ihren Namen an!</label>
 			<label index="error_empty_street">Bitte geben Sie Ihre Straße an!</label>
 			<label index="error_empty_town">Bitte geben Sie Ihren Wohnort an!</label>
-			<label index="error_empty_plz">Bitte geben Sie Ihre Postleitzahl an!</label>
+			<label index="error_empty_zip">Bitte geben Sie Ihre Postleitzahl an!</label>
 			<label index="error_no_vacancies">Leider ist das Zimmer zum gewünschten Zeitpunkt belegt!</label>
 			<label index="error_vacancies_limited">Leider steht das Zimmer nur für die angegebenen Zeiten zur Verfügung!</label>
+			<label index="error_no_checkIn_on">Leider ist die Anreise nicht möglich am </label>
 			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
@@ -184,6 +189,8 @@
 			<label index="persons">Personen</label>
 			<label index="period">Nacht</label>
 			<label index="periods">Nächte</label>
+			<label index="week">Woche</label>
+			<label index="weeks">Wochen</label>
 			<label index="please_confirm">Bitte prüfen Sie Ihre Angaben und schließen Sie die Buchung ab.</label>
 			<label index="submit_button_edit">Angaben ändern</label>
 			<label index="submit_button_final">Buchung abschließen</label>
@@ -205,10 +212,10 @@
 			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
 			<label index="email_new_booking">Buchungsanfrage von</label>
 			<label index="email_your_booking">Ihre Buchungsanfrage</label>
-			
+
 			<label index="arrival">Anreise</label>
 			<label index="depature">Abreise</label>
-			
+
 		</languageKey>
 		<languageKey index="nl" type="array">
 			<label index="vacant day">Vrij</label>
@@ -246,7 +253,7 @@
 			<label index="feld_name">Voornaam Achternaam</label>
 			<label index="feld_street">Straat Huisnummer</label>
 			<label index="feld_town">Woonplaats</label>
-			<label index="feld_plz">Postcode</label>
+			<label index="feld_zip">Postcode</label>
 
 			<label index="feld_email">Email</label>
 			<label index="feld_telefon">Telefoon</label>
@@ -268,7 +275,7 @@
 			<label index="error_empty_name">Uw naam invullen aub!</label>
 			<label index="error_empty_street">De straat invullen aub!</label>
 			<label index="error_empty_town">De woonplaats invullen aub!</label>
-			<label index="error_empty_plz">De postcode invullen aub!</label>
+			<label index="error_empty_zip">De postcode invullen aub!</label>
 			<label index="error_no_vacancies">Helaas is de camper in deze periode bezet!</label>
 			<label index="error_vacancies_limited">Alleen voor de aangegeven periode is de camper beschikbaar!</label>
 			<label index="error_startDateInThePast">De eerste dag ligt in het verleden!</label>
@@ -303,7 +310,7 @@
 			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
 			<label index="email_new_booking">Reserveringsverzoek vanaf</label>
 			<label index="email_your_booking">Uw reserveringsverzoek</label>
-</languageKey>		
+</languageKey>
 
 	</data>
 </T3locallang>

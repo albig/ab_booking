@@ -14,6 +14,8 @@
 			<label index="ab_booking.pi_flexform.numMonthsCols">Columns</label>
 			<label index="ab_booking.pi_flexform.numMonthsRows">Rows</label>
 			<label index="ab_booking.pi_flexform.monthsLineView">Show Months in a Row</label>
+			<label index="ab_booking.pi_flexform.showBookingRate">Show Booking Rate</label>
+			<label index="ab_booking.pi_flexform.showDateNavigator">Show Date Navigator</label>
 			<label index="ab_booking.pi_flexform.sheetGeneralOptions">General Options</label>
 			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
@@ -45,6 +47,8 @@
 			<label index="ab_booking.pi_flexform.numMonthsCols">Kalender Spalten</label>
 			<label index="ab_booking.pi_flexform.numMonthsRows">Kalender Reihen</label>
 			<label index="ab_booking.pi_flexform.monthsLineView">Monat einzeilig darstellen</label>
+			<label index="ab_booking.pi_flexform.showBookingRate">Anzeige der Buchungsrate</label>
+			<label index="ab_booking.pi_flexform.showDateNavigator">Anzeige des Datumswählers</label>
 			<label index="ab_booking.pi_flexform.sheetGeneralOptions">Allgemeine Einstellungen</label>
 			<label index="ab_booking.pi_flexform.itemDescription">Kurzbeschreibung</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Kalender</label>

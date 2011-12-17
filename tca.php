@@ -92,7 +92,7 @@ $TCA['tx_abbooking_booking'] = array (
 $TCA['tx_abbooking_product'] = array (
 	'ctrl' => $TCA['tx_abbooking_product']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,title,capacitymin,capacitymax,filterprices,priceid,uiddetails',
+		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,hidden,starttime,endtime,title,tstitle,capacitymin,capacitymax,filterprices,priceid,uiddetails',
 		'always_description' => 1
 	),
 	'feInterface' => $TCA['tx_abbooking_product']['feInterface'],
@@ -170,6 +170,16 @@ $TCA['tx_abbooking_product'] = array (
 				'size' => '30',	## WOP:[tables][2][fields][1][conf_size]
 			)
 		),
+		'tstitle' => array (		## WOP:[tables][2][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.tstitle',		## WOP:[tables][2][fields][1][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][2][fields][1][type]
+				'size' => '30',	## WOP:[tables][2][fields][1][conf_size]
+				'eval' => 'nospace',
+			)
+		),
 		'capacitymin' => array (		## WOP:[tables][2][fields][2][fieldname]
 			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][2][excludeField]
@@ -242,7 +252,7 @@ $TCA['tx_abbooking_product'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title;;;;2-2-2, capacitymin;;;;3-3-3, capacitymax, filterprice, priceid, uiddetails')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title;;;;2-2-2, tstitle, capacitymin;;;;3-3-3, capacitymax, filterprice, priceid, uiddetails')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => 'starttime, endtime')

@@ -15,6 +15,7 @@
 			<label index="tx_abbooking_booking.request">Request</label>
 			<label index="tx_abbooking_product">Product Properties</label>
 			<label index="tx_abbooking_product.title">Title</label>
+			<label index="tx_abbooking_product.tstitle">TypoScript Title</label>
 			<label index="tx_abbooking_product.capacitymin">Minimal Capacity</label>
 			<label index="tx_abbooking_product.capacitymax">Maximum Capacity</label>
 			<label index="tx_abbooking_product.filterprice">Filter prices by the following text (e.g. Single)</label>
@@ -54,6 +55,7 @@
 			<label index="tx_abbooking_booking.request">Anfrage</label>
 			<label index="tx_abbooking_product">Produkt Eigenschaften</label>
 			<label index="tx_abbooking_product.title">Titel</label>
+			<label index="tx_abbooking_product.tstitle">Typoscript Titel</label>
 			<label index="tx_abbooking_price.currency">Währung</label>
 			<label index="tx_abbooking_product.capacitymin">Minimale Kapazität</label>
 			<label index="tx_abbooking_product.capacitymax">Maximale Kapazität</label>

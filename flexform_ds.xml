@@ -37,8 +37,12 @@
 							<numIndex index="0">CHECKIN OVERVIEW</numIndex>
 							<numIndex index="1">CHECKIN OVERVIEW</numIndex>
 						</numIndex>
+						<numIndex index="5" type="array">
+							<numIndex index="0">BOOKING RATE OVERVIEW</numIndex>
+							<numIndex index="1">5</numIndex>
+						</numIndex>
 					</items>
-					<size>4</size>
+					<size>1</size>
 					<maxitems>1</maxitems>
 					<minitems>1</minitems>
 <!-- 					<multiple>0</multiple> -->
@@ -46,16 +50,6 @@
 					<itemListStyle>width:250px</itemListStyle>
 				</config>
 			</TCEforms>
-		<description>
-				<TCEforms>
-				<label>LLL:EXT:chgallery/locallang_db.xml:description</label>
-					<config>
-						<type>user</type>
-						<userFunc>tx_abbooking_tca->user_chgallerydescr</userFunc>
-					</config>
-				</TCEforms>
-			</description>
-			
 		</what_to_display>
 		<ProductID>
 			<TCEforms>
@@ -122,6 +116,15 @@
 					</config>
 				</TCEforms>
 			</enableCalendarBookingLink>
+			<showDateNavigator>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showDateNavigator</label>
+					<config>
+						<type>check</type>
+						<default>0</default>
+					</config>
+				</TCEforms>
+			</showDateNavigator>
 			<numMonths>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numMonths</label>
@@ -164,6 +167,15 @@
 					</config>
 				</TCEforms>
 			</monthsLineView>
+			<showBookingRate>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showBookingRate</label>
+					<config>
+						<type>check</type>
+						<default>0</default>
+					</config>
+				</TCEforms>
+			</showBookingRate>
 		</el>
 	</ROOT>
 </sheetCalendarOptions>
