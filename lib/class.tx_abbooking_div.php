@@ -621,7 +621,7 @@ class tx_abbooking_div {
 
 				$cssClass = $myBooked[strtotime($year."-".$mon."-".$d)];
 
-				$params_united = strtotime($year.'-'.$mon.'-'.$d).'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+				$params_united = strtotime($year.'-'.$mon.'-'.$d).'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 				$params = array (
 					$this->prefixId.'[ABx]' => $params_united,
@@ -786,13 +786,14 @@ class tx_abbooking_div {
 	 * @param	array		$interval: ...
 	 * @return	HTML-list		of calendar days
 	 */
-	function printAvailabilityCalendarDiv($uid, $interval = array()) {
+//~ 	function printAvailabilityCalendarDiv($uid, $interval = array()) {
+	function printAvailabilityCalendarDiv($uid, $rows = 1, $cols = 1) {
 
 		$this->pi_loadLL();
 
-		$rows = (int)$this->lConf['numMonthsRows'];
-		$columns = (int)$this->lConf['numMonthsCols'];
-		$months = $rows * $columns;
+//~ 		$rows = (int)$this->lConf['numMonthsRows'];
+//~ 		$columns = (int)$this->lConf['numMonthsCols'];
+		$months = $rows * $cols;
 
 		// disable booking links for robots
 		if ($this->isRobot())
@@ -806,11 +807,11 @@ class tx_abbooking_div {
 			else {
 				$interval['startDate'] = strtotime('first day of this month');
 			}
-			$interval['endDate'] = strtotime('+ '.$months.' months', $interval['startDate']);
+			$interval['endDate'] = strtotime('+ '.$months.' months', $interval['startDate'])-86400;
 			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);
 		} else {
 			$interval['startDate'] =  strtotime('first day of this month', $interval['startDate']);
-			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);			
+			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);
 		}
 
 		$interval['startList'] = strtotime( 'last monday', $interval['startDate'] );
@@ -889,9 +890,9 @@ class tx_abbooking_div {
 						&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 						&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 					) {
-					// set default numNights = 2, numPersons = 2
-					//#### 2_2 durch $this->lConf['numNights'] und $this->lConf['numPersons'] ersetzt ###
-					$params_united = $d.'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+					// set default daySelector = 2, adultSelector = 2
+					//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
+					$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 					$params = array (
 						$this->prefixId.'[ABx]' => $params_united,
 					);
@@ -980,9 +981,9 @@ class tx_abbooking_div {
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 				) {
-				// set default numNights = 2, numPersons = 2
-				//#### 2_2 durch $this->lConf['numNights'] und $this->lConf['numPersons'] ersetzt ###
-				$params_united = $d.'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+				// set default daySelector = 2, adultSelector = 2
+				//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
+				$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 				$params = array (
 					$this->prefixId.'[ABx]' => $params_united,
 				);
@@ -1061,21 +1062,20 @@ class tx_abbooking_div {
 			$i++;
 			$offers[$i] = '';
 			unset($interval);
-			unset($linkBookNow);
 			unset($contentError);
 
 			if (sizeof($this->lConf['OffTimeProductIDs']) > 0)
 				$offTimeProducts = ','.implode(',', $this->lConf['OffTimeProductIDs']);
 
-			if ($product['maxAvailable'] < $this->lConf['numNights']) {
+			if ($product['maxAvailable'] < $this->lConf['daySelector']) {
 				$interval['limitedVacancies'] = $availableMaxDate;
 				$contentError.= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
 				$bookNights = $product['maxAvailable'];
 			}
 			else {
-				$bookNights = $this->lConf['numNights'];
+				$bookNights = $this->lConf['daySelector'];
 			}
-			if ($product['minimumStay'] > $this->lConf['numNights']) {
+			if ($product['minimumStay'] > $this->lConf['daySelector']) {
 				if ($product['minimumStay'] == 1)
 					$text_periods = ' '.$this->pi_getLL('period');
 				else
@@ -1089,10 +1089,11 @@ class tx_abbooking_div {
 			// check if checkIn is ok for startDate
 			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
 				$contentError.= '<br /><i>'.$this->pi_getLL('error_no_checkIn_on').' '.strftime('%A', $this->lConf['startDateStamp']).'.</i><br />';
-				$this->lConf['enableCheckBookingLink'] = 0;
-			}
+				$enableCheckBookingLink = 0;
+			} else
+				$enableCheckBookingLink = $this->lConf['enableCheckBookingLink'];
 
-			$params_united = $this->lConf['startDateStamp'].'_'.$bookNights.'_'.$this->lConf['numPersons'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+			$params_united = $this->lConf['startDateStamp'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 			$params = array (
 				$this->prefixId.'[ABx]' => $params_united,
 			);
@@ -1109,7 +1110,7 @@ class tx_abbooking_div {
 			}
 
 
-			if ($this->lConf['enableCheckBookingLink'] == 1)
+			if ($enableCheckBookingLink)
 				$link = $this->pi_linkTP($title, $params, 0, $this->lConf['gotoPID']);
 			else
 				$link = $title;
@@ -1125,13 +1126,14 @@ class tx_abbooking_div {
 					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
-
-				if ($this->lConf['enableCheckBookingLink'] == 1)
-				$linkBookNow .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
+			if ($enableCheckBookingLink)
+				$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
 								<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 								<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
 								</form>
 				';
+			else
+				$linkBookNow = '';
 
 //~ 				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
 			} else {
@@ -1145,7 +1147,7 @@ class tx_abbooking_div {
 
 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
-			if ($this->lConf['enableCheckBookingLink'] == 1)
+			if ($this->lConf['enableCheckBookingLink'])
 				$offers[$i] .= $linkBookNow;
 			else
 				$offers[$i] .= '</form>';

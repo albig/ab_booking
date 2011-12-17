@@ -41,26 +41,26 @@ class tx_abbooking_form {
 	 * @return	HTML		form with booking details
 	 */
 	public function printUserFormElements($showErrors = 0, $showHidden = 0) {
-		
+
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 		$customer = $this->lConf['customerData'];
-		
+
 //~ if ($showErrors > 0)
 //~ 	print_r($this->lConf['form']);
-	
+
 		foreach ($this->lConf['form'] as $formname => $form) {
-			
+
 			$formname = str_replace('.', '', $formname);
 			if ($form['required'] == 1)
 				$cssClass = 'item ' . $formname . ' required';
 			else
 				$cssClass = 'item ' . $formname;
 			$formnameGET = $this->prefixId.'['.$formname.']';
-			
+
 			unset($cssError);
 			switch ($form['type']) {
 				case 'input':
-					
+
 					if (!empty($form['error']))
 						$cssClass .= ' errorField';
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
@@ -79,7 +79,7 @@ class tx_abbooking_form {
 						$out .= tx_abbooking_div::getJSCalendarInput($formnameGET, $this->lConf['startDateStamp'], $form['error']);
 					else
 						$out .= '<input '.$cssError.' name='.$formnameGET.' type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.$customer[$formname].'"/>';
-						
+
 					$out .= '</div>';
 					break;
 				case 'radio':
@@ -93,48 +93,48 @@ class tx_abbooking_form {
 					}
 					$out .= '<div class="clearsingleradio"></div>';
 					$out .= '</div>';
-				
+
 					break;
 				case 'checkbox':
 					break;
 				case 'selector':
-				
+
 					$selected='selected="selected"';
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
 					$out .= '<select name="'.$formnameGET.'" size="1">';
 					switch($formname) {
 						case 'adultSelector':
-							if (isset($this->lConf['numPersons']))
-								if ($this->lConf['numPersons'] > $product['capacitymax'])
-									$selNumPersons[$product['capacitymax']] = $selected;
-								else if ($this->lConf['numPersons'] < $product['capacitymin'])
-									$selNumPersons[$product['capacitymin']] = $selected;
+							if (isset($this->lConf['adultSelector']))
+								if ($this->lConf['adultSelector'] > $product['capacitymax'])
+									$seladultSelector[$product['capacitymax']] = $selected;
+								else if ($this->lConf['adultSelector'] < $product['capacitymin'])
+									$seladultSelector[$product['capacitymin']] = $selected;
 								else
-									$selNumPersons[$this->lConf['numPersons']] = $selected;
+									$seladultSelector[$this->lConf['adultSelector']] = $selected;
 							else
-								$selNumPersons[2] = $selected;
-								
+								$seladultSelector[2] = $selected;
+
 							/* how many persons are possible? */
 							for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
-								$out.='<option '.$selNumPersons[$i].' value='.$i.'>'.$i.' </option>';
+								$out.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
 							}
-								
+
 						break;
 						case 'childSelector':
 						break;
 						case 'teenSelector':
 						break;
 						case 'daySelector':
-							if (isset($this->lConf['numNights']))
-								$selNumNights[$this->lConf['numNights']] = $selected;
+							if (isset($this->lConf['daySelector']))
+								$seldaySelector[$this->lConf['daySelector']] = $selected;
 							else
-								$selNumNights[2] = $selected;
-								
+								$seldaySelector[2] = $selected;
+
 							for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
 									$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
-									$out.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
+									$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
 							}
-								
+
 						break;
 					}
 
@@ -157,7 +157,7 @@ class tx_abbooking_form {
 					break;
 			}
 //~ 			$out .= $formname.": ".$form['type'].": ".$form['required'].": ".$form['size']."\n";
-			
+
 		}
 		return $out;
 	}
@@ -173,12 +173,12 @@ class tx_abbooking_form {
 	 */
 	public function printUserForm($stage) {
 
-		
+
 		$interval = array();
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-//~ print_r($product);		
+//~ print_r($product);
 		$customer = $this->lConf['customerData'];
-		
+
 		// first check errors...
 		if (empty($product)) {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
@@ -211,12 +211,13 @@ class tx_abbooking_form {
 		$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
 		$content .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
 		$content .= '</p><br />';
-		
+
 		// show calendars following TS settings
 		if ($this->lConf['form']['showCalendarMonth']>0) {
-			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
-			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
-			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], $intval);
+//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
+//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
+			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], 1, $this->lConf['form']['showCalendarMonth']);
+
 		} else if ($this->lConf['form']['showCalendarWeek']>0) {
 			$intval['startDate'] = $interval['startDate'];
 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarWeek'].' weeks', $interval['startDate']);
@@ -227,20 +228,20 @@ class tx_abbooking_form {
 
 
 		$selected='selected="selected"';
-		if (isset($this->lConf['numPersons']))
-			if ($this->lConf['numPersons'] > $product['capacitymax'])
-				$selNumPersons[$product['capacitymax']] = $selected;
-			else if ($this->lConf['numPersons'] < $product['capacitymin'])
-				$selNumPersons[$product['capacitymin']] = $selected;
+		if (isset($this->lConf['adultSelector']))
+			if ($this->lConf['adultSelector'] > $product['capacitymax'])
+				$seladultSelector[$product['capacitymax']] = $selected;
+			else if ($this->lConf['adultSelector'] < $product['capacitymin'])
+				$seladultSelector[$product['capacitymin']] = $selected;
 			else
-				$selNumPersons[$this->lConf['numPersons']] = $selected;
+				$seladultSelector[$this->lConf['adultSelector']] = $selected;
 		else
-			$selNumPersons[2] = $selected;
+			$seladultSelector[2] = $selected;
 
-		if (isset($this->lConf['numNights']))
-			$selNumNights[$this->lConf['numNights']] = $selected;
+		if (isset($this->lConf['daySelector']))
+			$seldaySelector[$this->lConf['daySelector']] = $selected;
 		else
-			$selNumNights[2] = $selected;
+			$seldaySelector[2] = $selected;
 
 		$contentError = '';
 		/* handle errors */
@@ -260,9 +261,9 @@ class tx_abbooking_form {
 			$ErrorVacanciesLimited='class="error"';
 			$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
 		}
-		if (isset($this->form_errors['numNightsNotValid'])) {
+		if (isset($this->form_errors['daySelectorNotValid'])) {
 			$ErrorVacanciesLimited='class="error"';
-			$contentError.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
+			$contentError.='<li>'.$this->form_errors['daySelectorNotValid'].'</li>';
 		}
 
 		if ($product['minimumStay'] > $product['maxAvailable']) {
@@ -305,9 +306,9 @@ class tx_abbooking_form {
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 			$content .= tx_abbooking_form::printUserFormElements(0, $showHidden = 1);
-			$content .= $this->printCalculatedRates($product['uid'], $this->lConf['numNights'], 1);
+			$content .= $this->printCalculatedRates($product['uid'], $this->lConf['daySelector'], 1);
 
-			$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
+			$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
 			$params = array (
 				$this->prefixId.'[ABx]' => $params_united,
 			);
@@ -332,7 +333,7 @@ class tx_abbooking_form {
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 			$content .= tx_abbooking_form::printUserFormElements($numErrors, 0);
-			$content .= $this->printCalculatedRates($product['uid'], $this->lConf['numNights'], 1);
+			$content .= $this->printCalculatedRates($product['uid'], $this->lConf['daySelector'], 1);
 
 			$params_united = '0_0_0_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage + 1);
 			$params = array (
@@ -348,7 +349,7 @@ class tx_abbooking_form {
 		$content.='</div>';
 		return $content;
 	}
-	
+
 	/**
 	 * Return an input field with date2cal-calendar if available
 	 *
@@ -392,7 +393,7 @@ class tx_abbooking_form {
 
 		return $out;
 	}
-	
+
 	/*
 	 * Checks the form data for validity
 	 *
@@ -442,45 +443,45 @@ class tx_abbooking_form {
 							$numErrors++;
 						}
 						if (empty($customer[$formname])) {
-							$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required'); 
+							$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required');
 							$numErrors++;
 						}
-					}					
+					}
 					break;
 				case 'daySelector':
 					if ($form['required'] == 1) {
 						if (empty($customer[$formname]) || $customer[$formname] == 0) {
-							$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_numNightsNotValid'); 
+							$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_daySelectorNotValid');
 							$numErrors++;
 						}
 					}
 					break;
-					
+
 				default:
 					if ($form['required'] == 1 && empty($customer[$formname])) {
-						$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required'); 
+						$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required');
 						$numErrors++;
 					}
-					
+
 					break;
 			}
 		}
 
 		// check for limited vacancies...
-		if ($product['maxAvailable'] < $this->lConf['numNights']) {
+		if ($product['maxAvailable'] < $this->lConf['daySelector']) {
 			$form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited');
 			$numErrors++;
 		}
 
 		return $numErrors;
-		
+
 //~ 		if ($this->lConf['startDateStamp']+86400 > $this->lConf['endDateStamp']) {
 //~ 			$this->form_errors['endDateNotValid'] = $this->pi_getLL('error_endDateNotValid')."<br/>";
 //~ 			$numErrors++;
 //~ 		}
 
-//~ 		if (empty($this->lConf['numNights'])) {
-//~ 			$this->form_errors['numNightsNotValid'] = $this->pi_getLL('error_numNightsNotValid')."<br/>";
+//~ 		if (empty($this->lConf['daySelector'])) {
+//~ 			$this->form_errors['daySelectorNotValid'] = $this->pi_getLL('error_daySelectorNotValid')."<br/>";
 //~ 			$numErrors++;
 //~ 		}
 

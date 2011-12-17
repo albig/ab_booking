@@ -94,7 +94,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 //~ print_r($this->piVars);
 		// get all initial settings
 		$this->init();
-		
+
 		if (!isset($interval['startDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
@@ -108,7 +108,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['endList'] = $interval['endDate'];
 		}
 
-		
+
 //~ print_r($this->lConf);
 		switch ( $this->lConf['mode'] ) {
 			case 'form':
@@ -123,7 +123,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				// one product is allowed at a time:
 				foreach ( $this->lConf['productDetails'] as $key => $val ) {
-					
+
 					$product = $val;
 					break;
 				}
@@ -153,9 +153,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 								$out .= '<p class="offer">'.$this->pi_getLL('no_offer').'</p>';
 							$out .= '<p>'.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
 							$out .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']).'</p><br />';
-							$out .= '<p>'.$this->pi_getLL('feld_naechte').': '.$this->lConf['numNights'].'</p>';
+							$out .= '<p>'.$this->pi_getLL('feld_naechte').': '.$this->lConf['daySelector'].'</p>';
 							if ($this->lConf['showPersonsSelector']==1)
-								$out .= '<p>'.$this->pi_getLL('feld_personen').': '.$this->lConf['numPersons'].'</p>';
+								$out .= '<p>'.$this->pi_getLL('feld_personen').': '.$this->lConf['adultSelector'].'</p>';
 							$out .= '<ul>';
 							for ($i=0; $i<=$offers['amount']; $i++)
 								$out .= $offers[$i];
@@ -191,8 +191,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$numErrors = tx_abbooking_form::formVerifyUserInput();
 						else
 							$numErrors = $this->formVerifyUserInput();
-						
-						
+
+
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
 							$result= $this->send_confirmation_email($product['uid'], $send_errors);
@@ -229,11 +229,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				switch ($this->lConf['what_to_display']) {
 					case 'AVAILABILITY CHECK':
 						// update/check all rates
-						tx_abbooking_div::getAllRates($interval);				
+						tx_abbooking_div::getAllRates($interval);
 						$out .= $this->formCheckAvailability();
 						break;
 					case 'CALENDAR':
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonthsRows'], (int)$this->lConf['numMonthsCols']);
 						break;
 					case 'CALENDAR LINE':
 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
@@ -248,7 +248,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* ------------------------- */
 						/* show calendar             */
 						/* ------------------------- */
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonthsRows'], (int)$this->lConf['numMonthsCols']);
 						break;
 				}
 				break;
@@ -301,7 +301,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['ProductID'] = $this->piVars['ProductID'];
 
 		if (isset($this->piVars['ABx'])) {
-			list($this->lConf['startDateStamp'], $this->lConf['numNights'], $this->lConf['numPersons'], $this->lConf['ABProductID'], $this->lConf['ABuidpid'], $this->lConf['PIDbooking'], $this->lConf['ABdo']) = explode("_", $this->piVars['ABx']);
+			list($this->lConf['startDateStamp'], $this->lConf['daySelector'], $this->lConf['adultSelector'], $this->lConf['ABProductID'], $this->lConf['ABuidpid'], $this->lConf['PIDbooking'], $this->lConf['ABdo']) = explode("_", $this->piVars['ABx']);
 		}
 
 		// set dateFormat - prefered from TS otherwise from language defaults
@@ -324,9 +324,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		if (isset($this->piVars['daySelector']))
-			$this->lConf['numNights'] = $this->piVars['daySelector'];
+			$this->lConf['daySelector'] = $this->piVars['daySelector'];
 		if (isset($this->piVars['adultSelector']))
-			$this->lConf['numPersons'] = $this->piVars['adultSelector'];
+			$this->lConf['adultSelector'] = $this->piVars['adultSelector'];
 		if (isset($this->piVars['childSelector']))
 			$this->lConf['numChildren'] = $this->piVars['childSelector'];
 		if (isset($this->piVars['teenSelector']))
@@ -369,10 +369,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// set defaults if still empty:
-		if (! isset($this->lConf['numPersons']))
-			$this->lConf['numPersons'] = $this->lConf['numDefaultPersons'];
-		if (! isset($this->lConf['numNights']))
-			$this->lConf['numNights'] = $this->lConf['numDefaultNights'];
+		if (! isset($this->lConf['adultSelector']))
+			$this->lConf['adultSelector'] = $this->lConf['numDefaultPersons'];
+		if (! isset($this->lConf['daySelector']))
+			$this->lConf['daySelector'] = $this->lConf['numDefaultNights'];
 		if (! isset($this->lConf['daySteps']))
 			$this->lConf['daySteps'] = 1;
 
@@ -381,10 +381,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// ---------------------------------
 		if (empty($this->lConf['startDateStamp']))
 			$this->lConf['startDateStamp'] = strtotime(strftime("%Y-%m-%d 00:00:00"));
-//~ 		if (empty($this->lConf['numNights']))
+//~ 		if (empty($this->lConf['daySelector']))
 //~ 			$this->lConf['endDateStamp'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $this->lConf['startDateStamp']);
 //~ 		else
-			$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['numNights'].' days', $this->lConf['startDateStamp']);
+			$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
 
 		// get the storage pid from flexform
 		if (! intval($this->lConf['PIDstorage'])>0) {
@@ -504,20 +504,20 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 
 		$selected='selected="selected"';
-		if (isset($this->lConf['numPersons']))
-			if ($this->lConf['numPersons'] > $product['capacitymax'])
-				$selNumPersons[$product['capacitymax']] = $selected;
-			else if ($this->lConf['numPersons'] < $product['capacitymin'])
-				$selNumPersons[$product['capacitymin']] = $selected;
+		if (isset($this->lConf['adultSelector']))
+			if ($this->lConf['adultSelector'] > $product['capacitymax'])
+				$seladultSelector[$product['capacitymax']] = $selected;
+			else if ($this->lConf['adultSelector'] < $product['capacitymin'])
+				$seladultSelector[$product['capacitymin']] = $selected;
 			else
-				$selNumPersons[$this->lConf['numPersons']] = $selected;
+				$seladultSelector[$this->lConf['adultSelector']] = $selected;
 		else
-			$selNumPersons[2] = $selected;
+			$seladultSelector[2] = $selected;
 
-		if (isset($this->lConf['numNights']))
-			$selNumNights[$this->lConf['numNights']] = $selected;
+		if (isset($this->lConf['daySelector']))
+			$seldaySelector[$this->lConf['daySelector']] = $selected;
 		else
-			$selNumNights[2] = $selected;
+			$seldaySelector[2] = $selected;
 
 		$contentError = '';
 		/* handle errors */
@@ -557,9 +557,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$ErrorVacanciesLimited='class="error"';
 			$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
 		}
-		if (isset($this->form_errors['numNightsNotValid'])) {
+		if (isset($this->form_errors['daySelectorNotValid'])) {
 			$ErrorVacanciesLimited='class="error"';
-			$contentError.='<li>'.$this->form_errors['numNightsNotValid'].'</li>';
+			$contentError.='<li>'.$this->form_errors['daySelectorNotValid'].'</li>';
 		}
 
 		if ($product['minimumStay'] > $product['maxAvailable']) {
@@ -624,7 +624,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).':</b></div>
 					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['daySelector']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[daySelector]" value="'.htmlspecialchars($this->lConf['numNights']).'" >
+					<input type="hidden" name="'.$this->prefixId.'[daySelector]" value="'.htmlspecialchars($this->lConf['daySelector']).'" >
 					</div>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).':</b></div>
@@ -641,7 +641,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['daySelector'], 1);
 
-					$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['numNights'].'_'.$this->lConf['numPersons'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
+					$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
 					$params = array (
 						$this->prefixId.'[ABx]' => $params_united,
 					);
@@ -686,7 +686,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					/* how many days/nights are available? */
 					for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
 							$endDate = strtotime('+'.$i.' day', $startdate);
-							$content.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
+							$content.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
 					}
 					$content .= '</select><br/>
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></div>
@@ -695,10 +695,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					/* how many persons are possible? */
 					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
 						if ($this->lConf['numCheckMaxInterval'] < $this->piVars['daySelector'])
-							$numNights = $this->lConf['numCheckMaxInterval'];
+							$daySelector = $this->lConf['numCheckMaxInterval'];
 						else
-							$numNights = $this->piVars['daySelector'];
-						$content.='<option '.$selNumPersons[$i].' value='.$i.'>'.$i.' </option>';
+							$daySelector = $this->piVars['daySelector'];
+						$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
 					}
 
 					$params_united = '0_0_0_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage + 1);
@@ -708,7 +708,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 					$content .= '</select><br/>';
 
-					$content .= $this->printCalculatedRates($product['uid'], $this->lConf['numNights'], 1);
+					$content .= $this->printCalculatedRates($product['uid'], $this->lConf['daySelector'], 1);
 
 					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
 					$content .= '<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
@@ -745,15 +745,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		$selected='selected="selected"';
-		if (isset($this->lConf['numPersons']))
-			$selNumPersons[$this->lConf['numPersons']] = $selected;
+		if (isset($this->lConf['adultSelector']))
+			$seladultSelector[$this->lConf['adultSelector']] = $selected;
 		else
-			$selNumPersons[2] = $selected;
+			$seladultSelector[2] = $selected;
 
-		if (isset($this->lConf['numNights']))
-			$selNumNights[$this->lConf['numNights']] = $selected;
+		if (isset($this->lConf['daySelector']))
+			$seldaySelector[$this->lConf['daySelector']] = $selected;
 		else
-			$selNumNights[2] = $selected;
+			$seldaySelector[2] = $selected;
 
 		if (isset($this->form_errors['vacancies_limited'])) {
 			$ErrorVacanciesLimited='class="error"';
@@ -787,19 +787,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
 
 		$content .= '<br />
-				<label for="fieldNumNights"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
-				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" id="fieldNumNights" size="1">';
+				<label for="fielddaySelector"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
+				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" id="fielddaySelector" size="1">';
 		for ($i = $this->lConf['numCheckMinInterval']; $i<=$this->lConf['numCheckMaxInterval']; $i++) {
-			$content.='<option '.$selNumNights[$i].' value='.$i.'>'.$i.'</option>';
+			$content.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.'</option>';
 		}
 		$content .= '</select><br/>';
 
 		if ($this->lConf['showPersonsSelector'] == 1) {
-			$content .= '<label for="fieldNumPersons"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
-					<select name="'.$this->prefixId.'[adultSelector]" id="fieldNumPersons" size="1">';
+			$content .= '<label for="fieldadultSelector"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
+					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector" size="1">';
 			/* how many persons are possible? */
 			for ($i = 1; $i<=$overallCapacity; $i++) {
-					$content.='<option '.$selNumPersons[$i].' value='.$i.'>'.$i.'</option>';
+					$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.'</option>';
 			}
 			$content .= '</select><br/>';
 		} else
@@ -992,7 +992,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		$startDate = $interval['startDate'];
-		//$endDate =  strtotime('+ '.$this->lConf['numNights'].' days', $startDate);
+		//$endDate =  strtotime('+ '.$this->lConf['daySelector'].' days', $startDate);
 		$endDate = $interval['endDate'];
 
 		if ($endDate > strtotime('+ '.($this->lConf['numCheckNextMonths'] + 1).' months')) {
@@ -1095,7 +1095,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		}
 //~ print_r($this->lConf['productDetails']);
-		
+
 		return 0;
 	}
 
@@ -1124,7 +1124,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$customer = $this->lConf['customerData'];
 
 		// check for limited vacancies...
-		if ($product['maxAvailable'] < $this->lConf['numNights']) {
+		if ($product['maxAvailable'] < $this->lConf['daySelector']) {
 			$this->form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited')."<br/>";
 			$numErrors++;
 		}
@@ -1174,8 +1174,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$numErrors++;
 		}
 
-		if (empty($this->lConf['numNights'])) {
-			$this->form_errors['numNightsNotValid'] = $this->pi_getLL('error_numNightsNotValid')."<br/>";
+		if (empty($this->lConf['daySelector'])) {
+			$this->form_errors['daySelectorNotValid'] = $this->pi_getLL('error_daySelectorNotValid')."<br/>";
 			$numErrors++;
 		}
 
@@ -1198,7 +1198,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$longisp = @gethostbyaddr($ip);
 
-		$log = strftime("%Y-%m-%d %H:%M:%S").','.$ip.','.$longisp.','.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).','.strftime("%d.%m.%Y", $this->lConf['endDateStamp']).','.$this->piVars['adultSelector'].','.$this->lConf['numNights']."\n";
+		$log = strftime("%Y-%m-%d %H:%M:%S").','.$ip.','.$longisp.','.strftime("%d.%m.%Y", $this->lConf['startDateStamp']).','.strftime("%d.%m.%Y", $this->lConf['endDateStamp']).','.$this->piVars['adultSelector'].','.$this->lConf['daySelector']."\n";
 
 		//Daten schreiben
 		$fp2=fopen($logFile, "a");
@@ -1223,15 +1223,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
-		
+
 		if ($this->lConf['useTSconfiguration'] == 1) {
-	
+
 			foreach ($this->lConf['form'] as $formname => $form) {
-				$formname = str_replace('.', '', $formname);			
+				$formname = str_replace('.', '', $formname);
 				$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
 			}
-			
-			
+
+
 		} else {
 			$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
 			$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
@@ -1243,7 +1243,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
 			$text_mail .= $this->pi_getLL('feld_anreise').": ".strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp'])."\n";
 			$text_mail .= $this->pi_getLL('feld_abreise').": ".strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp'])."\n";
-			$text_mail .= $this->pi_getLL('feld_naechte').": ".$this->lConf['numNights']."\n";
+			$text_mail .= $this->pi_getLL('feld_naechte').": ".$this->lConf['daySelector']."\n";
 			$text_mail .= $this->pi_getLL('feld_personen').": ".$this->piVars['adultSelector']."\n\n";
 			if (isset($this->piVars['mitteilung']))
 				$text_mail .= $this->pi_getLL('feld_mitteilung').": ".$this->piVars['mitteilung']."\n\n";
@@ -1252,12 +1252,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// text for text/plain mail part
 		$text_plain_mail = strip_tags($text_mail);
-		$text_plain_mail .= $this->printCalculatedRates($key, $this->lConf['numNights'], 0);
+		$text_plain_mail .= $this->printCalculatedRates($key, $this->lConf['daySelector'], 0);
 		$text_plain_mail .= "===\n";
 
 		// text for text/html mail part
 		$text_html_mail = str_replace("\n", "<br />", $text_mail);
-		$text_html_mail .= str_replace("\n", "<br />", $this->printCalculatedRates($key, $this->lConf['numNights'], 0));
+		$text_html_mail .= str_replace("\n", "<br />", $this->printCalculatedRates($key, $this->lConf['daySelector'], 0));
 		$text_html_mail .= "===<br/>";
 
 
@@ -1363,8 +1363,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$startDate = $this->lConf['startDateStamp'];
 
-		if (isset($this->lConf['numNights']))
-			$endDate = strtotime('+'.($this->lConf['numNights']+$product['prices'][$startDate]['blockDaysAfterBooking']).' day', $startDate);
+		if (isset($this->lConf['daySelector']))
+			$endDate = strtotime('+'.($this->lConf['daySelector']+$product['prices'][$startDate]['blockDaysAfterBooking']).' day', $startDate);
 		else
 			$endDate = $startDate;
 
@@ -1445,10 +1445,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * @param	[type]		$period: booking period
 	 * @return	double		amount
 	 */
-	function getRatePerDayAndPerson($rate, $period, $dayStep) {
+	function getRatePerDayAndPerson($rate, $period, $dayStep, $numPersons) {
 
 		// get the discount array for price
 		$discountRate = $this->getDiscountRate($rate['price'], $period, $dayStep);
+		$discountRate['standardRate'] *= $numPersons;
+		$discountRate['discountRate'] *= $numPersons;
 
 		$discountRate['title'] = $this->getTSTitle($rate['title.']);
 
@@ -1465,6 +1467,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 //~ 			$discountRate['rateIncrement'] = 1;
 //~ 		else
 //~ 			$discountRate['rateIncrement'] = $dayStep;
+//~ print_r($discountRate);
 
 		return $discountRate;
 	}
@@ -1516,8 +1519,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$discountRate['incrementUse'] = $dayStep;
 			$discountRate['priceIsPerWeek'] = 0;
 		}
-		
-		
+
+
 		return $discountRate;
 	}
 
@@ -1557,20 +1560,20 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
 		for ($i=1; $i<=$product['capacitymax']; $i++) {
-//~ print_r("i: ".$i.", numPersons: ".$this->lConf['numPersons'].", capacitymax: ".$product['capacitymax']."\n");
+//~ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
 //~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
 			if ($product['prices'][$this->lConf['startDateStamp']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$this->lConf['startDateStamp']]['adult'.$i];
 				$max_persons = $i;
 			}
-			if ($max_amount > 0 && $i >= $this->lConf['numPersons'])
+			if ($max_amount > 0 && $i >= $this->lConf['adultSelector'])
 					break;
 		}
 
 		// step through days from startdate to (enddate | maxAvailable) and add rate for every day
 		$total_amount = 0;
 		$priceArray['adult'.$max_persons] = '+';
-		if ($this->lConf['numPersons']>$max_persons)
+		if ($this->lConf['adultSelector']>$max_persons)
 			$priceArray['adultX'] = '*+';
 		$priceArray['extraComponent1'] = '*+';
 		$priceArray['extraComponent2'] = '*+';
@@ -1746,7 +1749,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$customer = $this->lConf['customerData'];
 
-		$maxAdults = $this->lConf['numPersons'];
+		$maxAdults = $this->lConf['adultSelector'];
 		$maxChildren = $this->lConf['numChildren'];
 		$maxTeens = $this->lConf['numTeens'];
 
@@ -1783,8 +1786,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			unset($cur_title);
 			unset($pre_title);
 			unset($rateValueArray);
-			
-			if ($pricePerDay[$interval['startDate']]['priceIsPerWeek'] == 1) 
+
+			if ($pricePerDay[$interval['startDate']]['priceIsPerWeek'] == 1)
 				$dayStep = 7;
 			else
 				$dayStep = 1;
@@ -1800,7 +1803,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					if ($key == 'ratesPerDayAndPerson') {
 						if (is_array($pricePerDay[$d][$key.'.']))
 							foreach ($pricePerDay[$d][$key.'.'] as $ratePerDayAndPerson) {
-								$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, $dayStep);
+								$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, $dayStep, $maxAdults);
 							}
 					}
 				}
@@ -1819,8 +1822,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$cur_title = str_replace(" ", "", $title.$rateValue['discountRate'].$key);
 						$usedPrices[$cur_title]['title'] = $title;
 //~ 						$usedPrices[$cur_title]['rateUsed']++;
-						$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];;
-						$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];;
+						$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
+						$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
 						$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
 						$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
 						$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
@@ -1830,7 +1833,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 			}
 		}
-//~ print_r($usedPrices);		
+//~ print_r($usedPrices);
 		// now we have the simple rates per adult/child/teen
 		unset($keyArray);
 
@@ -1868,7 +1871,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$text_periods = ' '.$this->pi_getLL('week');
 				else
 					$text_periods = ' '.$this->pi_getLL('weeks');
-				
+
 			} else {
 				if ($value['rateUsed'] == 1)
 					$text_periods = ' '.$this->pi_getLL('period');
@@ -1891,7 +1894,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$total_amount += $value['rateValue'] * $value['rateUsed'];
 			}
 //~ 			$lDetails['dates'] = $value['rateDates'];
-			
+
 			// step through used dates and create date interval string
 			$openInterval = 0;
 			$lastday = 0;
@@ -1907,7 +1910,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$lastday = $currday;
 			}
 			if ($openInterval == 1)
-				$dateUsed .= strftime('%a %x', $lastday+86400 );
+				$dateUsed .= strftime('%a %x', $lastday+($dayStep*86400) );
 
 			$lDetails['dates'][] = $dateUsed;
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
@@ -1922,7 +1925,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		unset($rateValueArray);
 		if (is_array($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStay.']))
 			foreach ($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStay.'] as $ratePerDayAndPerson) {
-						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period);
+						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, 1, 1);
 			}
 		if (is_array($rateValueArray))
 			foreach ($rateValueArray as $rateValue) {
@@ -1945,7 +1948,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$rate['priceCurrency'] = $currency;
 		$rate['priceDetails'] = $priceDetails;
 
-		$rate['textPriceTotalAmount'] = number_format($total_amount, 2, ',', '').'&nbsp;'.$currency;
+		$rate['textPriceTotalAmount'] = number_format($total_amount, 2, ',', '').' '.$currency;
 
 		return $rate;
 
@@ -1969,7 +1972,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if ($this->lConf['showPrice'] == '1') {
 			$rates = $this->calcRates($key, $period);
-//~ print_r($rates);			
+//~ print_r($rates);
 			if ($printHTML == 1) {
 				if ($this->lConf['showPriceDetails'] == '1') {
 					$content .= '<div class="priceDetails">';
