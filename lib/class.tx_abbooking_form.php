@@ -49,6 +49,9 @@ class tx_abbooking_form {
 //~ 	print_r($this->lConf['form']);
 
 		foreach ($this->lConf['form'] as $formname => $form) {
+			// skip settings which are no form fields
+			if (!is_array($form))
+				continue;
 
 			$formname = str_replace('.', '', $formname);
 			if ($form['required'] == 1)
@@ -144,8 +147,7 @@ class tx_abbooking_form {
 					break;
 				case 'textarea':
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />
-					<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'
-					</textarea>
+					<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'</textarea>
 					</div>';
 					break;
 				case 'infobox':
@@ -216,7 +218,7 @@ class tx_abbooking_form {
 		if ($this->lConf['form']['showCalendarMonth']>0) {
 //~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
 //~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
-			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], 1, $this->lConf['form']['showCalendarMonth']);
+			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], $this->lConf['form']['showCalendarMonth'], 0);
 
 		} else if ($this->lConf['form']['showCalendarWeek']>0) {
 			$intval['startDate'] = $interval['startDate'];

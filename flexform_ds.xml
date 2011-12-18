@@ -147,17 +147,6 @@
 					</config>
 				</TCEforms>
 			</numMonthsCols>
-			<numMonthsRows>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numMonthsRows</label>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>2</default>
-					</config>
-				</TCEforms>
-			</numMonthsRows>
 			<monthsLineView>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.monthsLineView</label>
@@ -293,6 +282,15 @@
 					</config>
 				</TCEforms>
 			</useSwiftMailer>
+			<sendCustomerConfirmation>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sendCustomerConfirmation</label>
+					<config>
+						<type>check</type>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</sendCustomerConfirmation>
 			<EmailAddress>
 				<TCEforms>
 					<exclude>1</exclude>
@@ -350,6 +348,38 @@
 		</el>
 	</ROOT>
 </sheetBookingOptions>
+
+<sheetCheckInOverviewOptions>
+	<ROOT>
+		<TCEforms>
+			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetCheckInOverviewOptions</sheetTitle>
+			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
+		</TCEforms>
+		<type>array</type>
+		<el>
+			<checkInNumDays>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.checkInNumDays</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>4</default>
+					</config>
+				</TCEforms>
+			</checkInNumDays>
+			<showOnlyChanges>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showOnlyChanges</label>
+					<config>
+						<type>check</type>
+						<default>0</default>
+					</config>
+				</TCEforms>
+			</showOnlyChanges>
+		</el>
+	</ROOT>
+</sheetCheckInOverviewOptions>
 
 </sheets>
 </T3DataStructure>

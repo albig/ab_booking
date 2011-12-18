@@ -33,7 +33,21 @@ CREATE TABLE tx_abbooking_booking (
 	KEY parent (pid)
 );
 
-
+#
+# Table structure for table 'tx_abbooking_booking'
+#
+CREATE TABLE tx_abbooking_booking_meta (
+	uid int(11) NOT NULL auto_increment,
+	pid int(11) DEFAULT '0' NOT NULL,
+	tstamp int(11) DEFAULT '0' NOT NULL,
+	crdate int(11) DEFAULT '0' NOT NULL,
+	cruser_id int(11) DEFAULT '0' NOT NULL,
+	booking_id int(11) DEFAULT '0' NOT NULL,
+	meta_key varchar(255) default '0' NULL,
+	meta_value longtext,
+	PRIMARY KEY (uid),
+	KEY parent (pid)
+);
 
 #
 # Table structure for table 'tx_abbooking_product'

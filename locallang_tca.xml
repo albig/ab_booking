@@ -36,10 +36,15 @@
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
 			<label index="ab_booking.pi_flexform.CheckProductID">Check Products for Availablitity</label>
 			<label index="ab_booking.pi_flexform.useSwiftMailer">Use ab_swiftmailer for Email Transport (DEPRECATED in TYPO3 4.5)</label>
+			<label index="ab_booking.pi_flexform.sendCustomerConfirmation">Send confirmation to the customer.</label>
 			<label index="ab_booking.pi_flexform.EmailAddress">Email Address</label>
 			<label index="ab_booking.pi_flexform.EmailRealname">Realname</label>
 			<label index="ab_booking.pi_flexform.textSayThankYou">Thank You Text after final Booking</label>
 			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Confirmation Email</label>
+			<label index="ab_booking.pi_flexform.sheetCheckInOverviewOptions">Checkin Overview</label>
+			<label index="ab_booking.pi_flexform.checkInNumDays">Show next Days</label>
+			<label index="ab_booking.pi_flexform.showOnlyChanges">Show only Changes</label>
+
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="ab_booking.pi_flexform.sheetDisplayOptions">Anzeige Optionen</label>
@@ -69,10 +74,14 @@
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
 			<label index="ab_booking.pi_flexform.CheckProductID">Produkt auf Verfügbarkeit prüfen</label>
 			<label index="ab_booking.pi_flexform.useSwiftMailer">ab_swiftmailer für den Email-Versand nutzen (veraltet in TYPO3 4.5)</label>
+			<label index="ab_booking.pi_flexform.sendCustomerConfirmation">Bestätigungsmail an den Kunden schicken</label>
 			<label index="ab_booking.pi_flexform.EmailAddress">Email Adresse</label>
 			<label index="ab_booking.pi_flexform.EmailRealname">Name</label>
 			<label index="ab_booking.pi_flexform.textSayThankYou">Danksagung nach Absenden der Buchung</label>
 			<label index="ab_booking.pi_flexform.textConfirmEmail">Text in Bestätigungs-Email</label>
+			<label index="ab_booking.pi_flexform.sheetCheckInOverviewOptions">An- und Abreise Übersicht</label>
+			<label index="ab_booking.pi_flexform.checkInNumDays">Anzahl der angezeigten Tage</label>
+			<label index="ab_booking.pi_flexform.showOnlyChanges">Nur Veränderungen anzeigen</label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

@@ -196,7 +196,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
 							$result= $this->send_confirmation_email($product['uid'], $send_errors);
-							if ($result == 2) {
+							if (($result == 2 && $this->lConf['sendCustomerConfirmation'] == '1') || $result == 1) {
 								if (isset($this->lConf['textSayThankYou']))
 									$out .= '<div class="requestForm"><p>'.nl2br($this->lConf['textSayThankYou']).'</p></div>';
 								else
@@ -233,7 +233,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$out .= $this->formCheckAvailability();
 						break;
 					case 'CALENDAR':
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonthsRows'], (int)$this->lConf['numMonthsCols']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
 						break;
 					case 'CALENDAR LINE':
 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
@@ -248,7 +248,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* ------------------------- */
 						/* show calendar             */
 						/* ------------------------- */
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonthsRows'], (int)$this->lConf['numMonthsCols']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
 						break;
 				}
 				break;
@@ -1225,13 +1225,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$text_mail .= "===\n";
 
 		if ($this->lConf['useTSconfiguration'] == 1) {
-
 			foreach ($this->lConf['form'] as $formname => $form) {
 				$formname = str_replace('.', '', $formname);
+				// skip settings which are no form fields
+				if (!is_array($form) || empty($customer[$formname]))
+					continue;
 				$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
 			}
-
-
 		} else {
 			$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
 			$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
@@ -1311,14 +1311,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$text_plain_mail,
 						'From: '.$email_owner_string.chr(10).'Reply-To: '.$customer['address_email']);
 
-				// send acknolewdge mail to customer
-				t3lib_div::plainMailEncoded($email_customer_string,
-						$this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']),
-						$text_plain_mail,
-						'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->lConf['EmailAddress']);
-
-				// assume everything went ok because there is no return value of plainMailEncoded())
-				$send_success = 2;
+				if ($this->lConf['sendCustomerConfirmation'] == '1') {
+					// send acknolewdge mail to customer
+					t3lib_div::plainMailEncoded($email_customer_string,
+							$this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']),
+							$text_plain_mail,
+							'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->lConf['EmailAddress']);
+					// assume everything went ok because there is no return value of plainMailEncoded())
+					$send_success = 2;
+				} else
+					$send_success = 1;
 			}
 		}
 		else {
@@ -1334,15 +1336,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if ($mail->send() == 1)
 				$send_success = 1;
 
-			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
-			$mail->setFrom($email_owner);
-			$mail->setTo($email_customer);
-			$mail->setSubject($subject_customer);
-			$mail->setBody($text_html_mail, 'text/html', 'utf-8');
-			$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
+			if ($this->lConf['sendCustomerConfirmation'] == '1') {
+				$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+				$mail->setFrom($email_owner);
+				$mail->setTo($email_customer);
+				$mail->setSubject($subject_customer);
+				$mail->setBody($text_html_mail, 'text/html', 'utf-8');
+				$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
 
-			if ($mail->send() == 1)
-				$send_success++;
+				if ($mail->send() == 1)
+					$send_success++;
+			}
 
 		}
 		return $send_success;
@@ -1368,7 +1372,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else
 			$endDate = $startDate;
 
-		$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['address_name']).', '.str_replace(',', ' ', $customer['address_town']).', '.$customer['address_email'].', '.str_replace(',', ' ', $customer['address_telephone']);
+		$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['name']).', '.str_replace(',', ' ', $customer['city']).', '.$customer['email'].', '.str_replace(',', ' ', $customer['telephone']);
 		$editCode = md5($title.$this->lConf['ProductID']);
 
 		$fields_values = array(
@@ -1384,16 +1388,39 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking', $fields_values);
 
-		$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
+		$id_booking = $GLOBALS['TYPO3_DB']->sql_insert_id();
 
 		// to be fixed if AvailableProductIDs is more than one...
 		$fields_values = array(
-			'uid_local' => $id_inserted,
+			'uid_local' => $id_booking,
 			'uid_foreign' => implode(',', $this->lConf['AvailableProductIDs']),
 		);
   		$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_productid_mm', $fields_values);
 
 		$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
+
+
+		foreach ($this->lConf['form'] as $formname => $form) {
+			$formname = str_replace('.', '', $formname);
+
+			// skip settings which are no form fields
+			if (!is_array($form))
+				continue;
+
+			// fill new meta-database:
+			$fields_values = array(
+				'pid' => $this->lConf['PIDstorage'],
+				'tstamp' => time(),
+				'crdate' => time(),
+				'booking_id' => $id_booking,
+				'meta_key' => $formname,
+				'meta_value' => $customer[$formname],
+			);
+
+			$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_meta', $fields_values);
+
+			$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
+		}
 
 		return $id_inserted;
 	}
