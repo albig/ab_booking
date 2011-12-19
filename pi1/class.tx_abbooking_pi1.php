@@ -789,7 +789,14 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= '<br />
 				<label for="fielddaySelector"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
 				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" id="fielddaySelector" size="1">';
-		for ($i = $this->lConf['numCheckMinInterval']; $i<=$this->lConf['numCheckMaxInterval']; $i++) {
+
+		// set global day steps
+		if ((int)$this->lConf['numCheckDaySteps']>0)
+			$dayStep = $this->lConf['numCheckDaySteps'];
+		else
+			$dayStep = 1;
+
+		for ($i = $this->lConf['numCheckMinInterval']; $i<=$this->lConf['numCheckMaxInterval']; $i+=$dayStep) {
 			$content.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.'</option>';
 		}
 		$content .= '</select><br/>';

@@ -1110,12 +1110,37 @@ class tx_abbooking_div {
 
 			// check if checkIn is ok for startDate
 			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
-				$contentError.= '<br /><i>'.$this->pi_getLL('error_no_checkIn_on').' '.strftime('%A', $this->lConf['startDateStamp']).'.</i><br />';
+				$contentError.= '<i>'.$this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']).'.</i><br />';
 				$enableCheckBookingLink = 0;
+				for ($j=$this->lConf['startDateStamp']; $j < strtotime('+14 day', $this->lConf['startDateStamp']); $j=strtotime('+1 day', $j)) {
+//~ print_r(strftime('%x', $j));
+					if ($product['prices'][$j]['checkInOk'] == '1') {
+						$interval['startDate'] = $j;
+						$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+						$params = array (
+							$this->prefixId.'[ABx]' => $params_united,
+						);
+						if ($this->lConf['enableCheckBookingLink'])
+							$link = $this->pi_linkTP(strftime('%a, %x', $interval['startDate']), $params, 0, $this->lConf['gotoPID']);
+						else
+							$link = strftime('%a, %x', $j);
+
+						$contentError.= '<i>'.$this->pi_getLL('error_next_checkIn_on').' '.$link.'.</i><br />';
+//~ 						$this->lConf['startDateStamp'] = $j;
+//~ 						$enableCheckBookingLink = 1;
+						break;
+					}
+				}
 			} else
 				$enableCheckBookingLink = $this->lConf['enableCheckBookingLink'];
 
-			$params_united = $this->lConf['startDateStamp'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+			// show calendar list only up to the vacant day
+			if (empty($interval['startDate']))
+				$interval['startDate'] = $this->lConf['startDateStamp'];
+			$interval['endDate'] = strtotime('+'.$bookNights.' day', $this->lConf['startDateStamp']);
+
+
+			$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 			$params = array (
 				$this->prefixId.'[ABx]' => $params_united,
 			);
@@ -1162,10 +1187,6 @@ class tx_abbooking_div {
 				$offers[$i] .= '<li class="offerList"><div class="productTitle"><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
 			}
 
-			// show calendar list only up to the vacant day
-			$interval['startDate'] = $this->lConf['startDateStamp'];
-
-			$interval['endDate'] = strtotime('+'.$bookNights.' day', $this->lConf['startDateStamp']);
 
 			// show calendars following TS settings
 			if ($this->lConf['form']['showCalendarMonth']>0) {

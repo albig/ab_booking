@@ -219,6 +219,17 @@
 					</config>
 				</TCEforms>
 			</numCheckMaxInterval>
+			<numCheckDaySteps>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</numCheckDaySteps>
 			<numDefaultNights>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>

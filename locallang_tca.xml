@@ -26,6 +26,7 @@
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
 			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
+			<label index="ab_booking.pi_flexform.numCheckDaySteps">Day Steps (days)</label>
 			<label index="ab_booking.pi_flexform.numDefaultNights">Default Amount of Days to Book</label>
 			<label index="ab_booking.pi_flexform.numDefaultPersons">Default Amount of Persons to Book</label>
 			<label index="ab_booking.pi_flexform.showPersonsSelector">Show Selector for Number of Persons</label>

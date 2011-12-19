@@ -72,6 +72,7 @@
 			<label index="error_empty_zip">Please enter your zip code!</label>
 			<label index="error_no_vacancies">Unfortunately, the room is already booked!</label>
 			<label index="error_no_checkIn_on">Sorry, Checkin is not possible on</label>
+			<label index="error_next_checkIn_on">Next possible Checkin Date is</label>
 			<label index="error_startDateInThePast">Your seleted start date is in the past!</label>
 			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
 			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
@@ -175,7 +176,8 @@
 			<label index="error_empty_zip">Bitte geben Sie Ihre Postleitzahl an!</label>
 			<label index="error_no_vacancies">Leider ist das Zimmer zum gewünschten Zeitpunkt belegt!</label>
 			<label index="error_vacancies_limited">Leider steht das Zimmer nur für die angegebenen Zeiten zur Verfügung!</label>
-			<label index="error_no_checkIn_on">Leider ist die Anreise nicht möglich am </label>
+			<label index="error_no_checkIn_on">Leider ist die Anreise nicht möglich am</label>
+			<label index="error_next_checkIn_on">Nächste mögliche Anreise ist am</label>
 			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
