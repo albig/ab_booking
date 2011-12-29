@@ -455,6 +455,10 @@ class tx_abbooking_form {
 		foreach ($this->lConf['form'] as $formname => $form) {
 			$formname = str_replace('.', '', $formname);
 
+			// skip settings which are no form fields
+			if (!is_array($form))
+				continue;
+
 			switch ($formname) {
 				case 'email':
 					if ($form['required'] == 1) {
@@ -512,17 +516,6 @@ class tx_abbooking_form {
 
 		return $numErrors;
 
-//~ 		if ($this->lConf['startDateStamp']+86400 > $this->lConf['endDateStamp']) {
-//~ 			$this->form_errors['endDateNotValid'] = $this->pi_getLL('error_endDateNotValid')."<br/>";
-//~ 			$numErrors++;
-//~ 		}
-
-//~ 		if (empty($this->lConf['daySelector'])) {
-//~ 			$this->form_errors['daySelectorNotValid'] = $this->pi_getLL('error_daySelectorNotValid')."<br/>";
-//~ 			$numErrors++;
-//~ 		}
-
-		return $numErrors;
 	}
 
 }
