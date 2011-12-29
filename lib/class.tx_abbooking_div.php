@@ -276,8 +276,8 @@ class tx_abbooking_div {
 			return FALSE;
 
 		// set date timestamp to 00:00:00
-		$season['startDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormat'],$season['startDate']), 0, 0), 'U');
-		$season['endDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormat'],$season['endDate']), 0, 0), 'U');
+		$season['startDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormatConfig'],$season['startDate']), 0, 0), 'U');
+		$season['endDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormatConfig'],$season['endDate']), 0, 0), 'U');
 
 			// there are four cases of time intervals:
 			// 1: start set, stop set                 |-------------|
@@ -334,6 +334,7 @@ class tx_abbooking_div {
 			if ($seasonFound>0)
 				$allRates[] = $rateFound;
 		}
+//~ print_r($interval);
 //~ print_r("getrates allrates TS\n");
 //~ print_r(sizeof($allRates));
 //~ print_r($allRates);
@@ -803,9 +804,10 @@ class tx_abbooking_div {
 	 * @return	HTML-list		of calendar days
 	 */
 //~ 	function printAvailabilityCalendarDiv($uid, $interval = array()) {
-	function printAvailabilityCalendarDiv($uid, $months = 0, $cols = 1) {
+	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
 
-		$this->pi_loadLL();
+//~ print_r($interval);
+//~ 		$this->pi_loadLL();
 //~ 		$cur_de = setlocale(LC_ALL, 0);
 //~ 		$loc_en = setlocale(LC_ALL, 'en_GB.UTF-8', 'en_GB.utf8', 'eng', 'en_GB', 'en_US',  'en_GB.ISO8859-1', 'en_GB@euro', 'en');
 //~ 		$loc_de = setlocale(LC_ALL, 'de_DE.UTF-8', 'de_DE.utf8', 'deu', 'de_DE', 'deu_deu', 'de_DE.ISO8859-1', 'de_DE@euro', 'de', 'ge');
@@ -835,13 +837,16 @@ class tx_abbooking_div {
 		$interval['startList'] = strtotime( 'last monday', $interval['startDate'] );
 		$interval['endList'] = strtotime( 'next sunday', $interval['endDate'] );
 
+//~ print_r($interval);
+
 		if ($months == 0)
-			$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
+		$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
 				(date('Y', $interval['endList']) - date('Y', $interval['startList']) +1)*12;
 
+//~ print_r($months);
 		// this form of date_diff is erroneous... so check and reduce amount of months
-		if (strtotime('+ '.$months.' months', $interval['startDate']) - $interval['startDate']>0)
-			$month_diff--;
+//~ 		if (strtotime('+ '.$months.' months', $interval['startDate']) - $interval['startDate']>0)
+//~ 			$month_diff--;
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
@@ -1039,16 +1044,19 @@ class tx_abbooking_div {
 
 		switch ($step) {
 			case '1':
-				$cssStep1="current";
+				$cssStep1="step1 current";
+				$cssStep2="step2";
+				$cssStep3="step3";
 				break;
 			case '3':
-				$cssStep1="past";
-				$cssStep2="current";
+				$cssStep1="step1";
+				$cssStep2="step2 current";
+				$cssStep3="step3";
 				break;
 			case '4':
-				$cssStep1="past";
-				$cssStep2="past";
-				$cssStep3="current";
+				$cssStep1="step1";
+				$cssStep2="step2";
+				$cssStep3="step3 current";
 				break;
 		}
 
@@ -1190,14 +1198,20 @@ class tx_abbooking_div {
 
 			// show calendars following TS settings
 			if ($this->lConf['form']['showCalendarMonth']>0) {
+				if (intval($this->lConf['form']['showMonthsBeforeStart'])>0)
+					$intval['startDate'] = strtotime('-'.$this->lConf['form']['showMonthsBeforeStart'].' months', $interval['startDate']);
+				else
+					$intval['startDate'] = $interval['startDate'];
+				$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate']);
 	//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
 	//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
-				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarDiv($product['uid'].$offTimeProducts, $this->lConf['form']['showCalendarMonth'], 0);
+				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarDiv($product['uid'].$offTimeProducts,  $intval, $this->lConf['form']['showCalendarMonth'], 0);
 
 			} else if ($this->lConf['form']['showCalendarWeek']>0) {
-				$intval['startDate'] = $interval['startDate'];
-				$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarWeek'].' weeks', $interval['startDate']);
-				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
+					$intval['startDate'] = $interval['startDate'];
+
+				$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarWeek'].' weeks', $intval['startDate']);
+				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $intval);
 			} else
 				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 

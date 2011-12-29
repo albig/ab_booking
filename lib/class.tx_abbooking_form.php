@@ -87,14 +87,28 @@ class tx_abbooking_form {
 					break;
 				case 'radio':
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
-					foreach ($form['radio.'] as $radioname => $radio) {
-						if ($radio['selected'] == 1)
-							$selected = 'checked="checked"';
-						else
-							$selected = '';
-						$out .= '<div class="singleradio"><input type="radio" name="'.$formnameGET.'" value="'.$radioname.'" '.$selected.' />'.$this->getTSTitle($radio['title.']).'</div>';
+					if ($showHidden == 1) {
+						foreach ($form['radio.'] as $radioname => $radio) {
+								if ($radioname == $customer[$formname])
+									break;
+						}
+						$out .= '<p class="yourSettings">'.$this->getTSTitle($radio['title.']).'</p>';
+						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
 					}
-					$out .= '<div class="clearsingleradio"></div>';
+					else {
+						foreach ($form['radio.'] as $radioname => $radio) {
+							$selected = '';
+							if (! empty($customer[$formname])) {
+								if ($radioname == $customer[$formname])
+									$selected = 'checked="checked"';
+							} else {
+								if ($radio['selected'] == 1)
+									$selected = 'checked="checked"';
+							}
+							$out .= '<div class="singleradio"><input type="radio" name="'.$formnameGET.'" value="'.$radioname.'" '.$selected.' />'.$this->getTSTitle($radio['title.']).'</div>';
+						}
+						$out .= '<div class="clearsingleradio"></div>';
+					}
 					$out .= '</div>';
 
 					break;
@@ -102,53 +116,65 @@ class tx_abbooking_form {
 					break;
 				case 'selector':
 
-					$selected='selected="selected"';
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
-					$out .= '<select name="'.$formnameGET.'" size="1">';
-					switch($formname) {
-						case 'adultSelector':
-							if (isset($this->lConf['adultSelector']))
-								if ($this->lConf['adultSelector'] > $product['capacitymax'])
-									$seladultSelector[$product['capacitymax']] = $selected;
-								else if ($this->lConf['adultSelector'] < $product['capacitymin'])
-									$seladultSelector[$product['capacitymin']] = $selected;
-								else
-									$seladultSelector[$this->lConf['adultSelector']] = $selected;
-							else
-								$seladultSelector[2] = $selected;
-
-							/* how many persons are possible? */
-							for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
-								$out.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
-							}
-
-						break;
-						case 'childSelector':
-						break;
-						case 'teenSelector':
-						break;
-						case 'daySelector':
-							if (isset($this->lConf['daySelector']))
-								$seldaySelector[$this->lConf['daySelector']] = $selected;
-							else
-								$seldaySelector[2] = $selected;
-
-							for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
-									$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
-									$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
-							}
-
-						break;
+					if ($showHidden == 1) {
+						$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
+						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
 					}
+					else {
+						$selected='selected="selected"';
+						$out .= '<select name="'.$formnameGET.'" size="1">';
+						switch($formname) {
+							case 'adultSelector':
+								if (isset($this->lConf['adultSelector']))
+									if ($this->lConf['adultSelector'] > $product['capacitymax'])
+										$seladultSelector[$product['capacitymax']] = $selected;
+									else if ($this->lConf['adultSelector'] < $product['capacitymin'])
+										$seladultSelector[$product['capacitymin']] = $selected;
+									else
+										$seladultSelector[$this->lConf['adultSelector']] = $selected;
+								else
+									$seladultSelector[2] = $selected;
 
-					$out .= '</select>';
+								/* how many persons are possible? */
+								for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
+									$out.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
+								}
+
+							break;
+							case 'childSelector':
+							break;
+							case 'teenSelector':
+							break;
+							case 'daySelector':
+								if (isset($this->lConf['daySelector']))
+									$seldaySelector[$this->lConf['daySelector']] = $selected;
+								else
+									$seldaySelector[2] = $selected;
+
+								for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
+										$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
+										$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.date($this->lConf['dateFormat'], $endDate).')</option>';
+								}
+
+							break;
+						}
+
+						$out .= '</select>';
+					}
 					$out .= '</div>';
 
 					break;
 				case 'textarea':
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />
-					<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'</textarea>
-					</div>';
+					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
+					if ($showHidden == 1) {
+						$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
+						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
+
+					}
+					else
+						$out .= '<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'</textarea>';
+					$out .= '</div>';
 					break;
 				case 'infobox':
 					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
@@ -209,16 +235,25 @@ class tx_abbooking_form {
 		$content .='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
 
 		$content .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
-		$content .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
+		$content .= ' '.strftime('%A, %x', $this->lConf['startDateStamp']) . ' - ';
 		$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-		$content .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
+		$content .= ' '.strftime('%A, %x', $availableMaxDate);
 		$content .= '</p><br />';
 
 		// show calendars following TS settings
 		if ($this->lConf['form']['showCalendarMonth']>0) {
+			if (intval($this->lConf['form']['showMonthsBeforeStart'])>0)
+				$intval['startDate'] = strtotime('-'.$this->lConf['form']['showMonthsBeforeStart'].' months', $interval['startDate']);
+			else
+				$intval['startDate'] = $interval['startDate'];
+			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate']);
 //~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
 //~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
-			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], $this->lConf['form']['showCalendarMonth'], 0);
+			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'],  $intval, $this->lConf['form']['showCalendarMonth'], 0);
+
+//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
+//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
+//~ 			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], $this->lConf['form']['showCalendarMonth'], 0);
 
 		} else if ($this->lConf['form']['showCalendarWeek']>0) {
 			$intval['startDate'] = $interval['startDate'];

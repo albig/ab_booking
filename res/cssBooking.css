@@ -8,7 +8,7 @@
  * Calendar Table Settings
  *
  */
- 
+
 .tx-abbooking-pi1 {
 	overflow: auto;
 	padding: 5px 0;
@@ -108,7 +108,7 @@
 .tx-abbooking-pi1 div.availabilityCalendar .calendarMonth .calendarMonthName {
 	clear: both;
 	text-align: center;
-	font-size:: 120%;
+	font-size: 120%;
 	font-weight: normal;
 	background-color: #e0e0e0;
 }
@@ -139,7 +139,7 @@
 	border: none;
 	margin: 2px 4px;
 	text-decoration: none;
-	
+
 }
 
 .tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.noDay {
@@ -174,7 +174,7 @@
 	border: none;
 	margin: 2px 4px;
 	text-decoration: none;
-	
+
 }
 
 .tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li.noDay {

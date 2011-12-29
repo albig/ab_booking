@@ -151,8 +151,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 								$out .= '<p class="offer">'.$this->pi_getLL('we_may_offer').'</p>';
 							else
 								$out .= '<p class="offer">'.$this->pi_getLL('no_offer').'</p>';
-							$out .= '<p>'.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
-							$out .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']).'</p><br />';
+							$out .= '<p>'.strftime("%A, %x", $this->lConf['startDateStamp']).' - ';
+							$out .= ' '.strftime("%A, %x", $this->lConf['endDateStamp']).'</p><br />';
 							$out .= '<p>'.$this->pi_getLL('feld_naechte').': '.$this->lConf['daySelector'].'</p>';
 							if ($this->lConf['showPersonsSelector']==1)
 								$out .= '<p>'.$this->pi_getLL('feld_personen').': '.$this->lConf['adultSelector'].'</p>';
@@ -233,7 +233,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$out .= $this->formCheckAvailability();
 						break;
 					case 'CALENDAR':
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], array(), (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
 						break;
 					case 'CALENDAR LINE':
 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
@@ -248,7 +248,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* ------------------------- */
 						/* show calendar             */
 						/* ------------------------- */
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], array(), (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
 						break;
 				}
 				break;
@@ -305,8 +305,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// set dateFormat - prefered from TS otherwise from language defaults
-		if ($this->conf['dateFormat'] != '') {
-			$this->lConf['dateFormat'] = $this->conf['dateFormat'];
+		if (is_array($this->conf['dateFormat.'])) {
+			$this->lConf['dateFormat'] = $this->getTSTitle($this->conf['dateFormat.']);
 		} else {
 				if ($GLOBALS['TSFE']->config['config']['language'] == 'de')
 					$this->lConf['dateFormat'] = 'd.m.Y';
@@ -315,7 +315,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				else
 					$this->lConf['dateFormat'] = 'Y-m-d';
 		}
-
+		if (!empty($this->conf['dateFormatConfig']))
+			$this->lConf['dateFormatConfig'] = $this->conf['dateFormatConfig'];
+		else
+			$this->lConf['dateFormatConfig'] = $this->lConf['dateFormat'];
 
 		// overwrite some settings if post-vars are set:
 		if (isset($this->piVars['checkinDate'])) {
@@ -495,9 +498,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
 
 		$content .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
-		$content .= ' '.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).' - ';
+		$content .= ' '.strftime('%A, %x', $this->lConf['startDateStamp']) . ' - ';
 		$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-		$content .= ' '.strftime("%A, %d.%m.%Y", $availableMaxDate);
+		$content .= ' '.strftime('%A, %x', $availableMaxDate);
 		$content .= '</p><br />';
 		$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
 
@@ -1409,9 +1412,14 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		foreach ($this->lConf['form'] as $formname => $form) {
 			$formname = str_replace('.', '', $formname);
+			$formvalue = str_replace('.', '', $customer[$formname]);
 
 			// skip settings which are no form fields
 			if (!is_array($form))
+				continue;
+
+			// skip empty values
+			if (empty($formvalue))
 				continue;
 
 			// fill new meta-database:
@@ -1421,7 +1429,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				'crdate' => time(),
 				'booking_id' => $id_booking,
 				'meta_key' => $formname,
-				'meta_value' => $customer[$formname],
+				'meta_value' => $formvalue,
 			);
 
 			$query = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_abbooking_booking_meta', $fields_values);
