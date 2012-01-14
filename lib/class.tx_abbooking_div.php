@@ -323,6 +323,7 @@ class tx_abbooking_div {
 			$rateFound['title'] = $this->getTSTitle($this->conf['rates.'][$rate.'.']['title.']);
 			// 2. get the seasons for the rates and drop seasons outside interval
 			$seasonFound = 0;
+			if (is_array($this->conf['rates.'][$rate.'.']['seasons.']))
 			foreach ($this->conf['rates.'][$rate.'.']['seasons.'] as $season) {
 				$checkedSeason = tx_abbooking_div::checkSeasonValidation($this->conf['seasons.'][$season.'.'], $interval);
 				if ($checkedSeason !== FALSE) {
@@ -1078,6 +1079,7 @@ class tx_abbooking_div {
 	 */
 	function printOfferList() {
 
+		$contentError = array();
 		$offers['numOffers'] = 0;
 		$i = 0;
 
@@ -1099,7 +1101,7 @@ class tx_abbooking_div {
 
 			if ($product['maxAvailable'] < $this->lConf['daySelector']) {
 				$interval['limitedVacancies'] = $availableMaxDate;
-				$contentError.= '<br /><i>'.$this->pi_getLL('error_vacancies_limited').'</i><br />';
+				$contentError[] =  $this->pi_getLL('error_vacancies_limited');
 				$bookNights = $product['maxAvailable'];
 			}
 			else {
@@ -1111,14 +1113,14 @@ class tx_abbooking_div {
 				else
 					$text_periods = ' '.$this->pi_getLL('periods');
 
-				$contentError.='<br /><i>'.$this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods.'</i><br />';
+				$contentError[] = $this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods;
 				if ($bookNights < $product['minimumStay'])
 				$bookNights = $product['minimumStay'];
 			}
 
 			// check if checkIn is ok for startDate
 			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
-				$contentError.= '<i>'.$this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']).'.</i><br />';
+				$contentError[] = $this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']);
 				$enableCheckBookingLink = 0;
 				for ($j=$this->lConf['startDateStamp']; $j < strtotime('+14 day', $this->lConf['startDateStamp']); $j=strtotime('+1 day', $j)) {
 //~ print_r(strftime('%x', $j));
@@ -1133,7 +1135,7 @@ class tx_abbooking_div {
 						else
 							$link = strftime('%a, %x', $j);
 
-						$contentError.= '<i>'.$this->pi_getLL('error_next_checkIn_on').' '.$link.'.</i><br />';
+						$contentError.= $this->pi_getLL('error_next_checkIn_on').' '.$link;
 //~ 						$this->lConf['startDateStamp'] = $j;
 //~ 						$enableCheckBookingLink = 1;
 						break;
@@ -1172,25 +1174,30 @@ class tx_abbooking_div {
 
 			if ($product['maxAvailable'] > 0) {
 				$offers['numOffers']++;
-				$offers[$i] .= '<li class="offerList"><div>'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div><br /> '; //.$this->pi_getLL('up_to');
+				$offers[$i] .= '<li class="offerList"><div class="productTitle">'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div>';
 				$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-				$offers[$i] .= $contentError.'<br />';
+
+				if (count($contentError)>0) {
+					$offers[$i] .= '<ul class="errorHints">';
+					foreach ($contentError as $error)
+						$offers[$i] .= '<li>'.$error.'</li>';
+					$offers[$i] .= '</ul>';
+				}
 				$offers[$i] .= $bodytext;
 
 				if ($this->lConf['enableCheckBookingLink'] == 1)
 					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
-			if ($enableCheckBookingLink)
-				$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
-								<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
-								<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
-								</form>
-				';
-			else
-				$linkBookNow = '';
+				if ($enableCheckBookingLink)
+					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
+									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
+									<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
+									</form>
+					';
+				else
+					$linkBookNow = '';
 
-//~ 				$linkBookNow = '<p class="bookNow">'.$this->pi_linkTP($this->pi_getLL('bookNow'), $params, 0, $this->lConf['gotoPID']).'</p>';
 			} else {
 				$offers[$i] .= '<li class="offerList"><div class="productTitle"><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
 			}

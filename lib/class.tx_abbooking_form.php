@@ -229,8 +229,19 @@ class tx_abbooking_form {
 		}
 
 		$content .= tx_abbooking_div::printBookingStep($stage);
+		switch ($stage) {
+			case '1':
+				$cssStep="step1";
+				break;
+			case '3':
+				$cssStep="step2";
+				break;
+			case '4':
+				$cssStep="step3";
+				break;
+		}
 
-		$content .='<div class="requestForm">';
+		$content .='<div class="requestForm '.$cssStep.'">';
 
 		$content .='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
 
@@ -438,6 +449,7 @@ class tx_abbooking_form {
 	 */
 	function formVerifyUserInput() {
 
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 		$this->form_errors = array();
 		$numErrors = 0;
 		$dns_ok = 0;
@@ -479,12 +491,16 @@ class tx_abbooking_form {
 					break;
 				case 'checkinDate':
 					if ($form['required'] == 1) {
+						if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
+							$this->lConf['form'][$formname.'.']['error'] .= $this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']);
+							$numErrors++;
+						}
 						if ($this->lConf['startDateStamp'] < (time()-86400)) {
-							$this->lConf['form'][$formname.'.']['error'] = $this->pi_getLL('error_startDateInThePast');
+							$this->lConf['form'][$formname.'.']['error'] .= $this->pi_getLL('error_startDateInThePast');
 							$numErrors++;
 						}
 						if (empty($customer[$formname])) {
-							$this->lConf['form'][$formname.'.']['error'] = is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required');
+							$this->lConf['form'][$formname.'.']['error'] .= is_array($form['errorText.']) ? $this->getTSTitle($form['errorText.']) : $this->pi_getLL('error_required');
 							$numErrors++;
 						}
 					}

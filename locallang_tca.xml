@@ -29,6 +29,7 @@
 			<label index="ab_booking.pi_flexform.numCheckDaySteps">Day Steps (days)</label>
 			<label index="ab_booking.pi_flexform.numDefaultNights">Default Amount of Days to Book</label>
 			<label index="ab_booking.pi_flexform.numDefaultPersons">Default Amount of Persons to Book</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxPersons">Maximum Amount of Persons to show in this Selector.</label>
 			<label index="ab_booking.pi_flexform.showPersonsSelector">Show Selector for Number of Persons</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>
 			<label index="ab_booking.pi_flexform.what_to_display">What to display</label>
@@ -67,6 +68,7 @@
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximaler Buchungszeitraum (Tage)</label>
 			<label index="ab_booking.pi_flexform.numDefaultNights">Standard-Wert Buchungstage</label>
 			<label index="ab_booking.pi_flexform.numDefaultPersons">Standard-Wert Personen</label>
+			<label index="ab_booking.pi_flexform.numCheckMaxPersons">Maximale Anzahl von Personen in der Auswahl.</label>
 			<label index="ab_booking.pi_flexform.showPersonsSelector">Personenanzahl auswählbar?</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID der Detail Info Seite</label>
 			<label index="ab_booking.pi_flexform.what_to_display">Was soll angezeigt werden</label>

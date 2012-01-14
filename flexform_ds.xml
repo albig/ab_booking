@@ -252,6 +252,17 @@
 					</config>
 				</TCEforms>
 			</numDefaultPersons>
+			<numCheckMaxPersons>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxPersons</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default></default>
+					</config>
+				</TCEforms>
+			</numCheckMaxPersons>
 			<showPersonsSelector>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showPersonsSelector</label>

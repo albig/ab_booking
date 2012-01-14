@@ -43,7 +43,7 @@ CREATE TABLE tx_abbooking_booking_meta (
 	crdate int(11) DEFAULT '0' NOT NULL,
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	booking_id int(11) DEFAULT '0' NOT NULL,
-	meta_key varchar(255) default '0' NULL,
+	meta_key varchar(255) default '0' NOT NULL,
 	meta_value longtext,
 	PRIMARY KEY (uid),
 	KEY parent (pid)

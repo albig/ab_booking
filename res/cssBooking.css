@@ -418,18 +418,18 @@ input[type="checkbox"].jscalendar_cb {
   	border: 1px solid #aaa;
 	width: 95%;
 }
-.tx-abbooking-pi1  div.noteForm,
-.tx-abbooking-pi1  p.yourSettings
 
- {
-	list-style-type: none;
+
+.tx-abbooking-pi1 div.noteForm,
+.tx-abbooking-pi1 p.yourSettings
+{
  	margin: 5px 10px 5px 0;
  	padding: 5px 0 5px 5px;
   	border: 1px solid #080;
-	color: black;
-	font-weight: bold;
 	width: 95%;
 	background-color: #ddd;
+	color: black;
+	font-weight: bold;
 }
 .tx-abbooking-pi1  div.noteForm p {
 	font-size: 120%;
@@ -475,7 +475,6 @@ input[type="checkbox"].jscalendar_cb {
 }
 .tx-abbooking-pi1  form.requestForm .checkinDate {
 	clear: left;
-	margin-right: 10px;
 }
 .tx-abbooking-pi1  form.requestForm .required {
 	font-weight: bold;

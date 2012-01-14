@@ -24,6 +24,9 @@
 			you first have to enter the storage pid and you have to add products, 
 			prices and seasons into this storage folder.
 					]]></label>
+					
+			<label index="numCheckMaxPersons.description">Shows only up to this maximum in selector box. Even if the capacity over all is higher. Leave empty for autoselect the maximum capacity!</label>
+					
 		</languageKey>
 
 		<languageKey index="de" type="array">
@@ -35,11 +38,13 @@
 							<li>Booking: Form for entering the user data and to do the booking.</li>
 						</ul>
 						 ]]></label>
-			<label index="ProductID.description">Select the products you want to be used in this plugin.</label>
+			<label index="ProductID.description">Wählen Sie die Produkte, die Sie in diesem Plugin berücksichten wollen.</label>
 			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box, 
 				you first have to enter the storage pid and you have to add products, 
 				prices and seasons into this storage folder.
 					]]></label>
+
+			<label index="numCheckMaxPersons.description">Zeigt maximal die angegebene Anzahl von Personen in der Auswahl. Selbst wenn die Gesamtkapazität höher ist. Wenn der Wert leer ist wird automatische die maximale Kapazität ermittelt.</label>
 		</languageKey>
 				
 		

@@ -428,10 +428,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// save session data
 		if (isset($this->piVars['submit_button'])) {
 			$customerData = $this->piVars; // copy all - is this bad?
-			$customerData["address_name"] = $this->piVars['name'];
+			if (empty($this->piVars['name']))
+				$customerData["address_name"] =  $this->piVars['firstname'] . ' ' . $this->piVars['lastname'];
+			else
+				$customerData["address_name"] = $this->piVars['name'];
 			$customerData["address_street"] = $this->piVars['street'];
-			$customerData["address_postalcode"] = $this->piVars['zip'];
-			$customerData["address_town"] = $this->piVars['town'];
+			$customerData["address_zip"] = $this->piVars['zip'];
+			$customerData["address_city"] = $this->piVars['city'];
 			$customerData["address_email"] = $this->piVars['email'];
 			$customerData["address_telephone"] = $this->piVars['telephone'];
 			if (isset($this->piVars['rateOption']))
@@ -536,9 +539,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$ErrorEmail='class="error"';
 			$contentError.='<li>'.$this->form_errors['email'].'</li>';
 		}
-		if (isset($this->form_errors['town'])) {
+		if (isset($this->form_errors['city'])) {
 			$ErrorTown='class="error"';
-			$contentError.='<li>'.$this->form_errors['town'].'</li>';
+			$contentError.='<li>'.$this->form_errors['city'].'</li>';
 		}
 		if (isset($this->form_errors['PLZ'])) {
 			$ErrorPLZ='class="error"';
@@ -597,50 +600,39 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_final'));
 
 			$content.='<form class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
+
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
 
-					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($customer['address_name']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($customer['address_name']).'" >
 					<p class="yourSettings">'.htmlspecialchars($customer['address_street']).'</p>
 					<input  type="hidden" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" >
-					<p class="yourSettings">'.htmlspecialchars($customer['address_postalcode']).' '.htmlspecialchars($customer['address_town']).'</p>
-					<input  type="hidden" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_postalcode']).'" >
-					<input  type="hidden" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($customer['address_town']).'">
+					<p class="yourSettings">'.htmlspecialchars($customer['address_zip']).' '.htmlspecialchars($customer['address_city']).'</p>
+					<input  type="hidden" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_zip']).'" >
+					<input  type="hidden" name="'.$this->prefixId.'[city]" value="'.htmlspecialchars($customer['address_city']).'">
 					<p class="yourSettings">'.htmlspecialchars($customer['address_email']).'</p>
 					<input  type="hidden" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" >
 					<p class="yourSettings">'.htmlspecialchars($customer['address_telephone']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[telephone]" value="'.htmlspecialchars($customer['address_telephone']).'" >
-					</div>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></div>
-					<div class="noteForm">
 					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[checkinDateStamp]" value="'.$this->lConf['startDateStamp'].'" >
-					</div>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_abreise')).'</b></div>
-					<div class="noteForm">
 					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']).'</p>
-					</div>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).':</b></div>
-					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['daySelector']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[daySelector]" value="'.htmlspecialchars($this->lConf['daySelector']).'" >
-					</div>
-
+´
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).':</b></div>
-					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['adultSelector']).'</p>
 					<input type="hidden" name="'.$this->prefixId.'[adultSelector]" value="'.htmlspecialchars($this->piVars['adultSelector']).'" >
-					</div>
 
 					<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
-					<div class="noteForm">
 					<p class="yourSettings">'.htmlspecialchars($this->piVars['mitteilung']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">
-					</div>';
+					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">';
 
 					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['daySelector'], 1);
 
@@ -674,8 +666,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					<input '.$ErrorStreet.' type="text" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" ><br/>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_zip')).' '.htmlspecialchars($this->pi_getLL('feld_town')).'</b></div>
-					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_postalcode']).'" >
-					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[town]" value="'.htmlspecialchars($customer['address_town']).'"><br/>
+					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_zip']).'" >
+					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[city]" value="'.htmlspecialchars($customer['address_city']).'"><br/>
 
 					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_email')).'</b></div>
 					<input '.$ErrorEmail.' type="text" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" ><br/>
@@ -807,8 +799,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if ($this->lConf['showPersonsSelector'] == 1) {
 			$content .= '<label for="fieldadultSelector"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
 					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector" size="1">';
+			// you may set in flexform the maximum amount of persons to show in the selector
+			if (intval($this->lConf['numCheckMaxPersons'])>0)
+				$selectorMax = min($this->lConf['numCheckMaxPersons'],  $overallCapacity);
+			else
+				$selectorMax = $overallCapacity;
 			/* how many persons are possible? */
-			for ($i = 1; $i<=$overallCapacity; $i++) {
+			for ($i = 1; $i<=$selectorMax; $i++) {
 					$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.'</option>';
 			}
 			$content .= '</select><br/>';
@@ -898,7 +895,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$lang = $GLOBALS['TSFE']->config['config']['language'];
 
-		return $title[$lang];
+		if (! is_array($title))
+			return '';
+
+		if (!empty($title[$lang]))
+			$langTitle = $title[$lang];
+		else
+			$langTitle = current($title);
+
+		return $langTitle;
 	}
 
 	/**
@@ -1166,11 +1171,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->form_errors['street'] = $this->pi_getLL('error_empty_street')."<br/>";
 			$numErrors++;
 		}
-		if (empty($customer['address_town'])) {
-			$this->form_errors['town'] = $this->pi_getLL('error_empty_town')."<br/>";
+		if (empty($customer['address_city'])) {
+			$this->form_errors['city'] = $this->pi_getLL('error_empty_town')."<br/>";
 			$numErrors++;
 		}
-		if (empty($customer['address_postalcode'])) {
+		if (empty($customer['address_zip'])) {
 			$this->form_errors['PLZ'] = $this->pi_getLL('error_empty_zip')."<br/>";
 			$numErrors++;
 		}
@@ -1240,13 +1245,18 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// skip settings which are no form fields
 				if (!is_array($form) || empty($customer[$formname]))
 					continue;
-				$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
+				// special case: radio (and later checkbox):
+				if (is_array($form['radio.'])) {
+					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $this->getTSTitle($form['radio.'][$customer[$formname]]['title.'])."\n";
+				}
+				else
+					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
 			}
 		} else {
 			$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
 			$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
-			$text_mail .= $this->pi_getLL('feld_zip').": ".$this->piVars['plz']."\n";
-			$text_mail .= $this->pi_getLL('feld_town').": ".$customer['address_town']."\n\n";
+			$text_mail .= $this->pi_getLL('feld_zip').": ".$customer['address_zip']."\n";
+			$text_mail .= $this->pi_getLL('feld_town').": ".$customer['address_city']."\n\n";
 			$text_mail .= $this->pi_getLL('feld_email').": ".$customer['address_email']."\n";
 			$text_mail .= $this->pi_getLL('feld_telephone').": ".$customer['address_telephone']."\n\n";
 
@@ -1332,8 +1342,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				} else
 					$send_success = 1;
 			}
-		}
-		else {
+		} else {
 			// send mail for TYPO3 4.5.x....
 			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 			$mail->setFrom($email_owner);
@@ -1499,8 +1508,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if ($rate['priceIsPerWeek'] == 1) {
 			$discountRate['incrementUse'] = 1;
 			$discountRate['priceIsPerWeek'] = 1;
-		}
-		else {
+		} else {
 			$discountRate['incrementUse'] = $dayStep;
 			$discountRate['priceIsPerWeek'] = 0;
 		}
@@ -1556,8 +1564,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if ($dayStep == 7) {
 			$discountRate['incrementUse'] = 1;
 			$discountRate['priceIsPerWeek'] = 1;
-		}
-		else {
+		} else {
 			$discountRate['incrementUse'] = $dayStep;
 			$discountRate['priceIsPerWeek'] = 0;
 		}
@@ -1821,34 +1828,27 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if ($maxTeens > 0)
 			$keyArray[] = 'teen';
 
- 		$keyArray[] = 'ratesPerDayAndPerson';
-//~ 		$keyArray[] = 'ratesPerStay';
-
 		foreach($keyArray as $key) {
 			unset($cur_title);
 			unset($pre_title);
 			unset($rateValueArray);
 
-			if ($pricePerDay[$interval['startDate']]['priceIsPerWeek'] == 1)
-				$dayStep = 7;
-			else
-				$dayStep = 1;
+			if (!is_array($pricePerDay[$interval['startDate']][$key.'.']))
+				continue;
+
+			if ($key != 'ratesPerDayAndPerson') {
+				if ($pricePerDay[$interval['startDate']]['priceIsPerWeek'] == 1)
+					$dayStep = 7;
+				else
+					$dayStep = 1;
+			}
+
 			for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
 
-//~ 				if ($d == $interval['startDate']) {
-//~ 				}
 				unset($rateValueArray);
 
-				if ($key != 'ratesPerDayAndPerson') {
-						$rateValueArray[] = $this->getDiscountRate($pricePerDay[$d][$key.'.'][$maxAdults], $period, $dayStep);
-				} else {
-					if ($key == 'ratesPerDayAndPerson') {
-						if (is_array($pricePerDay[$d][$key.'.']))
-							foreach ($pricePerDay[$d][$key.'.'] as $ratePerDayAndPerson) {
-								$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, $dayStep, $maxAdults);
-							}
-					}
-				}
+				$rateValueArray[] = $this->getDiscountRate($pricePerDay[$d][$key.'.'][$maxAdults], $period, $dayStep);
+
 				if (is_array($rateValueArray))
 				foreach ($rateValueArray as $rateValue) {
 					unset($cur_title);
@@ -1875,14 +1875,64 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 			}
 		}
-//~ print_r($usedPrices);
+
+		//-------------------------------------------------------------
+		// now get the ratesPerDayAndPerson from the startDate
+		// --> this is almost the same as above but the dayStep value may
+		//     differ from rate to rate ...
+		//-------------------------------------------------------------
+
+		unset($keyArray);
+ 		$keyArray[] = 'ratesPerDayAndPerson';
+
+		foreach($keyArray as $key) {
+			unset($cur_title);
+			unset($pre_title);
+			unset($rateValueArray);
+
+			if (!is_array($pricePerDay[$interval['startDate']][$key.'.']))
+				continue;
+
+			foreach ($pricePerDay[$interval['startDate']][$key.'.'] as $ratePerDayAndPerson) {
+				if ($ratePerDayAndPerson['priceIsPerWeek'] == 1)
+					$dayStep = 7;
+				else
+					$dayStep = 1;
+
+				for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
+					unset($rateValueArray);
+
+					$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, $dayStep, $maxAdults);
+
+					if (is_array($rateValueArray))
+					foreach ($rateValueArray as $rateValue) {
+						unset($cur_title);
+						unset($pre_title);
+						if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
+								continue;
+
+							if (empty($rateValue['title']))
+								$title = $pricePerDay[$d]['title'];
+							else
+								$title = $rateValue['title'];
+
+							$cur_title = str_replace(" ", "", $title.$rateValue['discountRate'].$key);
+							$usedPrices[$cur_title]['title'] = $title;
+							$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
+							$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
+							$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
+							$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
+							$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
+							$usedPrices[$cur_title]['usedDates'][] = $d;
+
+							$pre_title = $cur_title;
+					}
+				}
+			}
+		}
+
 		// now we have the simple rates per adult/child/teen
 		unset($keyArray);
-
-//~ 		print_r("-rateValue---Start---\n");
-//~ 		print_r($rateValue);
-//~ 		print_r($usedPrices);
-//~ 		print_r("-rateValue---End---\n");
 
 		// take currency from TS
 		$currency = $this->conf['rates.']['currency'];
@@ -1906,6 +1956,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// input form element for selectable options
+		if (is_array($usedPrices))
 		foreach ($usedPrices as $title => $value) {
 			unset($lDetails);
 			if ($value['priceIsPerWeek'] == 1) {
@@ -1969,6 +2020,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			foreach ($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStay.'] as $ratePerDayAndPerson) {
 						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, 1, 1);
 			}
+
 		if (is_array($rateValueArray))
 			foreach ($rateValueArray as $rateValue) {
 				if ($rateValue['discountRate'] >= 0) {
@@ -1976,6 +2028,28 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 					$lDetails['form'] = '';
 					$lDetails['description'] = $rateValue['title'];
+					$lDetails['dates'] = '';
+					$lDetails['value'] = number_format($rateValue['discountRate'], 2, ',', '').' '.$currency;
+					$priceDetails[] = $lDetails;
+				}
+			}
+
+		//-------------------------------------------------------------
+		// now get the ratesPerStayAndPerson from the startDate
+		//-------------------------------------------------------------
+		unset($rateValueArray);
+		if (is_array($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStayAndPerson.']))
+			foreach ($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStayAndPerson.'] as $ratePerDayAndPerson) {
+						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, 1, $maxAdults);
+			}
+
+		if (is_array($rateValueArray))
+			foreach ($rateValueArray as $rateValue) {
+				if ($rateValue['discountRate'] >= 0) {
+					$total_amount += $rateValue['discountRate'];
+
+					$lDetails['form'] = '';
+					$lDetails['description'] = $rateValue['title'].$text_persons;;
 					$lDetails['dates'] = '';
 					$lDetails['value'] = number_format($rateValue['discountRate'], 2, ',', '').' '.$currency;
 					$priceDetails[] = $lDetails;
