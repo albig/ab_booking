@@ -234,8 +234,18 @@ class tx_abbooking_div {
 				}
 				if ($i == $p)
 				  $pricePerDay[$d] = 'noPrice';
-				else
-				  $pricePerDay[$d] = $pricesAvailable[$i];
+				else {
+					$pricePerDay[$d] = $pricesAvailable[$i];
+					$checkInOk = tx_abbooking_div::checkCheckinWeekDays($d, $pricePerDay[$d]['checkInWeekdays']);
+					if ($checkInOk === FALSE) {
+						$pricePerDay[$d]['checkInOk'] = '0';
+//~ 							print_r("checkin NOT ok on ".strftime("%x", $d)."\n");
+					}
+					else {
+//~ 						print_r("checkin ok ".strftime("%x", $d)."\n");
+						$pricePerDay[$d]['checkInOk'] = '1';
+					}
+				}
 			}
 		}
 		return $pricePerDay;
@@ -255,7 +265,7 @@ class tx_abbooking_div {
 //~   print_r("\n");
 //~  print_r(date(w, $this->lConf['startDateStamp']));
 //~ print_r("\n");
- 		if (($checkInWeekdays == "") ||
+ 		if (($checkInWeekdays == "") || ($checkInWeekdays == '*') ||
 			in_array(date(w, $day), explode(',', $checkInWeekdays)   ))
 			return TRUE;
 		else
@@ -892,7 +902,7 @@ class tx_abbooking_div {
 					if ($printDayNames == 1) {
 						// fill noDays at the end of the month
 						for ($fillDay = $d; $fillDay <= strtotime('next sunday', $d); $fillDay=strtotime('+1 day', $fillDay)) {
-								$out .= '<li class="'.$myBooked[$fillDay].' DayNames">'.strftime("%a", $fillDay).'</li>';
+								$out .= '<li class="'.$myBooked[$fillDay].' DayNames">'.substr(strftime("%a", $fillDay), 0, 2).'</li>';
 						}
 						$out .= '</ul>';
 						$out .= '</div>';
@@ -1002,7 +1012,7 @@ class tx_abbooking_div {
 
 			 // print only in first line
 			if ($printDayNames == 1) {
-				$out .= '<li class="'.$cssClass.' DayNames">'.strftime("%a", $d).'</li>';
+				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
 			}
 
 			if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
@@ -1135,7 +1145,7 @@ class tx_abbooking_div {
 						else
 							$link = strftime('%a, %x', $j);
 
-						$contentError.= $this->pi_getLL('error_next_checkIn_on').' '.$link;
+						$contentError[] = $this->pi_getLL('error_next_checkIn_on').' '.$link;
 //~ 						$this->lConf['startDateStamp'] = $j;
 //~ 						$enableCheckBookingLink = 1;
 						break;
@@ -1247,8 +1257,8 @@ class tx_abbooking_div {
 	function getJSCalendarInput($name, $value, $error = '') {
 
 		if (class_exists('JSCalendar')) {
-			if ($this->conf['dateFormat'] != '') {
-				$dateFormat = str_replace(array('d', 'm', 'y', 'Y'), array('%d', '%m', '%y', '%Y'), $this->conf['dateFormat']);
+			if ($this->lConf['dateFormat'] != '') {
+				$dateFormat = str_replace(array('d', 'm', 'y', 'Y'), array('%d', '%m', '%y', '%Y'), $this->lConf['dateFormat']);
 			} else {
 				// unfortunately, the jscalendar doesn't recognize %x as dateformat
 				if ($GLOBALS['TSFE']->config['config']['language'] == 'de')

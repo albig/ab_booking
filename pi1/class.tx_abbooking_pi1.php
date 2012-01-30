@@ -467,7 +467,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	public function formBookingUserData($stage) {
 
 		// jump to dynamic form if configured
-		if ($this->lConf['useTSconfiguration'] == 1 && count($this->lConf['form'])>1)
+//~ 		if ($this->lConf['useTSconfiguration'] == 1 && count($this->lConf['form'])>1)
+ 		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1)
 			return tx_abbooking_form::printUserForm($stage);
 
 		$interval = array();
@@ -1239,7 +1240,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
 
-		if ($this->lConf['useTSconfiguration'] == 1) {
+ 		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1) {
 			foreach ($this->lConf['form'] as $formname => $form) {
 				$formname = str_replace('.', '', $formname);
 				// skip settings which are no form fields
@@ -1391,7 +1392,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else
 			$endDate = $startDate;
 
-		$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['name']).', '.str_replace(',', ' ', $customer['city']).', '.$customer['email'].', '.str_replace(',', ' ', $customer['telephone']);
+		$title = strftime('%Y%m%d', $startDate).', '.str_replace(',', ' ', $customer['address_name']).', '.str_replace(',', ' ', $customer['city']).', '.$customer['email'].', '.str_replace(',', ' ', $customer['telephone']);
 		$editCode = md5($title.$this->lConf['ProductID']);
 
 		$fields_values = array(
@@ -1528,7 +1529,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * @param	[type]		$period: booking period
 	 * @return	double		amount
 	 */
-	function getDiscountRate($rate, $period, $dayStep) {
+	function getDiscountRate($rate, $period, $dayStep = 1) {
 
 		$discountDetails = explode(',', $rate);
 

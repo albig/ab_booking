@@ -66,7 +66,14 @@ class tx_abbooking_form {
 
 					if (!empty($form['error']))
 						$cssClass .= ' errorField';
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
+					$out .= '<div class="'.$cssClass.'">';
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
 					if (!empty($form['error'])) {
 						$cssError = 'class="error"';
 						$out .= '<p class="errorText">'.$form['error'].'</p>';
@@ -86,7 +93,16 @@ class tx_abbooking_form {
 					$out .= '</div>';
 					break;
 				case 'radio':
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
+					$out .= '<div class="'.$cssClass.'">';
+					
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
+					
 					if ($showHidden == 1) {
 						foreach ($form['radio.'] as $radioname => $radio) {
 								if ($radioname == $customer[$formname])
@@ -113,10 +129,29 @@ class tx_abbooking_form {
 
 					break;
 				case 'checkbox':
+					$out .= '<div class="'.$cssClass.'">';
+					
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
+					
+					$out .= '</div>';
 					break;
 				case 'selector':
+					$out .= '<div class="'.$cssClass.'">';
+					
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
 
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
 					if ($showHidden == 1) {
 						$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
 						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
@@ -166,7 +201,16 @@ class tx_abbooking_form {
 
 					break;
 				case 'textarea':
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
+					$out .= '<div class="'.$cssClass.'">';
+					
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
+
 					if ($showHidden == 1) {
 						$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
 						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
@@ -177,8 +221,16 @@ class tx_abbooking_form {
 					$out .= '</div>';
 					break;
 				case 'infobox':
-					$out .= '<div class="'.$cssClass.'">'.$this->getTSTitle($form['title.']).'<br />';
-					$out .= '<p>'.$this->getTSTitle($form['info.']).'</p>';
+					$out .= '<div class="'.$cssClass.'">';
+					
+					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					else {
+						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						if (count($form['info.'])>0)
+							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
+					}
+
 					$out .= '</div>';
 					break;
 				default:
@@ -398,49 +450,7 @@ class tx_abbooking_form {
 		return $content;
 	}
 
-	/**
-	 * Return an input field with date2cal-calendar if available
-	 *
-	 * @param	string		$name: of the input field
-	 * @param	string		$value: of the input field
-	 * @param	boolean		$error: if set the css class "error" is added
-	 * @return	HTML-input		field for date selection
-	 */
-	function getJSCalendarInput($name, $value, $error = '') {
 
-		if (class_exists('JSCalendar')) {
-			if ($this->conf['dateFormat'] != '') {
-				$dateFormat = str_replace(array('d', 'm', 'y', 'Y'), array('%d', '%m', '%y', '%Y'), $this->conf['dateFormat']);
-			} else {
-				// unfortunately, the jscalendar doesn't recognize %x as dateformat
-				if ($GLOBALS['TSFE']->config['config']['language'] == 'de')
-					$dateFormat = '%d.%m.%Y';
-				else if ($GLOBALS['TSFE']->config['config']['language'] == 'en')
-					$dateFormat = '%d/%m/%Y';
-				else
-					$dateFormat = '%Y-%m-%d';
-			}
-			$JSCalendar = JSCalendar::getInstance();
-			// datetime format (default: time)
-            $JSCalendar->setDateFormat(false, $dateFormat);
-			$JSCalendar->setNLP(false);
-            $JSCalendar->setInputField($name);
-			$JSCalendar->setConfigOption('ifFormat', $dateFormat);
- 			$out .= $JSCalendar->render(strftime($dateFormat, $value));
-
-			if (($jsCode = $JSCalendar->getMainJS()) != '') {
-				$GLOBALS['TSFE']->additionalHeaderData['abbooking_jscalendar'] = $jsCode;
-			}
-		} else {
-			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'" value="'.strftime('%x', $value).'" ><br/>';
-		}
-
-		if (isset($error)) {
-			$out = str_replace('class="jscalendar"', 'class="jscalendar error"', $out);
-		}
-
-		return $out;
-	}
 
 	/*
 	 * Checks the form data for validity

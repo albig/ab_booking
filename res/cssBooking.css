@@ -466,9 +466,15 @@ input[type="checkbox"].jscalendar_cb {
 	float: left;
 	margin-right: 10px;
 }
+.tx-abbooking-pi1  form.requestForm .city {
+	float: left;
+}
+.tx-abbooking-pi1  form.requestForm .email {
+	clear: left;
+}
 .tx-abbooking-pi1  form.requestForm .singleradio {
 	float: left;
-	margin-right: 10px;
+	clear: left;
 }
 .tx-abbooking-pi1  form.requestForm .clearsingleradio {
 	clear: left;
@@ -476,10 +482,19 @@ input[type="checkbox"].jscalendar_cb {
 .tx-abbooking-pi1  form.requestForm .checkinDate {
 	clear: left;
 }
-.tx-abbooking-pi1  form.requestForm .required {
+.tx-abbooking-pi1  form.requestForm .required p.title {
 	font-weight: bold;
 }
-.tx-abbooking-pi1  form.requestForm .required:before {
+.tx-abbooking-pi1  form.requestForm p.title {
+	font-weight: bold;
+}
+.tx-abbooking-pi1  form.requestForm p.info {
+	font-weight: normal;
+	font-size: 90%;
+	padding: 1px;
+	margin: 0px;
+}
+.tx-abbooking-pi1  form.requestForm .required p.title:before {
 	content: '*';
 }
 .tx-abbooking-pi1  form.requestForm .errorField {
@@ -620,4 +635,14 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 
 .tx-abbooking-pi1  div.priceTotal {
 	margin-bottom: 1em;
+}
+
+.tooltipForm {
+	display:none;
+ 	background:transparent url(/fileadmin/templates/weltcafe_template/images/white_big_wc.png);
+	font-size: 90%;
+	height:100px;
+	width:240px;
+	padding:20px;
+	color:#333;	
 }
