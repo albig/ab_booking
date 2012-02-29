@@ -1867,6 +1867,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 //~ 						$usedPrices[$cur_title]['rateUsed']++;
 						$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
 						$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
+						$usedPrices[$cur_title]['dayStep'] = $dayStep;
 						$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
 						$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
 						$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
@@ -1921,6 +1922,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$usedPrices[$cur_title]['title'] = $title;
 							$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
 							$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
+							$usedPrices[$cur_title]['dayStep'] = $dayStep;
 							$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
 							$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
 							$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
@@ -1992,19 +1994,31 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			// step through used dates and create date interval string
 			$openInterval = 0;
 			$lastday = 0;
+//~ print_r($value);			
 			foreach ($value['usedDates'] as $id => $currday) {
 				$dayDiff = (int)($currday - $lastday);
 				if ($id == 0 || $openInterval == 0) {
 					$dateUsed = strftime('%a %x', $currday).' - ';
 					$openInterval = 1;
 				} else if ($openInterval == 1 && $dayDiff > 86400) {
-					$dateUsed .= strftime('%a %x', $lastday );
+					if ($value['priceIsPerWeek'] == '1')
+						$dateUsed .= strftime('%a %x', $currday+(($value['dayStep'])*86400));
+					else
+						$dateUsed .= strftime('%a %x', $lastday);
 					$openInterval = 0;
 				}
 				$lastday = $currday;
 			}
-			if ($openInterval == 1)
-				$dateUsed .= strftime('%a %x', $lastday+($dayStep*86400) );
+//~ print_r($dateUsed."\n");			
+			
+			if ($openInterval == 1) {
+				if ($value['priceIsPerWeek'] == '1')
+					$dateUsed .= strftime('%a %x', $lastday+(($value['dayStep'])*86400));
+				else
+					$dateUsed .= strftime('%a %x', $lastday+($value['dayStep']*86400) );
+			}
+//~ print_r($dateUsed."\n");			
+//~ print_r("------------\n");			
 
 			$lDetails['dates'][] = $dateUsed;
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
