@@ -1241,6 +1241,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$text_mail .= "===\n";
 
  		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1) {
+			$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
 			foreach ($this->lConf['form'] as $formname => $form) {
 				$formname = str_replace('.', '', $formname);
 				// skip settings which are no form fields
@@ -1293,7 +1294,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$email_owner = t3lib_utility_Mail::getSystemFrom();
 		$email_customer = array($customer['address_email'] => $customer['address_name']);
 		$subject_customer = $this->pi_getLL('email_your_booking').': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
-		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %A, %d.%m.%Y", $this->lConf['endDateStamp']);
+		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
 
 		if (version_compare(TYPO3_version, '4.5', '<')) {
 			// send mail for TYPO3 4.4.x....

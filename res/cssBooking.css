@@ -419,7 +419,12 @@ input[type="checkbox"].jscalendar_cb {
 	width: 95%;
 }
 
-
+.tx-abbooking-pi1  ul.errorHints li {
+	list-style-type: circle;
+	color: red;
+	font-weight: bold;
+	font-style: italic;
+}
 .tx-abbooking-pi1 div.noteForm,
 .tx-abbooking-pi1 p.yourSettings
 {

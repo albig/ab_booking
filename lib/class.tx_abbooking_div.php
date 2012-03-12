@@ -1146,8 +1146,6 @@ class tx_abbooking_div {
 							$link = strftime('%a, %x', $j);
 
 						$contentError[] = $this->pi_getLL('error_next_checkIn_on').' '.$link;
-//~ 						$this->lConf['startDateStamp'] = $j;
-//~ 						$enableCheckBookingLink = 1;
 						break;
 					}
 				}
@@ -1182,6 +1180,7 @@ class tx_abbooking_div {
 			else
 				$link = $title;
 
+			$linkBookNow = '';
 			if ($product['maxAvailable'] > 0) {
 				$offers['numOffers']++;
 				$offers[$i] .= '<li class="offerList"><div class="productTitle">'.$link.' <b>'.strtolower($this->pi_getLL('result_available')).'</b></div>';
@@ -1195,18 +1194,17 @@ class tx_abbooking_div {
 				}
 				$offers[$i] .= $bodytext;
 
-				if ($this->lConf['enableCheckBookingLink'] == 1)
+				if ($enableCheckBookingLink)
 					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
+				
 				if ($enableCheckBookingLink)
 					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
 									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 									<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
 									</form>
 					';
-				else
-					$linkBookNow = '';
 
 			} else {
 				$offers[$i] .= '<li class="offerList"><div class="productTitle"><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
@@ -1235,10 +1233,10 @@ class tx_abbooking_div {
 
 //~ 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
-			if ($this->lConf['enableCheckBookingLink'])
+			if ($enableCheckBookingLink)
 				$offers[$i] .= $linkBookNow;
-			else
-				$offers[$i] .= '</form>';
+//~ 			else
+//~ 				$offers[$i] .= '</form>';
 			// close list item...
 			$offers[$i] .= '</li>';
 		}
