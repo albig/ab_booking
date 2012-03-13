@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2011 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2012 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -43,7 +43,6 @@ class tx_abbooking_div {
 			$l10n_parent = 'l10n_parent';
 
 		// we try to get the default language entry (normal behaviour) or, if not possible, currently the needed language (fallback if no default language entry is available)
-// 		$where = 'pid='.$pid.' AND uid IN('.$uid.') AND (sys_language_uid IN (-1,0) OR (sys_language_uid = ' .$GLOBALS['TSFE']->sys_language_uid. ' AND '.$l10n_parent.' = 0))';
 		$where = 'pid='.$pid.' AND uid IN('.$uid.') AND (sys_language_uid IN (-1,0) OR (sys_language_uid = ' .$GLOBALS['TSFE']->sys_language_uid. '))';
 		// use the TYPO3 default function for adding hidden = 0, deleted = 0, group and date statements
 		$where  .= $GLOBALS['TSFE']->sys_page->enableFields($table, $show_hidden = 0, $ignore_array);
@@ -52,12 +51,9 @@ class tx_abbooking_div {
 		$order = '';
 		$group = '';
 		$limit = '';
-//~ print_r($table."--".$pid."----------\n");
-//~ print_r($where);
-//~ print_r("------------\n");
+
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select, $table, $where, $group, $order, $limit);
 		while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-// print_r($row);
 			// check for language overlay if:
 			// * row is valid
 			// * row language is different from currently needed language
@@ -75,7 +71,6 @@ class tx_abbooking_div {
 			if ($row) {
 				// get correct language uid for translated realurl link
 				$link_uid = ($row['_LOCALIZED_UID']) ? $row['_LOCALIZED_UID'] : $row['uid'];
-// print_r("the link_uid is ".$link_uid."\n");
 			}
 			$out[$row['uid']] = $row;
 		}
@@ -147,9 +142,7 @@ class tx_abbooking_div {
 	 * @return	string		with amount, currency...
 	 */
 	function getPrices($key, $interval) {
-//~ print_r($key);
-//~ print_r($interval);
-//~ print_r("\n");
+
 			if ($this->lConf['useTSconfiguration'] == 1)
 				return tx_abbooking_div::getRatesFromTS($key, $interval);
 			else
@@ -239,10 +232,8 @@ class tx_abbooking_div {
 					$checkInOk = tx_abbooking_div::checkCheckinWeekDays($d, $pricePerDay[$d]['checkInWeekdays']);
 					if ($checkInOk === FALSE) {
 						$pricePerDay[$d]['checkInOk'] = '0';
-//~ 							print_r("checkin NOT ok on ".strftime("%x", $d)."\n");
 					}
 					else {
-//~ 						print_r("checkin ok ".strftime("%x", $d)."\n");
 						$pricePerDay[$d]['checkInOk'] = '1';
 					}
 				}
@@ -252,19 +243,14 @@ class tx_abbooking_div {
 	}
 
 	/**
-	 * Check if Season is valild for a given date
+	 * Check if day is in checkInWeekday --> valid
 	 *
-	 * @param	string		$uid
-	 * @param	array		$interval: ...
-	 * @return	array		with booking periods
+	 * @param	string		$day
+	 * @param	array		$checkInWeekdays: ...
+	 * @return	boolean		true on success
 	 */
 	function checkCheckinWeekDays($day, $checkInWeekdays) {
 
-//~   print_r("checkCheckinWeekDays\n");
-//~   print_r(explode(',', $checkInWeekdays));
-//~   print_r("\n");
-//~  print_r(date(w, $this->lConf['startDateStamp']));
-//~ print_r("\n");
  		if (($checkInWeekdays == "") || ($checkInWeekdays == '*') ||
 			in_array(date(w, $day), explode(',', $checkInWeekdays)   ))
 			return TRUE;
@@ -297,12 +283,9 @@ class tx_abbooking_div {
 
 		if (($season['startDateStamp'] <= $interval['endList'] || $season['startDateStamp'] == 0) &&
 			($season['endDateStamp'] >= $interval['startList'] || $season['endDateStamp'] == 0)) {
-//~  				print_r('season ok' . $season['startDate'] . "\n");
-
 			return $season;
 		}
 		else
-//~  			print_r('season NOT ok' . $season['startDate'] . "\n");
 			return FALSE;
 	}
 	/**
@@ -316,16 +299,12 @@ class tx_abbooking_div {
 
 		$pricePerDay = array();
 
-//~ 		if (!isset($uid))
-//~ 			$uid = $this->lConf['ProductID'];
-
 		if (!isset($interval['startList']) && !isset($interval['endList'])) {
 			$interval['startList'] = $interval['startDate'];
 			$interval['endList'] = $interval['endDate'];
 		}
 
 		// 1. get the rates for the product
-// 		$ratesTitleArray = $this->conf['products.'][$tstitle.'.']['rates.'];
 		$ratesTitleArray = $this->lConf['productDetails'][$key]['rates.'];
 		if (is_array($ratesTitleArray))
 		foreach ($ratesTitleArray as $rate) {
@@ -345,12 +324,7 @@ class tx_abbooking_div {
 			if ($seasonFound>0)
 				$allRates[] = $rateFound;
 		}
-//~ print_r($interval);
-//~ print_r("getrates allrates TS\n");
-//~ print_r(sizeof($allRates));
-//~ print_r($allRates);
-//~ print_r("-----------------\n");
-//~
+
 		// 3. get the rate for every day...
 		// get the valid prices per day
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
@@ -360,26 +334,18 @@ class tx_abbooking_div {
 					$checkInOk = tx_abbooking_div::checkCheckinWeekDays($d, $singlePrice['checkInWeekdays']);
 					if ($checkInOk === FALSE) {
 						$singlePrice['checkInOk'] = '0';
-//~ 							print_r("checkin NOT ok on ".strftime("%x", $d)."\n");
 					}
 					else {
-//~ 						print_r("checkin ok ".strftime("%x", $d)."\n");
 						$singlePrice['checkInOk'] = '1';
 					}
 
 					$validPriceFound = 0;
 					foreach ($singlePrice['seasons'] as $seasonName => $season) {
-//~ print_r("getrates allrates TS\n");
-//~ print_r($singlePrice['checkInWeekdays']);
-//~ print_r($singlePrice);
-//~ print_r("-----------------\n");
 						if (($season['startDateStamp'] <= $d || $season['startDateStamp'] == 0)
 							&& ($season['endDateStamp'] >= $d || $season['endDateStamp'] == 0)) {
 							// if no valid price is found - go further in the price array.
 							// otherwise the first in the list is the right.
 							$validPriceFound = 1;
-//~ 						print_r("checkinThisSingle: ".$validPriceFound."\n");
-//~ 						print_r($singlePrice);
 							break;
 						}
 					}
@@ -389,10 +355,6 @@ class tx_abbooking_div {
 					}
 				}
 		}
-//~ print_r("getrates from TS\n");
-//~ print_r(sizeof($pricePerDay));
-//~ print_r($pricePerDay);
-//~ print_r("-----------------\n");
 
 		if (count($pricePerDay)>0)
 			return $pricePerDay;
@@ -473,219 +435,18 @@ class tx_abbooking_div {
 		return $bookedDays;
 	}
 
-	/**
-	 * Display the availability calendar for one or more months depending on flexform configuration
-	 *
-	 * @param	integer		$uid: ...
-	 * @param	[type]		$interval: ...
-	 * @return	HTML-table		with calendar view
-	 */
-	function printAvailabilityCalendar($uid, $interval = array()) {
-
-		$this->pi_loadLL();
-		$myBooked = array();
-		$rows = (int)$this->lConf['numMonthsRows'];
-		$columns = (int)$this->lConf['numMonthsCols'];
-		$months = $rows * $columns;
-
-
-		// disable booking links for robots
-		if ($this->isRobot())
-			$this->lConf['enableCalendarBookingLink'] = 0;
-
-		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
-			if ($this->lConf['startDateStamp'] > 0) {
-				$interval['startDate'] =  strtotime(strftime("%Y-%m-1", $this->lConf['startDateStamp']));
-			}
-			else {
-				$interval['startDate'] = strtotime(strftime("%Y-%m-1"));
-			}
-//~ 		print_r(strftime("%Y-%m-%d", $interval['startDate']));
-			$interval['endDate'] = strtotime('+'.$months.' months', $interval['startDate']);
-//~ 		print_r(strftime("%Y-%m-%d", $interval['endDate']));
-
-//~ 			$today = strtotime(strftime("%Y-%m-%d"));
-//~ 			$interval['startDate'] = strtotime(strftime("%Y-%m-1"));
-//~ 			$interval['endDate'] = strtotime('+'.$months.' months', $today);
-		}
-		$interval['startList'] = $interval['startDate'];
-		$interval['endList'] = $interval['endDate'];
-
-		$prices = tx_abbooking_div::getPrices($uid, $interval);
-		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
-
-		if (empty($this->lConf['ProductID']) && empty($uid)) {
-			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
-		}
-
-		// date select form
-		$out .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
-				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
-		$out .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
-		if (!$this->isRobot())
-			$out .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
-		$out .= '</form>
-			<br />
-		';
-
-		$out .= '<table class="listlegend"><tr>';
-		$out .= '<td class="vacant">&nbsp;</td><td class="legend">' . $this->pi_getLL('vacant day') .'</td>';
-		$out .= '<td class="booked">&nbsp;</td><td class="legend">'.	$this->pi_getLL('booked day').' </td>';
-		$out .= '</tr></table>';
-
-		$out .= '<table class="availabilityCalendar">';
-		$out .= '<tr>';
-
-		// runs $rows * $columns times
-		for ($i = 0; $i < $months; $i++) {
-			$days = 0;
-			if ($i % $columns == 0 && $i != 0 && $i != $months) {
-				$out .= '</tr><tr>';
-			}
-			// adding leading zero
-			$m = ( $i + date(m) ) % 12 ;
-			$mon = (int)(($m == 0) ? 12 : $m);
-			$year = (int)date(Y) + (int)( ( $i + date(m) - 1) / 12 ) ;
-
-			$out .= '<td class="ABmonth">';
-			$out .= '<h3 class="ABmonthname">'. $this->pi_getLL(date("M", strtotime( $year . "-".$mon."-01"))).' '. $year .'</h3>';
-			$out .= '<table class="ABcalendar">';
-
-			// calender view in line mode
-			if($this->lConf['monthsLineView']) {
-				$out .= '<tr>
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-				</tr>';
-				$rowsCalendar = 42;
-			}
-			// default calendar view
-			else {
-				$out .= '<tr>
-				<td class="DayTitle" title="'.$this->pi_getLL("Mon").'">'.$this->pi_getLL("Mo").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Tus").'">'.$this->pi_getLL("Tu").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Wed").'">'.$this->pi_getLL("We").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Thu").'">'.$this->pi_getLL("Th").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Fri").'">'.$this->pi_getLL("Fr").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sat").'">'.$this->pi_getLL("Sa").'</td>
-				<td class="DayTitle" title="'.$this->pi_getLL("Sun").'">'.$this->pi_getLL("Su").'</td>
-				</tr>';
-				$rowsCalendar = 7;
-			}
-			$out .= '<tr>';
-
-			// calculating the left spaces to get the layout right
-			for ($s = 0; $s < date('w', strtotime($year."-".$mon."-7")) ; $s++){
-				$out .= '<td class="noDay">&nbsp;</td>';
-				$days++;
-			}
-
-			$bookingRate = 0;
-			for ($d=1; $d <= date("t", strtotime( $year . "-" . $mon . "-01")); $d++){
-				if ($days % $rowsCalendar == 0 && $days != 0 ) { // new row after 42 or 7 days
-					$out .= '</tr><tr>';
-				}
-
-				$cssClass = $myBooked[strtotime($year."-".$mon."-".$d)];
-
-				$params_united = strtotime($year.'-'.$mon.'-'.$d).'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-
-				$params = array (
-					$this->prefixId.'[ABx]' => $params_united,
-				);
-				if ($this->lConf['enableCalendarBookingLink'] // show booking links
-					&& strtotime($year.'-'.$mon.'-'.$d) >= strtotime(strftime("%Y-%m-%d"))	// only future dates
-					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
-					&& (! strstr($cssClass, 'noPrices'))
-					)
-					$out .= '<td class="'.$cssClass.'">'.$this->pi_linkTP($d, $params, 0, $this->lConf['gotoPID']).'</td>';
-				else
-					$out .= '<td class="'.$cssClass.'">'.$d.'</td>';
-				// booking end
-				if ($this->lConf['showBookingRate'] && strstr($cssClass, 'booked') && !strstr($cssClass, 'booked End'))
-					$bookingRate ++;
-				$days++;
-			}
-
-			for (; $days < 42; $days++ ) {
-				if ($days % $rowsCalendar == 0) {  // new row after 42 or 7 days
-					$out .= '</tr><tr>';
-				}
-				$out .= '<td class="noDay">&nbsp;</td>';
-				$out .= "\n";
-			}
-			$out .= '</tr>';
-			$out .= '</table>';
-			if ($this->lConf['showBookingRate'])
-				$out .= '<p>'.round((100*$bookingRate/date("t", strtotime( $year . "-" . $mon . "-01"))),0).' %</p>';
-			$out .= "\n";
-		}
-
-		$out .= '</tr></table>';
-
-		return $out;
-	}
 
 	/**
 	 * Display the availability calendar for one or more months depending on flexform configuration
 	 *
 	 * @param	integer		$uid: ...
-	 * @param	[type]		$interval: ...
+	 * @param	array		$interval: ...
 	 * @return	HTML-table		with calendar view
 	 */
 	function printCheckinOverview($uid, $interval = array()) {
 
 		$this->pi_loadLL();
 		$myBooked = array();
-//~ 		$rows = (int)$this->lConf['numMonthsRows'];
-//~ 		$columns = (int)$this->lConf['numMonthsCols'];
-//~ 		$weeks = 3;
 
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
 			if ($this->lConf['startDateStamp']>0)
@@ -713,7 +474,6 @@ class tx_abbooking_div {
 
 		$out = $content;
 
-//~ 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
 		// keep uids in fixed order...
 		function cmpUIDs($a, $b)
@@ -736,10 +496,9 @@ class tx_abbooking_div {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 		}
 
-//~ print_r($bookedPeriods);
 		foreach ($bookedPeriods['bookings'] as $id => $row) {
 			for ($d = $row['startdate']; $d <= $row['enddate']; $d=strtotime("+ 1 day", $d)) {
-//~ print_r($myBooked[$d][$row['uid']]);
+
 				$is_arrival = strpos($myBooked[$d][$row['uid']][$id], 'Start');
 				$is_depature = strpos($myBooked[$d][$row['uid']][$id], 'End');
 				if ($this->lConf['showOnlyChanges'] == '1' && $is_arrival === FALSE && $is_depature === FALSE )
@@ -756,7 +515,7 @@ class tx_abbooking_div {
 				$bookingInfos[$d]['title'] .= $tilearray[1] .'</div></div>';
 			}
 		};
-//~ print_r($bookingInfos);
+
 		$out .= '<div class="calendarCheckinOverview">';
 		$out .= '<div class="calendarWeek">';
 		// step from last monday to next sunday through the list.
@@ -770,8 +529,6 @@ class tx_abbooking_div {
 			if ($showDays > $this->lConf['checkInNumDays'])
 				break;
 
-//~ 			if (date(w, $d) == 1 || $d == $interval['startList']) {// open div on monday
-//~ 			}
 			$out .= '<ul class="CalendarLine">';
 			unset($cssClass);
 
@@ -796,10 +553,6 @@ class tx_abbooking_div {
 			$out .= '<li class="'.$cssClass.'">'.$infoField.'</li>';
 			$out .= '</ul>';
 
-
-
-//~ 			if (date(w, $d) == 0 || $d == $interval['endList']) {// close div after sunday
-//~ 			}
 		}
 		$out .= '</div>';
 		$out .= '</div>';
@@ -814,17 +567,7 @@ class tx_abbooking_div {
 	 * @param	array		$interval: ...
 	 * @return	HTML-list		of calendar days
 	 */
-//~ 	function printAvailabilityCalendarDiv($uid, $interval = array()) {
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
-
-//~ print_r($interval);
-//~ 		$this->pi_loadLL();
-//~ 		$cur_de = setlocale(LC_ALL, 0);
-//~ 		$loc_en = setlocale(LC_ALL, 'en_GB.UTF-8', 'en_GB.utf8', 'eng', 'en_GB', 'en_US',  'en_GB.ISO8859-1', 'en_GB@euro', 'en');
-//~ 		$loc_de = setlocale(LC_ALL, 'de_DE.UTF-8', 'de_DE.utf8', 'deu', 'de_DE', 'deu_deu', 'de_DE.ISO8859-1', 'de_DE@euro', 'de', 'ge');
-//~ 		$out .=  "Current setting is " .print_r($cur_de, 1). "<br />\n";
-//~ 		$out .=  "Preferred locale for german on this system is " .$loc_de. "<br />\n";
-//~ 		$out .=  "Preferred locale for english on this system is " .$loc_en. "<br />\n";
 
 		// disable booking links for robots
 		if ($this->isRobot())
@@ -848,16 +591,10 @@ class tx_abbooking_div {
 		$interval['startList'] = strtotime( 'last monday', $interval['startDate'] );
 		$interval['endList'] = strtotime( 'next sunday', $interval['endDate'] );
 
-//~ print_r($interval);
-
 		if ($months == 0)
 		$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
 				(date('Y', $interval['endList']) - date('Y', $interval['startList']) +1)*12;
 
-//~ print_r($months);
-		// this form of date_diff is erroneous... so check and reduce amount of months
-//~ 		if (strtotime('+ '.$months.' months', $interval['startDate']) - $interval['startDate']>0)
-//~ 			$month_diff--;
 
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
@@ -995,9 +732,7 @@ class tx_abbooking_div {
 		$prices = tx_abbooking_div::getPrices($uid, $interval);
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
-//~ print_r("printAvailabilityCalendarLine\n");
-//~ print_r($prices);
-//~ print_r($myBooked);
+
 		$printDayNames = 1;
 		$out = '<div class="availabilityCalendarLine">';
 		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
@@ -1133,7 +868,7 @@ class tx_abbooking_div {
 				$contentError[] = $this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']);
 				$enableCheckBookingLink = 0;
 				for ($j=$this->lConf['startDateStamp']; $j < strtotime('+14 day', $this->lConf['startDateStamp']); $j=strtotime('+1 day', $j)) {
-//~ print_r(strftime('%x', $j));
+
 					if ($product['prices'][$j]['checkInOk'] == '1') {
 						$interval['startDate'] = $j;
 						$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
@@ -1218,8 +953,6 @@ class tx_abbooking_div {
 				else
 					$intval['startDate'] = $interval['startDate'];
 				$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate']);
-	//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
-	//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
 				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarDiv($product['uid'].$offTimeProducts,  $intval, $this->lConf['form']['showCalendarMonth'], 0);
 
 			} else if ($this->lConf['form']['showCalendarWeek']>0) {
@@ -1230,13 +963,8 @@ class tx_abbooking_div {
 			} else
 				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
-
-//~ 			$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
-
 			if ($enableCheckBookingLink)
 				$offers[$i] .= $linkBookNow;
-//~ 			else
-//~ 				$offers[$i] .= '</form>';
 			// close list item...
 			$offers[$i] .= '</li>';
 		}
