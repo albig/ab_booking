@@ -1,26 +1,20 @@
 /*
- * (c) 2008-2011 Alexander Bigga <linux@bigga.de>
- *
+ * (c) 2008-2012 Alexander Bigga <linux@bigga.de>
  */
 
-
 /*
- * Calendar Table Settings
- *
+ * Calendar Settings
  */
 
 .tx-abbooking-pi1 {
 	overflow: auto;
 	padding: 5px 0;
 }
-.tx-abbooking-pi1 table.availabilityCalendar table {
-    border-collapse: separate;
-}
 
 .tx-abbooking-pi1 .availabilityCalendar li,
 .tx-abbooking-pi1 .availabilityCalendarLine li
- {
- 	padding: 1px;
+{
+	padding: 1px;
 
 	-moz-border-radius: 3pt;
 	-webkit-border-radius: 3pt;
@@ -29,48 +23,46 @@
 	-moz-box-shadow: 1px 1px 1px #a96;
 	-webkit-box-shadow: 1px 1px 1px #a96;
 	box-shadow: 1px 1px 1px #a96;
+
+}
+.tx-abbooking-pi1 .availabilityCalendar li a,
+.tx-abbooking-pi1 .availabilityCalendarLine li a
+{
+	padding: 2px;
+	margin: 0px;
+	width: 100%;
 }
 
-.tx-abbooking-pi1 .listlegend td {
-	font-size: 100%;
- 	width: 14px;
-	text-align: center;
-}
-.tx-abbooking-pi1 .listlegend td.legend {
-	 text-align: left;
+
+.tx-abbooking-pi1 .availabilityCalendar li.Start,
+.tx-abbooking-pi1 .availabilityCalendarLine li.Start
+{
+	border-right: 2px solid #d30000;
+	border-bottom: 2px solid #d30000;
+	border-left: 2px solid #008000;
+	border-top: 2px solid #008000;
+	text-decoration: line-through;
 }
 
-/*.tx-abbooking-pi1 .availabilityCalendar .legend {
-	font-size: 100%;
-	border: 0px;
-	text-align: left;
-}*/
-.tx-abbooking-pi1 table.availabilityCalendar .ABmonthname {
-	background-color: #e0e0e0;
-	border: 0px;
+.tx-abbooking-pi1 .availabilityCalendar li.End,
+.tx-abbooking-pi1 .availabilityCalendarLine li.End
+{
+	border-right: 2px solid #008000;
+	border-bottom: 2px solid #008000;
+	border-left: 2px solid #d30000;
+	border-top: 2px solid #008000;
+	text-decoration: none;
 }
 
-.tx-abbooking-pi1 table.availabilityCalendar td.ABmonth {
-	vertical-align: top;
-}
-.tx-abbooking-pi1 table.availabilityCalendar .ABcalendar td {
-	font-size: 100%;
-	text-align: center;
+.tx-abbooking-pi1 .availabilityCalendar li.End:hover,
+.tx-abbooking-pi1 .availabilityCalendar li.vacant:hover,
+.tx-abbooking-pi1 .availabilityCalendarLine li.End:hover,
+.tx-abbooking-pi1 .availabilityCalendarLine li.vacant:hover
+ {
+	border: 2px solid #ad8;
+	background-color: #ad8;
 }
 
-.tx-abbooking-pi1 table.availabilityCalendar .noDay {
-	font-size: 100%;
-	border: 0px;
-	text-align: center;
-
-	-moz-border-radius: 3pt;
-	-webkit-border-radius: 3pt;
-  	border-radius: 3pt;
-
-	-moz-box-shadow: none;
-	-webkit-box-shadow: none;
-	box-shadow: none;
-}
 
 
 
@@ -268,64 +260,7 @@
 	border: 2px solid #aaa;
 }
 
-.tx-abbooking-pi1 .Start {
-	border-right: 2px solid #d30000;
-	border-bottom: 2px solid #d30000;
-	border-left: 2px solid #008000;
-	border-top: 2px solid #008000;
-	text-decoration: line-through;
-}
 
-.tx-abbooking-pi1 .End {
-	border-right: 2px solid #008000;
-	border-bottom: 2px solid #008000;
-	border-left: 2px solid #d30000;
-	border-top: 2px solid #008000;
-	text-decoration: none;
-
-	-moz-border-radius: 3pt;
-	-webkit-border-radius: 3pt;
-  	border-radius: 3pt;
-
-	-moz-box-shadow: 2px 2px 2px #a96;
-	-webkit-box-shadow: 2px 2px 2px #a96;
-	box-shadow: 2px 2px 2px #a96;
-}
-
-
-.tx-abbooking-pi1 li a,
-.tx-abbooking-pi1 li a
- {
-	padding: 2px 2px 2px 2px;
-	margin: 0px;
-	width: 100%;
-}
-
-.tx-abbooking-pi1 li.End:hover,
-.tx-abbooking-pi1 li.vacant:hover
-{
-	margin: 0px;
-	width: 17px;
-}
-
-.tx-abbooking-pi1 li.End:hover a,
-.tx-abbooking-pi1 li.vacant:hover a
- {
-	padding: 3px;
-
-	-moz-border-radius: 2pt;
-	-webkit-border-radius: 2pt;
-  	border-radius: 2pt;
-
-	-moz-box-shadow: 1px 1px 1px #a96;
-	-webkit-box-shadow: 1px 1px 1px #a96;
-	box-shadow: 1px 1px 1px #a96;
-
-	margin: 0 0 0 -3px;
-	width: 17px;
-	border: 2px solid #ad8;
-	background-color: #ad8;
-}
 
 .tx-abbooking-pi1 .DayTitle {
 	font-weight: bold;
@@ -382,11 +317,6 @@ input.submit_dateSelect {
 	padding: 5px;
 	margin: 0px;
 	background-color: #aadd88;
-}
-
-/* get rid of checkbox of date2calendar extension */
-input[type="checkbox"].jscalendar_cb {
-	display: none;
 }
 
 /*
@@ -644,108 +574,10 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 
 .tooltipForm {
 	display:none;
- 	background:transparent url(/fileadmin/templates/weltcafe_template/images/white_big_wc.png);
+ 	background:transparent url(white_big_wc.png);
 	font-size: 90%;
 	height:100px;
 	width:240px;
 	padding:20px;
 	color:#333;
-}
-/*
- *  Datepicker with jQuery UI
- * */
-div.ui-datepicker {
-  	padding: 1px;
-	border: 1px solid #aa0000;
-	background-color: #fff;
-
-	-moz-border-radius: 4pt;
-	-webkit-border-radius: 4pt;
-  	border-radius: 4pt;
-
-	-moz-box-shadow: 5px 5px 5px #a96;
-	-webkit-box-shadow: 5px 5px 5px #a96;
-	box-shadow: 5px 5px 5px #a96;
-
-}
-/* datepicker image */
-img.ui-datepicker-trigger {
-	position: relative;
-	left: 3px;
-	top: 4px;
-}
-.tx-abbooking-pi1 input.datepicker  {
-	width: 7em;
-}
-div.ui-datepicker-header {
-	background-color: #fff;
-}
-div.ui-datepicker-header span.ui-datepicker-month,
-div.ui-datepicker-header span.ui-datepicker-year {
-	font-weight: bold;
-}
-div.ui-datepicker-header a.ui-datepicker-prev {
-	float: left;
-	padding: 1px;
-}
-div.ui-datepicker-header a.ui-datepicker-next {
-	float: right;
-	padding: 1px;
-}
-div.ui-datepicker-title {
-	text-align: center;
-}
-table.ui-datepicker-calendar {
-	background-color: #fff;
-	margin: 0px;
-	border-spacing: 1px;
-}
-table.ui-datepicker-calendar th {
-	background-color: #eee;
-	border-bottom: 2px solid #aa0000;
-	padding: 3px;
-	margin: 0px;
-}
-table.ui-datepicker-calendar th.ui-datepicker-week-end {
-	background-color: #aaa;
-	border-bottom: 2px solid #aa0000;
-}
-table.ui-datepicker-calendar th.ui-datepicker-week-col{
-	background-color: #eee;
-	border-bottom: 2px solid #aa0000;
-	border-right: 1px solid #aaa;
-}
-table.ui-datepicker-calendar td {
-	background-color: #eee;
-	padding: 3px;
-	margin: 0px;
-}
-table.ui-datepicker-calendar td.ui-datepicker-week-end {
-	background-color: #aaa;
-}
-table.ui-datepicker-calendar td.ui-datepicker-week-col {
-	background-color: #eee;
-	border-right: 1px solid #aaa;
-}
-a.ui-datepicker-next span.ui-icon {
-	display: none;
-}
-a.ui-datepicker-next {
-	width: 20px; height: 16px;
-	background: url(ab_arrow_right.png) no-repeat;
-}
-a.ui-datepicker-next-hover {
-	width: 20px; height: 16px;
-	background: url(ab_arrow_right_g.png) no-repeat;
-}
-a.ui-datepicker-prev {
-	width: 20px; height: 16px;
-	background: url(ab_arrow_left.png) no-repeat;
-}
-a.ui-datepicker-prev-hover {
-	width: 20px; height: 16px;
-	background: url(ab_arrow_left_g.png) no-repeat;
-}
-a.ui-datepicker-prev span.ui-icon {
-	display: none;
 }
