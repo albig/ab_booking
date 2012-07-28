@@ -78,20 +78,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$this->conf = $conf;
 		$this->pi_setPiVarDefaults();
 		$this->pi_loadLL();
-		$this->pi_USER_INT_obj = 1;
-
-		if (t3lib_extMgm::isLoaded('date2cal', 0)) {
-			include_once(t3lib_extMgm::extPath('date2cal') . '/src/class.jscalendar.php');
-		}
-		if (version_compare(TYPO3_version, '4.5', '<'))
-			if (t3lib_extMgm::isLoaded('ab_swiftmailer', 0)) {
-				require_once(t3lib_extMgm::extPath('ab_swiftmailer').'pi1/class.tx_abswiftmailer_pi1.php'); // load swift lib
-			}
+		$this->pi_USER_INT_obj = 0;
 
 		$this->cssBooking = str_replace(PATH_site,'',t3lib_div::getFileAbsFileName($this->conf['file.']['cssBooking']));
-                $GLOBALS['TSFE']->additionalHeaderData['abbooking_css'] = '<link href="'.$this->cssBooking.'" rel="stylesheet" type="text/css" />'."\n";
+		$GLOBALS['TSFE']->additionalHeaderData['abbooking_css'] = '<link href="'.$this->cssBooking.'" rel="stylesheet" type="text/css" />'."\n";
 
-//~ print_r($this->piVars);
 		// get all initial settings
 		$this->init();
 
@@ -1226,10 +1217,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Send Confirmation Email
 	 *
-	 *  HTML mail is not fully supported yet!
+	 * HTML mail is not fully supported yet!
 	 *
 	 * @param	[type]		$key: ...
-	 * @param	[type]		$send_errors: ...
+	 * @param	string		$send_errors: ...
 	 * @return	number		of successfully sent emails
 	 */
 	function send_confirmation_email($key, &$send_errors) {
@@ -1239,6 +1230,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
 
+		// use TS form settings
  		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1) {
 			$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
 			foreach ($this->lConf['form'] as $formname => $form) {
@@ -1253,7 +1245,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				else
 					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
 			}
-		} else {
+		}
+		// use builtin fixed form settings
+		else {
 			$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
 			$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
 			$text_mail .= $this->pi_getLL('feld_zip').": ".$customer['address_zip']."\n";
@@ -1281,9 +1275,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$text_html_mail .= str_replace("\n", "<br />", $this->printCalculatedRates($key, $this->lConf['daySelector'], 0));
 		$text_html_mail .= "===<br/>";
 
-
 		$result = 0;
 
+		// the admin email may be set via flexform. If nothing is found
+		// the system default mailfrom is taken
 		if (!empty($this->lConf['EmailAddress']))
 			$email_owner = array($this->lConf['EmailAddress'] => $this->lConf['EmailRealname']);
 		else
@@ -1294,7 +1289,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
 
 		// TYPO3 4.5 has swiftmailer included
-		// send mail for TYPO3 4.5.x....
+		// 1. send email to admin
 		$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 		$mail->setFrom($email_owner);
 		$mail->setTo($email_owner);
@@ -1306,6 +1301,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if ($mail->send() == 1)
 			$send_success = 1;
 
+		// 2. send email to customer
 		if ($this->lConf['sendCustomerConfirmation'] == '1') {
 			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 			$mail->setFrom($email_owner);
@@ -1317,7 +1313,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if ($mail->send() == 1)
 				$send_success++;
 		}
-
 
 		return $send_success;
 	}
@@ -1396,6 +1391,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 			$id_inserted = $GLOBALS['TYPO3_DB']->sql_insert_id();
 		}
+
+		$GLOBALS['TSFE']->clearPageCacheContent_pidList($this->getPluginPageIds());
 
 		return $id_inserted;
 	}
@@ -2125,6 +2122,26 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 		return $content;
 
+	}
+
+	/**
+	 * Get all uids of ab_booking plugin
+	 *
+	 * @return	string	csv list of page uids
+	 */
+	function getPluginPageIds() {
+
+		$select = 'DISTINCT pid';
+		$table = 'tt_content';
+		$query = 'list_type = \'ab_booking_pi1\' AND hidden = 0 AND deleted = 0';
+
+		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select, $table ,$query);
+
+		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
+			$pluginPageIds[] = $row['pid'];
+		};
+
+		return implode(',', $pluginPageIds);
 	}
 
 	/**

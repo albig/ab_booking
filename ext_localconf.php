@@ -15,5 +15,5 @@ t3lib_extMgm::addUserTSConfig('
 	options.saveDocNew.tx_abbooking_seasons=1
 ');
 ## WOP:[pi][1][addType]
-t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_abbooking_pi1.php', '_pi1', 'list_type', 0);
+t3lib_extMgm::addPItoST43($_EXTKEY, 'pi1/class.tx_abbooking_pi1.php', '_pi1', 'list_type', 1);
 ?>
