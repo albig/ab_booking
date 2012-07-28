@@ -376,9 +376,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// ---------------------------------
 		if (empty($this->lConf['startDateStamp']))
 			$this->lConf['startDateStamp'] = strtotime(strftime("%Y-%m-%d 00:00:00"));
-//~ 		if (empty($this->lConf['daySelector']))
-//~ 			$this->lConf['endDateStamp'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $this->lConf['startDateStamp']);
-//~ 		else
 			$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
 
 		// get the storage pid from flexform
@@ -459,7 +456,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	public function formBookingUserData($stage) {
 
 		// jump to dynamic form if configured
-//~ 		if ($this->lConf['useTSconfiguration'] == 1 && count($this->lConf['form'])>1)
  		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1)
 			return tx_abbooking_form::printUserForm($stage);
 
@@ -469,7 +465,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 			return $content;
 		}
-
 
 		$interval['startDate'] = $this->lConf['startDateStamp'];
 		$interval['endDate'] = $this->lConf['endDateStamp'];
@@ -499,8 +494,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= ' '.strftime('%A, %x', $availableMaxDate);
 		$content .= '</p><br />';
 		$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
-
-
 
 		$selected='selected="selected"';
 		if (isset($this->lConf['adultSelector']))
@@ -720,9 +713,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// assume that only one valid uid and some offTimeProducts in ProductID..
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-//~ print_r("-formCheckAvailability---Start---\n");
-//~ print_r($product);
-//~ print_r("-formCheckAvailability---End---\n");
+
 		if (empty($this->lConf['productDetails'])) {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 			return $content;
@@ -845,7 +836,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['endList'] = strtotime('+'.$this->lConf['numCheckMaxInterval'].' day', $this->lConf['startDateStamp']);
 		}
 
-
 		if (!empty($ProductUID)) {
 			// SELECT:
 			$where_extra = 'capacitymax > 0 ';
@@ -857,12 +847,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$availableProductIDs[$pi] = $uid;
 				$pi++;
 
-				// get all prices for given UID and given dates
-//~ 				$product['prices'] = tx_abbooking_div::getPrices($uid, $interval);
-
 				$product['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
-//~ print_r("get_product_properties\n");
-//~ print_r($product);
+
 				// get uid and pid of the detailed description content element
 				$uidpid = explode("#", $product['uiddetails']);
 				if (is_numeric($uidpid[0])) {
@@ -921,9 +907,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['endList'] = strtotime('+'.$this->lConf['numCheckMaxInterval'].' day', $this->lConf['startDateStamp']);
 		}
 
-//~ print_r("ProductUID\n");
-//~ print_r($ProductUID);
-//~ print_r("\n");
 		if (!empty($ProductUID)) {
 			// SELECT:
 			// FixMe: we have to set the closingtimes by TS
@@ -945,9 +928,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 			$product_properties = $out;
 
-//~ print_r("product_properties\n");
-//~ print_r($product_properties);
-//~ print_r("\n");
 			// step through found products
 			foreach ( $product_properties as $uid => $product ) {
 
@@ -967,11 +947,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 		}
 
-//~ print_r("get_product_properties\n");
-//~ print_r($product_properties_return);
-//~ print_r("availableProductIDs\n");
-//~ print_r($availableProductIDs);
-//~
 		$offTimeProductIDs  = array_diff(explode(",", $ProductUID), $availableProductIDs);
 		$this->lConf['AvailableProductIDs'] = $availableProductIDs;
 		$this->lConf['OffTimeProductIDs'] = $offTimeProductIDs;
