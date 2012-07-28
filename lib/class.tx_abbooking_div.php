@@ -569,6 +569,10 @@ class tx_abbooking_div {
 	 */
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
 
+		// disable caching of target booking page
+		$this->pi_USER_INT_obj = 1;
+		$cache = 0;
+
 		// disable booking links for robots
 		if ($this->isRobot())
 			$this->lConf['enableCalendarBookingLink'] = 0;
@@ -670,7 +674,7 @@ class tx_abbooking_div {
 					$params = array (
 						$this->prefixId.'[ABx]' => $params_united,
 					);
-					$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP($printDay, $params, 0, $this->lConf['gotoPID']).'</li>';
+					$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP($printDay, $params, $cache, $this->lConf['gotoPID']).'</li>';
 				}
 				else
 					$out .= '<li class="'.$cssClass.'">'.$printDay.'</li>';
@@ -710,6 +714,10 @@ class tx_abbooking_div {
 	 * @return	HTML-list		of calendar days
 	 */
 	function printAvailabilityCalendarLine($uid, $interval = array()) {
+
+		// disable caching of target booking page
+		$this->pi_USER_INT_obj = 1;
+		$cache = 0;
 
 		$this->pi_loadLL();
 
@@ -760,7 +768,7 @@ class tx_abbooking_div {
 				$params = array (
 					$this->prefixId.'[ABx]' => $params_united,
 				);
-				$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP(strftime("%d", $d), $params, 0, $this->lConf['gotoPID']).'</li>';
+				$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP(strftime("%d", $d), $params, $cache, $this->lConf['gotoPID']).'</li>';
 			}
 			else
 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
@@ -824,6 +832,10 @@ class tx_abbooking_div {
 	 */
 	function printOfferList() {
 
+		// disable caching of target booking page
+		$this->pi_USER_INT_obj = 1;
+		$cache = 0;
+
 		$contentError = array();
 		$offers['numOffers'] = 0;
 		$i = 0;
@@ -876,7 +888,7 @@ class tx_abbooking_div {
 							$this->prefixId.'[ABx]' => $params_united,
 						);
 						if ($this->lConf['enableCheckBookingLink'])
-							$link = $this->pi_linkTP(strftime('%a, %x', $interval['startDate']), $params, 0, $this->lConf['gotoPID']);
+							$link = $this->pi_linkTP(strftime('%a, %x', $interval['startDate']), $params, $cache, $this->lConf['gotoPID']);
 						else
 							$link = strftime('%a, %x', $j);
 
@@ -911,7 +923,7 @@ class tx_abbooking_div {
 
 
 			if ($enableCheckBookingLink)
-				$link = $this->pi_linkTP($title, $params, 0, $this->lConf['gotoPID']);
+				$link = $this->pi_linkTP($title, $params, $cache, $this->lConf['gotoPID']);
 			else
 				$link = $title;
 
@@ -933,7 +945,7 @@ class tx_abbooking_div {
 					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
-				
+
 				if ($enableCheckBookingLink)
 					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
 									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
@@ -996,7 +1008,7 @@ class tx_abbooking_div {
 			if (($jsCode = $JSCalendar->getMainJS()) != '') {
 				$GLOBALS['TSFE']->additionalHeaderData['abbooking_jscalendar'] = $jsCode;
 			}
-		} else 
+		} else
 			$out .= '<input '.$errorClass.' type="text" class="datepicker" name="'.$name.'" id="'.$name.'" value="'.strftime($dateFormat, $value).'" ><br/>';
 //~ 			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'"  ><br/>';		}
 
