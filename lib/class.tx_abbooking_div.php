@@ -982,18 +982,9 @@ class tx_abbooking_div {
 	 */
 	function getJSCalendarInput($name, $value, $error = '') {
 
+		$dateFormat = str_replace(array('d', 'm', 'y', 'Y'), array('%d', '%m', '%y', '%Y'), $this->lConf['dateFormat']);
+
 		if (class_exists('JSCalendar')) {
-			if ($this->lConf['dateFormat'] != '') {
-				$dateFormat = str_replace(array('d', 'm', 'y', 'Y'), array('%d', '%m', '%y', '%Y'), $this->lConf['dateFormat']);
-			} else {
-				// unfortunately, the jscalendar doesn't recognize %x as dateformat
-				if ($GLOBALS['TSFE']->config['config']['language'] == 'de')
-					$dateFormat = '%d.%m.%Y';
-				else if ($GLOBALS['TSFE']->config['config']['language'] == 'en')
-					$dateFormat = '%d/%m/%Y';
-				else
-					$dateFormat = '%Y-%m-%d';
-			}
 			$JSCalendar = JSCalendar::getInstance();
 			// datetime format (default: time)
             $JSCalendar->setDateFormat(false, $dateFormat);
@@ -1005,9 +996,9 @@ class tx_abbooking_div {
 			if (($jsCode = $JSCalendar->getMainJS()) != '') {
 				$GLOBALS['TSFE']->additionalHeaderData['abbooking_jscalendar'] = $jsCode;
 			}
-		} else {
-			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'" value="'.strftime('%x', $value).'" ><br/>';
-		}
+		} else 
+			$out .= '<input '.$errorClass.' type="text" class="datepicker" name="'.$name.'" id="'.$name.'" value="'.strftime($dateFormat, $value).'" ><br/>';
+//~ 			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'"  ><br/>';		}
 
 		if (isset($error)) {
 			$out = str_replace('class="jscalendar"', 'class="jscalendar error"', $out);

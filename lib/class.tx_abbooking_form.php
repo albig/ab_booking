@@ -426,10 +426,10 @@ class tx_abbooking_form {
 		else {
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_check'));
 
-			if (isset($this->lConf['startDateStamp']))
-				$startdate = $this->lConf['startDateStamp'];
-			else
-				$startdate = time();
+//~ 			if (isset($this->lConf['startDateStamp']))
+//~ 				$startdate = $this->lConf['startDateStamp'];
+//~ 			else
+//~ 				$startdate = time();
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 			$content .= tx_abbooking_form::printUserFormElements($numErrors, 0);

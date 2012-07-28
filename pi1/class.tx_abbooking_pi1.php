@@ -771,19 +771,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$content.='<h2><b>'.$this->form_errors['endDateTooFarInFuture'].'</b></h2>';
 		}
 
-		$content .='<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-				<label for="'.$this->prefixId.'[checkinDate]'.$this->lConf['uidpid'].'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label>';
-//				<label for="'.$this->prefixId.'[checkinDate]'.$this->lConf['uidpid'].'_cb">&nbsp;</label><br/>';
-
+		$content .= '<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
+		// input div for startDate
+		$content .= '<div class="startdate">';
+		$content .= '<label for="'.$this->prefixId.'[checkinDate]'.$this->lConf['uidpid'].'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
 		if (isset($this->lConf['startDateStamp']))
 			$startdate = $this->lConf['startDateStamp'];
 		else
 			$startdate = time();
-
 		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
+		$content .= '</div>';
 
-		$content .= '<br />
-				<label for="fielddaySelector"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
+		$content .= '<div class="selector">';
+		$content .= '<label for="fielddaySelector"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
 				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" id="fielddaySelector" size="1">';
 
 		// set global day steps
@@ -795,9 +795,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		for ($i = $this->lConf['numCheckMinInterval']; $i<=$this->lConf['numCheckMaxInterval']; $i+=$dayStep) {
 			$content.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.'</option>';
 		}
-		$content .= '</select><br/>';
+		$content .= '</select>';
+		$content .= '</div>';
 
 		if ($this->lConf['showPersonsSelector'] == 1) {
+			$content .= '<div class="selector">';
 			$content .= '<label for="fieldadultSelector"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
 					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector" size="1">';
 			// you may set in flexform the maximum amount of persons to show in the selector
@@ -810,8 +812,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.'</option>';
 			}
 			$content .= '</select><br/>';
+			$content .= '</div>';
 		} else
-			$content .= '<input type="hidden" name="'.$this->prefixId.'[adultSelector]" value="'.$this->lConf['numDefaultPersons'].'">';
+			$content .= '<div><input type="hidden" name="'.$this->prefixId.'[adultSelector]" value="'.$this->lConf['numDefaultPersons'].'"></div>';
 
 		$params_united = '0_0_0_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_availabilityList';
 		$params = array (
@@ -819,12 +822,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		);
 
 		$content .= '
-		<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'"><br />';
+		<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
 		if (!$this->isRobot())
 			$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
-		$content .= '</form>
-			<br />
-		';
+		$content .= '</form><br />';
 
 		return $content;
 	}
@@ -1225,7 +1226,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Send Confirmation Email
 	 *
-	 *  HTML mail is fully not supported yet!
+	 *  HTML mail is not fully supported yet!
 	 *
 	 * @param	[type]		$key: ...
 	 * @param	[type]		$send_errors: ...
@@ -1234,9 +1235,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	function send_confirmation_email($key, &$send_errors) {
 
 		$product = $this->lConf['productDetails'][$key];
-
 		$customer = $this->lConf['customerData'];
-
 		$text_mail .= $this->lConf['textConfirmEmail']."\n\n";
 		$text_mail .= "===\n";
 
@@ -1285,91 +1284,41 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$result = 0;
 
-		// prefere ab_swiftmailer in TYPO3 < 4.5
-		// TYPO3 4.5 has swiftmailer included
-
 		if (!empty($this->lConf['EmailAddress']))
 			$email_owner = array($this->lConf['EmailAddress'] => $this->lConf['EmailRealname']);
 		else
 			$email_owner = t3lib_utility_Mail::getSystemFrom();
+
 		$email_customer = array($customer['address_email'] => $customer['address_name']);
 		$subject_customer = $this->pi_getLL('email_your_booking').': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
 		$subject_owner = $this->pi_getLL('email_new_booking').' '.$customer['address_name'].': '.$product['title'].' '.strftime("%a, %d.%m.%Y", $this->lConf['startDateStamp']).' - '.strftime("%a, %d.%m.%Y", $this->lConf['endDateStamp']);
 
-		if (version_compare(TYPO3_version, '4.5', '<')) {
-			// send mail for TYPO3 4.4.x....
-			// does tx_abswiftmailer_pi1 exists?
-			if (class_exists('tx_abswiftmailer_pi1') && $this->lConf['useSwiftMailer']) {
-				$this->swift = t3lib_div::makeInstance('tx_abswiftmailer_pi1');
+		// TYPO3 4.5 has swiftmailer included
+		// send mail for TYPO3 4.5.x....
+		$mail = t3lib_div::makeInstance('t3lib_mail_Message');
+		$mail->setFrom($email_owner);
+		$mail->setTo($email_owner);
+		$mail->setReplyTo($email_customer);
+		$mail->setSubject($subject_owner);
+		$mail->setBody($text_html_mail, 'text/html', 'utf-8');
+		$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
 
-				// send booking mail to owner
-				$result = $this->swift->swift_send_message($email_customer,
-					$subject_owner,
-					$text_plain_mail);
-				if ($result != 1) {
-					$send_errors = $result;
-				} else
-					$send_success++;
+		if ($mail->send() == 1)
+			$send_success = 1;
 
-				// send acknowledge mail to customer
-				$result = $this->swift->swift_send_message($email_customer,
-					$subject_customer,
-					$text_plain_mail, 1);
-				if ($result != 1) {
-					$send_errors .= $result;
-				} else
-					$send_success++;
-			} else {
-				foreach ($email_owner as $emailAddress => $emailName) {
-					$email_owner_string = $emailName.' <'.$emailAddress.'>';
-				}
-				foreach ($email_customer as $emailAddress => $emailName) {
-					$email_customer_string = $emailName.' <'.$emailAddress.'>';
-				}
-
-				// send booking mail to owner, reply-to customer
-				t3lib_div::plainMailEncoded($email_owner_string,
-						$this->pi_getLL('email_new_booking').' '.$customer['address_name'].' ('.$customer['address_email'].')',
-						$text_plain_mail,
-						'From: '.$email_owner_string.chr(10).'Reply-To: '.$customer['address_email']);
-
-				if ($this->lConf['sendCustomerConfirmation'] == '1') {
-					// send acknolewdge mail to customer
-					t3lib_div::plainMailEncoded($email_customer_string,
-							$this->pi_getLL('email_your_booking').' '.strftime("%d.%m.%Y", $this->lConf['startDateStamp']),
-							$text_plain_mail,
-							'From: '.$email_owner_string.chr(10).'Reply-To: '.$this->lConf['EmailAddress']);
-					// assume everything went ok because there is no return value of plainMailEncoded())
-					$send_success = 2;
-				} else
-					$send_success = 1;
-			}
-		} else {
-			// send mail for TYPO3 4.5.x....
+		if ($this->lConf['sendCustomerConfirmation'] == '1') {
 			$mail = t3lib_div::makeInstance('t3lib_mail_Message');
 			$mail->setFrom($email_owner);
-			$mail->setTo($email_owner);
-			$mail->setReplyTo($email_customer);
-			$mail->setSubject($subject_owner);
+			$mail->setTo($email_customer);
+			$mail->setSubject($subject_customer);
 			$mail->setBody($text_html_mail, 'text/html', 'utf-8');
 			$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
 
 			if ($mail->send() == 1)
-				$send_success = 1;
-
-			if ($this->lConf['sendCustomerConfirmation'] == '1') {
-				$mail = t3lib_div::makeInstance('t3lib_mail_Message');
-				$mail->setFrom($email_owner);
-				$mail->setTo($email_customer);
-				$mail->setSubject($subject_customer);
-				$mail->setBody($text_html_mail, 'text/html', 'utf-8');
-				$mail->addPart(strip_tags($text_plain_mail), 'text/plain', 'utf-8');
-
-				if ($mail->send() == 1)
-					$send_success++;
-			}
-
+				$send_success++;
 		}
+
+
 		return $send_success;
 	}
 
@@ -1706,32 +1655,33 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// input form element for selectable options
-		foreach ($usedPrices as $title => $value) {
-			if ($value['rateUsed'] == 1)
-				$text_periods = ' '.$this->pi_getLL('period');
-			else
-				$text_periods = ' '.$this->pi_getLL('periods');
+		if (is_array($usedPrices))
+			foreach ($usedPrices as $title => $value) {
+				if ($value['rateUsed'] == 1)
+					$text_periods = ' '.$this->pi_getLL('period');
+				else
+					$text_periods = ' '.$this->pi_getLL('periods');
 
-			if ($value['isOption'] == 1) {
-				if ($customer[$title] == 1 || $customer[$title] == '' ) {
-					$checked = ' checked="checked"';
-					$total_amount += $value['rateValue'] * $value['rateUsed'];
+				if ($value['isOption'] == 1) {
+					if ($customer[$title] == 1 || $customer[$title] == '' ) {
+						$checked = ' checked="checked"';
+						$total_amount += $value['rateValue'] * $value['rateUsed'];
+					}
+					else {
+						$checked = ' ';
+					}
+					$lDetails['form']  = '<input type="checkbox" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'" '.$checked.'>';
+					$lDetails['form'] .= '<input type="hidden" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'_1">';
 				}
 				else {
-					$checked = ' ';
+					$lDetails['form'] = '';
+					$total_amount += $value['rateValue'] * $value['rateUsed'];
 				}
-				$lDetails['form']  = '<input type="checkbox" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'" '.$checked.'>';
-				$lDetails['form'] .= '<input type="hidden" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'_1">';
+				$lDetails['dates'] = $value['rateDates'];
+				$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
+				$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+				$priceDetails[] = $lDetails;
 			}
-			else {
-				$lDetails['form'] = '';
-				$total_amount += $value['rateValue'] * $value['rateUsed'];
-			}
-			$lDetails['dates'] = $value['rateDates'];
-			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
-			$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
-			$priceDetails[] = $lDetails;
-		}
 
 		// apply discount; discountValue is taken from startDate
 		$discountrate = $product['prices'][$this->lConf['startDateStamp']]['discount'];
@@ -1995,7 +1945,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			// step through used dates and create date interval string
 			$openInterval = 0;
 			$lastday = 0;
-//~ print_r($value);			
+//~ print_r($value);
 			foreach ($value['usedDates'] as $id => $currday) {
 				$dayDiff = (int)($currday - $lastday);
 				if ($id == 0 || $openInterval == 0) {
@@ -2010,16 +1960,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 				$lastday = $currday;
 			}
-//~ print_r($dateUsed."\n");			
-			
+//~ print_r($dateUsed."\n");
+
 			if ($openInterval == 1) {
 				if ($value['priceIsPerWeek'] == '1')
 					$dateUsed .= strftime('%a %x', $lastday+(($value['dayStep'])*86400));
 				else
 					$dateUsed .= strftime('%a %x', $lastday+($value['dayStep']*86400) );
 			}
-//~ print_r($dateUsed."\n");			
-//~ print_r("------------\n");			
+//~ print_r($dateUsed."\n");
+//~ print_r("------------\n");
 
 			$lDetails['dates'][] = $dateUsed;
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;

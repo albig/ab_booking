@@ -649,5 +649,103 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	height:100px;
 	width:240px;
 	padding:20px;
-	color:#333;	
+	color:#333;
+}
+/*
+ *  Datepicker with jQuery UI
+ * */
+div.ui-datepicker {
+  	padding: 1px;
+	border: 1px solid #aa0000;
+	background-color: #fff;
+
+	-moz-border-radius: 4pt;
+	-webkit-border-radius: 4pt;
+  	border-radius: 4pt;
+
+	-moz-box-shadow: 5px 5px 5px #a96;
+	-webkit-box-shadow: 5px 5px 5px #a96;
+	box-shadow: 5px 5px 5px #a96;
+
+}
+/* datepicker image */
+img.ui-datepicker-trigger {
+	position: relative;
+	left: 3px;
+	top: 4px;
+}
+.tx-abbooking-pi1 input.datepicker  {
+	width: 7em;
+}
+div.ui-datepicker-header {
+	background-color: #fff;
+}
+div.ui-datepicker-header span.ui-datepicker-month,
+div.ui-datepicker-header span.ui-datepicker-year {
+	font-weight: bold;
+}
+div.ui-datepicker-header a.ui-datepicker-prev {
+	float: left;
+	padding: 1px;
+}
+div.ui-datepicker-header a.ui-datepicker-next {
+	float: right;
+	padding: 1px;
+}
+div.ui-datepicker-title {
+	text-align: center;
+}
+table.ui-datepicker-calendar {
+	background-color: #fff;
+	margin: 0px;
+	border-spacing: 1px;
+}
+table.ui-datepicker-calendar th {
+	background-color: #eee;
+	border-bottom: 2px solid #aa0000;
+	padding: 3px;
+	margin: 0px;
+}
+table.ui-datepicker-calendar th.ui-datepicker-week-end {
+	background-color: #aaa;
+	border-bottom: 2px solid #aa0000;
+}
+table.ui-datepicker-calendar th.ui-datepicker-week-col{
+	background-color: #eee;
+	border-bottom: 2px solid #aa0000;
+	border-right: 1px solid #aaa;
+}
+table.ui-datepicker-calendar td {
+	background-color: #eee;
+	padding: 3px;
+	margin: 0px;
+}
+table.ui-datepicker-calendar td.ui-datepicker-week-end {
+	background-color: #aaa;
+}
+table.ui-datepicker-calendar td.ui-datepicker-week-col {
+	background-color: #eee;
+	border-right: 1px solid #aaa;
+}
+a.ui-datepicker-next span.ui-icon {
+	display: none;
+}
+a.ui-datepicker-next {
+	width: 20px; height: 16px;
+	background: url(ab_arrow_right.png) no-repeat;
+}
+a.ui-datepicker-next-hover {
+	width: 20px; height: 16px;
+	background: url(ab_arrow_right_g.png) no-repeat;
+}
+a.ui-datepicker-prev {
+	width: 20px; height: 16px;
+	background: url(ab_arrow_left.png) no-repeat;
+}
+a.ui-datepicker-prev-hover {
+	width: 20px; height: 16px;
+	background: url(ab_arrow_left_g.png) no-repeat;
+}
+a.ui-datepicker-prev span.ui-icon {
+	display: none;
 }
