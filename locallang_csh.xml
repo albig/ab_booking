@@ -11,42 +11,52 @@
 	<data type="array">
 		<languageKey index="default" type="array">
 			<label index="tstitle.description">Title of the Typoscript Element</label>
-			<label index="what_to_display.description">Define the view</label>
-			<label index="what_to_display.details"><![CDATA[ On this TAB you enter
+			<label index="pluginSelection.description">Define the view</label>
+			<label index="pluginSelection.details"><![CDATA[ On this TAB you enter
 						<ul>
 							<li><b>Calendar</b>: Show Calendar for one ore more Product IDs</li>
 							<li><b>Availability Form</b>: Show Form to Check the Availability</li>
-							<li><b>Booking</b>: Form for entering the user data and to do the booking.</li>
+							<li><b>Booking Form</b>: Form for entering the user data and to do the booking.</li>
 						</ul>
-						 ]]></label>
+						 ]]>
+			</label>
+
 			<label index="ProductID.description">Select the products you want to be used in this plugin.</label>
-			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box, 
-			you first have to enter the storage pid and you have to add products, 
+			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box,
+			you first have to enter the storage pid and you have to add products,
 			prices and seasons into this storage folder.
-					]]></label>
-					
+					]]>
+			</label>
+
+			<label index="enableCalendarBookingLink.description">Enable booking links on available dates in the calendar.</label>
+			<label index="showDateNavigator.description">Show date navigation above the calendar.</label>
+
 			<label index="numCheckMaxPersons.description">Shows only up to this maximum in selector box. Even if the capacity over all is higher. Leave empty for autoselect the maximum capacity!</label>
-					
+
 		</languageKey>
 
 		<languageKey index="de" type="array">
-			<label index="what_to_display.description">Define the view</label>
-			<label index="what_to_display.details"><![CDATA[ On this TAB you enter
+			<label index="tstitle.description">Titel des Typoscript Elements</label>
+			<label index="pluginSelection.description">Define the view</label>
+			<label index="pluginSelection.details"><![CDATA[ On this TAB you enter
 						<ul>
-							<li>Calendar: Show Calendar for one ore more Product IDs</li>
-							<li>Availability Form: Show Form to Check the Availability</li>
-							<li>Booking: Form for entering the user data and to do the booking.</li>
+							<li><b>Kalender</b>: Show Calendar for one ore more Product IDs</li>
+							<li><b>Verfügbarkeitsprüfung</b>: Show Form to Check the Availability</li>
+							<li><b>Buchungsformular</b>: Form for entering the user data and to do the booking.</li>
 						</ul>
 						 ]]></label>
 			<label index="ProductID.description">Wählen Sie die Produkte, die Sie in diesem Plugin berücksichten wollen.</label>
-			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box, 
-				you first have to enter the storage pid and you have to add products, 
+			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box,
+				you first have to enter the storage pid and you have to add products,
 				prices and seasons into this storage folder.
 					]]></label>
 
+			<label index="enableCalendarBookingLink.description">Aktiviere Links zur Buchungsseite bei freien Tagen im Kalender.</label>
+			<label index="showDateNavigator.description">Zeige Datumswahl oberhalb der Kalender.</label>
+
 			<label index="numCheckMaxPersons.description">Zeigt maximal die angegebene Anzahl von Personen in der Auswahl. Selbst wenn die Gesamtkapazität höher ist. Wenn der Wert leer ist wird automatische die maximale Kapazität ermittelt.</label>
 		</languageKey>
-				
-		
+
+
 	</data>
 </T3locallang>

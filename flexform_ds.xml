@@ -11,46 +11,6 @@
 	    </TCEforms>
 		<type>array</type>
 		<el>
-		<what_to_display>
-			<TCEforms>
-				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.what_to_display</label>
-				<config>
-					<type>select</type>
-					<items type="array">
-						<numIndex index="0" type="array">
-							<numIndex index="0">CALENDAR</numIndex>
-							<numIndex index="1">CALENDAR</numIndex>
-						</numIndex>
-						<numIndex index="1" type="array">
-							<numIndex index="0">AVAILABILITY CHECK</numIndex>
-							<numIndex index="1">AVAILABILITY CHECK</numIndex>
-						</numIndex>
-						<numIndex index="2" type="array">
-							<numIndex index="0">BOOKING</numIndex>
-							<numIndex index="1">BOOKING</numIndex>
-						</numIndex>
-						<numIndex index="3" type="array">
-							<numIndex index="0">CALENDAR LINE</numIndex>
-							<numIndex index="1">CALENDAR LINE</numIndex>
-						</numIndex>
-						<numIndex index="4" type="array">
-							<numIndex index="0">CHECKIN OVERVIEW</numIndex>
-							<numIndex index="1">CHECKIN OVERVIEW</numIndex>
-						</numIndex>
-						<numIndex index="5" type="array">
-							<numIndex index="0">BOOKING RATE OVERVIEW</numIndex>
-							<numIndex index="1">5</numIndex>
-						</numIndex>
-					</items>
-					<size>1</size>
-					<maxitems>1</maxitems>
-					<minitems>1</minitems>
-<!-- 					<multiple>0</multiple> -->
-					<selectedListStyle>width:250px</selectedListStyle>
-					<itemListStyle>width:250px</itemListStyle>
-				</config>
-			</TCEforms>
-		</what_to_display>
 		<ProductID>
 			<TCEforms>
  			<exclude>1</exclude>
@@ -64,6 +24,19 @@
 			</config>
 			</TCEforms>
 		</ProductID>
+
+		<enableCalendarBookingLink>
+			<TCEforms>
+				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCalendarBookingLink</label>
+				<displayCond>FIELD:pluginSelection:=:CALENDAR</displayCond>
+				<config>
+					<type>check</type>
+					<default>1</default>
+				</config>
+			</TCEforms>
+		</enableCalendarBookingLink>
+
+
 		<PIDstorage>
 			<TCEforms>
 				<exclude>1</exclude>
@@ -99,17 +72,59 @@
 </sheetGeneralOptions>
 
 
-<sheetCalendarOptions>
+<sheetPluginOptions>
 	<ROOT>
 		<TCEforms>
-			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetCalendarOptions</sheetTitle>
+			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetPluginOptions</sheetTitle>
 			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
 		</TCEforms>
 		<type>array</type>
 		<el>
+			<pluginSelection>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection</label>
+					<onChange>reload</onChange>
+					<config>
+						<type>select</type>
+						<items type="array">
+							<numIndex index="0" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.calendar</numIndex>
+								<numIndex index="1">0</numIndex>
+							</numIndex>
+							<numIndex index="1" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.availabilitycheck</numIndex>
+								<numIndex index="1">1</numIndex>
+							</numIndex>
+							<numIndex index="2" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.booking</numIndex>
+								<numIndex index="1">2</numIndex>
+							</numIndex>
+							<numIndex index="3" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.calendarline</numIndex>
+								<numIndex index="1">3</numIndex>
+							</numIndex>
+							<numIndex index="4" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.checkinoverview</numIndex>
+								<numIndex index="1">4</numIndex>
+							</numIndex>
+							<numIndex index="5" type="array">
+								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.bookingrateoverview</numIndex>
+								<numIndex index="1">5</numIndex>
+							</numIndex>
+						</items>
+						<size>1</size>
+						<maxitems>1</maxitems>
+						<minitems>1</minitems>
+						<selectedListStyle>width:250px</selectedListStyle>
+						<itemListStyle>width:250px</itemListStyle>
+					</config>
+				</TCEforms>
+			</pluginSelection>
+
 			<enableCalendarBookingLink>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCalendarBookingLink</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>check</type>
 						<default>1</default>
@@ -119,6 +134,7 @@
 			<showDateNavigator>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showDateNavigator</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>check</type>
 						<default>0</default>
@@ -128,6 +144,7 @@
 			<numMonths>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numMonths</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -139,6 +156,7 @@
 			<numMonthsCols>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numMonthsCols</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -147,48 +165,79 @@
 					</config>
 				</TCEforms>
 			</numMonthsCols>
-			<monthsLineView>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.monthsLineView</label>
-					<config>
-						<type>check</type>
-						<default>0</default>
-					</config>
-				</TCEforms>
-			</monthsLineView>
 			<showBookingRate>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showBookingRate</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>check</type>
 						<default>0</default>
 					</config>
 				</TCEforms>
 			</showBookingRate>
-		</el>
-	</ROOT>
-</sheetCalendarOptions>
-
-<sheetAvailabilityOptions>
-	<ROOT>
-		<TCEforms>
-			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetAvailabilityOptions</sheetTitle>
-			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
-		</TCEforms>
-		<type>array</type>
-		<el>
+			<numDefaultNightsCalendar>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</numDefaultNightsCalendar>
+			<numDefaultPersonsCalendar>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultPersons</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</numDefaultPersonsCalendar>
 			<enableCheckBookingLink>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCheckBookingLink</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>check</type>
 						<default>1</default>
 					</config>
 				</TCEforms>
 			</enableCheckBookingLink>
+			<numDefaultNightsAvailabilitycheck>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</numDefaultNightsAvailabilitycheck>
+			<numDefaultPersonsAvailabilitycheck>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultPersons</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</numDefaultPersonsAvailabilitycheck>
+
 			<numCheckNextMonths>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckNextMonths</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -200,6 +249,7 @@
 			<numCheckMinInterval>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMinInterval</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -211,6 +261,7 @@
 			<numCheckMaxInterval>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxInterval</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -222,6 +273,7 @@
 			<numCheckDaySteps>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -230,31 +282,10 @@
 					</config>
 				</TCEforms>
 			</numCheckDaySteps>
-			<numDefaultNights>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>2</default>
-					</config>
-				</TCEforms>
-			</numDefaultNights>
-			<numDefaultPersons>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultPersons</label>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>2</default>
-					</config>
-				</TCEforms>
-			</numDefaultPersons>
 			<numCheckMaxPersons>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxPersons</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -266,47 +297,18 @@
 			<showPersonsSelector>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showPersonsSelector</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>check</type>
 						<default>1</default>
 					</config>
 				</TCEforms>
 			</showPersonsSelector>
-<!--			<detailInfosUID>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.detailInfosUID</label>
-					<config>
-						<type>input</type>
-						<size>3</size>
-						<max>3</max>
-						<default></default>
-					</config>
-				</TCEforms>
-			</detailInfosUID>-->
-		</el>
-	</ROOT>
-</sheetAvailabilityOptions>
 
-<sheetBookingOptions>
-	<ROOT>
-		<TCEforms>
-			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetBookingOptions</sheetTitle>
-			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
-		</TCEforms>
-		<type>array</type>
-		<el>
-			<useSwiftMailer>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.useSwiftMailer</label>
-					<config>
-						<type>check</type>
-						<default>0</default>
-					</config>
-				</TCEforms>
-			</useSwiftMailer>
 			<sendCustomerConfirmation>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sendCustomerConfirmation</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
 					<config>
 						<type>check</type>
 						<default>1</default>
@@ -317,6 +319,7 @@
 				<TCEforms>
 					<exclude>1</exclude>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.EmailAddress</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
 					<config>
 						<type>input</type>
 						<size>60</size>
@@ -329,6 +332,7 @@
 				<TCEforms>
 					<exclude>1</exclude>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.EmailRealname</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
 					<config>
 						<type>input</type>
 						<size>60</size>
@@ -340,6 +344,7 @@
 			<textSayThankYou>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.textSayThankYou</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
 					<config>
 						<type>text</type>
 						<cols>60</cols>
@@ -355,6 +360,7 @@
 			<textConfirmEmail>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.textConfirmEmail</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
 					<config>
 						<type>text</type>
 						<cols>60</cols>
@@ -367,21 +373,11 @@
 -->
 				</TCEforms>
 			</textConfirmEmail>
-		</el>
-	</ROOT>
-</sheetBookingOptions>
 
-<sheetCheckInOverviewOptions>
-	<ROOT>
-		<TCEforms>
-			<sheetTitle>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sheetCheckInOverviewOptions</sheetTitle>
-			<cshFile>LLL:EXT:ab_booking/locallang_csh.xml</cshFile>
-		</TCEforms>
-		<type>array</type>
-		<el>
 			<checkInNumDays>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.checkInNumDays</label>
+					<displayCond>FIELD:pluginSelection:=:4</displayCond>
 					<config>
 						<type>input</type>
 						<size>2</size>
@@ -393,15 +389,17 @@
 			<showOnlyChanges>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showOnlyChanges</label>
+					<displayCond>FIELD:pluginSelection:=:4</displayCond>
 					<config>
 						<type>check</type>
 						<default>0</default>
 					</config>
 				</TCEforms>
 			</showOnlyChanges>
+
 		</el>
 	</ROOT>
-</sheetCheckInOverviewOptions>
+</sheetPluginOptions>
 
 </sheets>
 </T3DataStructure>

@@ -13,15 +13,21 @@
 			<label index="ab_booking.pi_flexform.numMonths">Number of Months</label>
 			<label index="ab_booking.pi_flexform.numMonthsCols">Columns</label>
 			<label index="ab_booking.pi_flexform.numMonthsRows">Rows</label>
-			<label index="ab_booking.pi_flexform.monthsLineView">Show Months in a Row</label>
 			<label index="ab_booking.pi_flexform.showBookingRate">Show Booking Rate</label>
 			<label index="ab_booking.pi_flexform.showDateNavigator">Show Date Navigator</label>
 			<label index="ab_booking.pi_flexform.sheetGeneralOptions">General Options</label>
 			<label index="ab_booking.pi_flexform.itemDescription">Short Description</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
+			<label index="ab_booking.pi_flexform.sheetPluginOptions">Plugin Settings</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.calendar">Calendar</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.availabilitycheck">Availability Check</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.booking">Booking Form</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.calendarline">Calendar Single Line</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.checkinoverview">Checkin Overview</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.bookingrateoverview">Booking Rate Overview</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions">Mail Settings</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Links in Calendar View</label>
 			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
 			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimum Booking Interval (days)</label>
@@ -32,7 +38,7 @@
 			<label index="ab_booking.pi_flexform.numCheckMaxPersons">Maximum Amount of Persons to show in this Selector.</label>
 			<label index="ab_booking.pi_flexform.showPersonsSelector">Show Selector for Number of Persons</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>
-			<label index="ab_booking.pi_flexform.what_to_display">What to display</label>
+			<label index="ab_booking.pi_flexform.pluginSelection">What to display</label>
 			<label index="ab_booking.pi_flexform.PIDstorage">PID of Storage Sysfolder</label>
 			<label index="ab_booking.pi_flexform.PIDbooking">PID of Booking Page</label>
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
@@ -53,16 +59,22 @@
 			<label index="ab_booking.pi_flexform.numMonths">Anzahl der Monate</label>
 			<label index="ab_booking.pi_flexform.numMonthsCols">Kalender Spalten</label>
 			<label index="ab_booking.pi_flexform.numMonthsRows">Kalender Reihen</label>
-			<label index="ab_booking.pi_flexform.monthsLineView">Monat einzeilig darstellen</label>
 			<label index="ab_booking.pi_flexform.showBookingRate">Anzeige der Buchungsrate</label>
 			<label index="ab_booking.pi_flexform.showDateNavigator">Anzeige des Datumswählers</label>
 			<label index="ab_booking.pi_flexform.sheetGeneralOptions">Allgemeine Einstellungen</label>
 			<label index="ab_booking.pi_flexform.itemDescription">Kurzbeschreibung</label>
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Kalender</label>
+			<label index="ab_booking.pi_flexform.sheetPluginOptions">Plugin Einstellungen</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.calendar">Kalender</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.availabilitycheck">Verfügbarkeitsprüfung</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.booking">Buchungsformular</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.calendarline">Kalender als Zeile</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.checkinoverview">Checkin Übersicht</label>
+			<label index="ab_booking.pi_flexform.pluginSelection.bookingrateoverview">Buchungsraten Übersicht</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Verfügbarkeits Prüfung</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions">Email Einstellungen</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Link im Kalender aktivieren</label>
-			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Link in Angebots-Liste aktivieren</label>
+			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Links im Kalender aktivieren</label>
+			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Links in Angebots-Liste aktivieren</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>
 			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimaler Buchungszeitraum (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximaler Buchungszeitraum (Tage)</label>
@@ -71,7 +83,7 @@
 			<label index="ab_booking.pi_flexform.numCheckMaxPersons">Maximale Anzahl von Personen in der Auswahl.</label>
 			<label index="ab_booking.pi_flexform.showPersonsSelector">Personenanzahl auswählbar?</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID der Detail Info Seite</label>
-			<label index="ab_booking.pi_flexform.what_to_display">Was soll angezeigt werden</label>
+			<label index="ab_booking.pi_flexform.pluginSelection">Was soll angezeigt werden</label>
 			<label index="ab_booking.pi_flexform.PIDstorage">PID der Buchungs-Sysfolder</label>
 			<label index="ab_booking.pi_flexform.PIDbooking">PID der Buchungsseite</label>
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>
@@ -103,7 +115,7 @@
 			<label index="ab_booking.pi_flexform.numCheckNextMonths" type="integer">3223258</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval" type="integer">82323251</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID" type="integer">37607590</label>
-			<label index="ab_booking.pi_flexform.what_to_display" type="integer">4813935</label>
+			<label index="ab_booking.pi_flexform.pluginSelection" type="integer">4813935</label>
 			<label index="ab_booking.pi_flexform.PIDstorage" type="integer">80050390</label>
 			<label index="ab_booking.pi_flexform.PIDbooking" type="integer">243697323</label>
 			<label index="ab_booking.pi_flexform.ProductID" type="integer">159320228</label>
@@ -138,7 +150,7 @@
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>
-			<label index="ab_booking.pi_flexform.what_to_display">What to display</label>
+			<label index="ab_booking.pi_flexform.pluginSelection">What to display</label>
 			<label index="ab_booking.pi_flexform.PIDstorage">PID of Storage Sysfolder</label>
 			<label index="ab_booking.pi_flexform.PIDbooking">PID of Booking Page</label>
 			<label index="ab_booking.pi_flexform.ProductID">Product ID</label>

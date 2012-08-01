@@ -218,19 +218,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 			case 'display':
 			default:
-				switch ($this->lConf['what_to_display']) {
-					case 'AVAILABILITY CHECK':
+				switch ($this->lConf['pluginSelection']) {
+					case '0':
+						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], array(), (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
+						break;
+					case '1':
 						// update/check all rates
 						tx_abbooking_div::getAllRates($interval);
 						$out .= $this->formCheckAvailability();
 						break;
-					case 'CALENDAR':
-						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], array(), (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
-						break;
-					case 'CALENDAR LINE':
+					case '3':
 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
 						break;
-					case 'CHECKIN OVERVIEW':
+					case '4':
 						$out .= tx_abbooking_div::printCheckinOverview($this->lConf['ProductID']);
 						break;
 					case '5': // booking rate overview
@@ -255,17 +255,23 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * @return	empty
 	 */
 	function init() {
+
 		$this->extConf = array();
 		$this->pi_initPIflexForm(); // Init and get the flexform data of the plugin
 		$this->lConf = array(); // Setup our storage array...
 		// Assign the flexform data to a local variable for easier access
 		$piFlexForm = $this->cObj->data['pi_flexform'];
 
+		// only the following flexform sheets are allowed.
+		// due to refactoring the FF, old values on other sheets may
+		// be are still present and confuse ...
+		$allowedFFSheets = array('sheetGeneralOptions', 'sheetPluginOptions');
 
 		// Traverse the entire array based on the language...
 		// and assign each configuration option to $this->lConf array...
 		if (sizeof($piFlexForm)>0)
 			foreach ( $piFlexForm['data'] as $sheet => $data ) {
+				if (in_array($sheet, $allowedFFSheets))
 				foreach ( $data as $lang => $value ) {
 					foreach ( $value as $key => $val ) {
 						$this->lConf[$key] = $this->pi_getFFvalue($piFlexForm, $key, $sheet);
@@ -337,7 +343,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['mode'] = 'display';
 		else {
 			// check if formular or display mode:
-			if (($this->lConf['what_to_display'] == 'BOOKING') &&
+			if (($this->lConf['pluginSelection'] == '2') &&
 			      ($this->lConf['uidpid'] == $this->lConf['ABuidpid'] ||
 				$this->lConf['PIDbooking'] == $this->cObj->data['pid'])) {
 				$this->lConf['mode'] = 'form';
@@ -363,11 +369,26 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['gotoPID'] = $GLOBALS['TSFE']->id;
 		}
 
+print_r($this->lConf);
 		// set defaults if still empty:
-		if (! isset($this->lConf['adultSelector']))
-			$this->lConf['adultSelector'] = $this->lConf['numDefaultPersons'];
-		if (! isset($this->lConf['daySelector']))
-			$this->lConf['daySelector'] = $this->lConf['numDefaultNights'];
+		// the values are set either in calendar or availability check view
+		if (empty($this->lConf['adultSelector'])) {
+			if (!empty($this->lConf['numDefaultPersons']))
+				$this->lConf['adultSelector'] = $this->lConf['numDefaultPersonsAvailabilitycheck'];
+			else if (!empty($this->lConf['numDefaultPersonsCalendar']))
+				$this->lConf['adultSelector'] = $this->lConf['numDefaultPersonsCalendar'];
+			else
+				$this->lConf['adultSelector'] = 2;
+		}
+		if (empty($this->lConf['daySelector'])) {
+			if (!empty($this->lConf['numDefaultNights']))
+				$this->lConf['daySelector'] = $this->lConf['numDefaultNightsAvailabilitycheck'];
+			else if (!empty($this->lConf['numDefaultNightsCalendar']))
+				$this->lConf['daySelector'] = $this->lConf['numDefaultNightsCalendar'];
+			else
+				$this->lConf['daySelector'] = 2;
+		}
+
 		if (! isset($this->lConf['daySteps']))
 			$this->lConf['daySteps'] = 1;
 
@@ -572,12 +593,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$content.='</div>';
 		}
 
-		// check if configured email is present
-		if (version_compare(TYPO3_version, '4.5', '<'))
-			if ((!class_exists('tx_abswiftmailer_pi1') || !$this->lConf['useSwiftMailer']) && empty($this->lConf['EmailAddress'])) {
-				$content.= '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noEmailConfigured').'</b></h2>';
-			}
-
 		/* handle stages */
 		if ($stage == 3) {
 			$content.='<div class="noteForm"><p>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</p></div>';
@@ -628,7 +643,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					);
 
 					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING">
+					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="2">
 							<div class="buttons">
 							<input class="edit" type="submit" name="'.$this->prefixId.'[submit_button_edit]" value="'.$SubmitButtonEdit.'">
 							<input class="submit_final" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
@@ -675,10 +690,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 					/* how many persons are possible? */
 					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
-						if ($this->lConf['numCheckMaxInterval'] < $this->piVars['daySelector'])
+						if ($this->lConf['numCheckMaxInterval'] < $this->lConf['daySelector'])
 							$daySelector = $this->lConf['numCheckMaxInterval'];
 						else
-							$daySelector = $this->piVars['daySelector'];
+							$daySelector = $this->lConf['daySelector'];
 						$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
 					}
 
@@ -694,7 +709,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
 					$content .= '<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
 							<textarea name="'.$this->prefixId.'[mitteilung]" rows=5 cols=30 wrap="PHYSICAL">'.htmlspecialchars($this->piVars['mitteilung']).'</textarea><br/>
-							<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
+							<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="2"><br/>
 							<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
 				</form>
 				<br />

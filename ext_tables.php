@@ -139,7 +139,6 @@ include_once(t3lib_extMgm::extPath($_EXTKEY).'lib/class.tx_abbooking_remote.php'
 //t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_product','EXT:'.$_EXTKEY.'/locallang_csh_product.xml');
 
 // include userfunc
-//t3lib_extMgm::addLLrefForTCAdescr('somekey', 'EXT:myext/locallang_csh.xml');
 // add CSH (context sensitive help) to TYPO3 >= 4.5
 t3lib_extMgm::addLLrefForTCAdescr('tt_content.pi_flexform.ab_booking_pi1.list', 'EXT:'.$_EXTKEY.'/locallang_csh.xml');
 ?>
