@@ -26,9 +26,4 @@ plugin.tx_abbooking_pi1 {
 			specialComponent2 = Room Cleaning
 		}
 	}
-#	remote.remoteSettingsEnable = {$plugin.tx_abbooking_pi1.remote.remoteSettingsEnable}
-#	remote.remoteURL = {$plugin.tx_abbooking_pi1.remote.remoteURL}
-#	remote.remoteType = {$plugin.tx_abbooking_pi1.remote.remoteType}
-#	remote.remoteStoragePID = {$plugin.tx_abbooking_pi1.remote.remoteStoragePID}
-#	remote.remoteProductUIDs = {$plugin.tx_abbooking_pi1.remote.remoteProductUIDs}
 }

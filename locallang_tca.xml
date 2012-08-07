@@ -27,8 +27,8 @@
 			<label index="ab_booking.pi_flexform.pluginSelection.bookingrateoverview">Booking Rate Overview</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions">Mail Settings</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Links in Calendar View</label>
-			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkCalendar">Enable Booking Links in Calendar View</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkAvailabilityCheck">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
 			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
@@ -73,8 +73,8 @@
 			<label index="ab_booking.pi_flexform.pluginSelection.bookingrateoverview">Buchungsraten Übersicht</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Verfügbarkeits Prüfung</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions">Email Einstellungen</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Buchungs-Links im Kalender aktivieren</label>
-			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Buchungs-Links in Angebots-Liste aktivieren</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkCalendar">Buchungs-Links im Kalender aktivieren</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkAvailabilityCheck">Buchungs-Links in Angebots-Liste aktivieren</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Verfügbarkeit für die folgenden Monate prüfen</label>
 			<label index="ab_booking.pi_flexform.numCheckMinInterval">Minimaler Buchungszeitraum (days)</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximaler Buchungszeitraum (Tage)</label>
@@ -110,8 +110,8 @@
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions" type="integer">150966827</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions" type="integer">109957913</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions" type="integer">4332477</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink" type="integer">179809195</label>
-			<label index="ab_booking.pi_flexform.enableCheckBookingLink" type="integer">182428140</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkCalendar" type="integer">179809195</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkAvailabilityCheck" type="integer">182428140</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths" type="integer">3223258</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval" type="integer">82323251</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID" type="integer">37607590</label>
@@ -145,8 +145,8 @@
 			<label index="ab_booking.pi_flexform.sheetCalendarOptions">Calendar</label>
 			<label index="ab_booking.pi_flexform.sheetAvailabilityOptions">Availability Check</label>
 			<label index="ab_booking.pi_flexform.sheetBookingOptions">Booking</label>
-			<label index="ab_booking.pi_flexform.enableCalendarBookingLink">Enable Booking Link in Calendar View</label>
-			<label index="ab_booking.pi_flexform.enableCheckBookingLink">Enable Booking Link in Availability List View</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkCalendar">Enable Booking Link in Calendar View</label>
+			<label index="ab_booking.pi_flexform.enableBookingLinkAvailabilityCheck">Enable Booking Link in Availability List View</label>
 			<label index="ab_booking.pi_flexform.numCheckNextMonths">Check Availability for next Months</label>
 			<label index="ab_booking.pi_flexform.numCheckMaxInterval">Maximum Booking Interval (days)</label>
 			<label index="ab_booking.pi_flexform.detailInfosUID">UID of Detail Info Page</label>

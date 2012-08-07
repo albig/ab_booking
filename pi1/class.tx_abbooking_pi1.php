@@ -32,7 +32,7 @@
  *  232:     function init()
  *  384:     public function formBookingUserData($conf, $product, $stage)
  *  649:     public function formCheckAvailability()
- *  748:     public function get_product_properties($ProductUID)
+ *  748:     public function getProductPropertiesFromDB($ProductUID)
  *  805:     function check_availability($storagePid)
  *  914:     function formVerifyUserInput()
  *  998:     function log_request($logFile)
@@ -108,10 +108,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				if (isset ($this->piVars['submit_button_edit']) && $this->lConf['ABdo'] == 'bor3')
 					$this->lConf['ABdo'] = 'bor0';
 
-
 				// update/check all rates
 				tx_abbooking_div::getAllRates($interval);
-				$this->check_availability($this->lConf['PIDstorage']);
+				$this->check_availability();
 
 				// one product is allowed at a time:
 				foreach ( $this->lConf['productDetails'] as $key => $val ) {
@@ -224,7 +223,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						break;
 					case '1':
 						// update/check all rates
-						tx_abbooking_div::getAllRates($interval);
+//~ 						tx_abbooking_div::getAllRates($interval);
 						$out .= $this->formCheckAvailability();
 						break;
 					case '3':
@@ -250,7 +249,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 	}
 	/**
-	 * initializes the flexform and all config options ;-)
+	 * initializes all config options in $this->lConf
+	 *
+	 * priority:
+	 *   1. GET/POST (piVars)
+	 *   --> if not set 2. Flexform
+	 *   --> if not set 3. Typoscript
 	 *
 	 * @return	empty
 	 */
@@ -261,6 +265,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$this->lConf = array(); // Setup our storage array...
 		// Assign the flexform data to a local variable for easier access
 		$piFlexForm = $this->cObj->data['pi_flexform'];
+
 
 		// only the following flexform sheets are allowed.
 		// due to refactoring the FF, old values on other sheets may
@@ -369,11 +374,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['gotoPID'] = $GLOBALS['TSFE']->id;
 		}
 
-print_r($this->lConf);
 		// set defaults if still empty:
-		// the values are set either in calendar or availability check view
+		// the values are set either in Calendar or Availability Check view
 		if (empty($this->lConf['adultSelector'])) {
-			if (!empty($this->lConf['numDefaultPersons']))
+			if (!empty($this->lConf['numDefaultPersonsAvailabilitycheck']))
 				$this->lConf['adultSelector'] = $this->lConf['numDefaultPersonsAvailabilitycheck'];
 			else if (!empty($this->lConf['numDefaultPersonsCalendar']))
 				$this->lConf['adultSelector'] = $this->lConf['numDefaultPersonsCalendar'];
@@ -381,13 +385,21 @@ print_r($this->lConf);
 				$this->lConf['adultSelector'] = 2;
 		}
 		if (empty($this->lConf['daySelector'])) {
-			if (!empty($this->lConf['numDefaultNights']))
+			if (!empty($this->lConf['numDefaultNightsAvailabilitycheck']))
 				$this->lConf['daySelector'] = $this->lConf['numDefaultNightsAvailabilitycheck'];
 			else if (!empty($this->lConf['numDefaultNightsCalendar']))
 				$this->lConf['daySelector'] = $this->lConf['numDefaultNightsCalendar'];
 			else
 				$this->lConf['daySelector'] = 2;
 		}
+
+		// set bool value for Booking Link in Calendar and Availability Check view:
+		if (!empty($this->lConf['enableBookingLinkAvailabilityCheck']))
+			$this->lConf['enableBookingLink'] = $this->lConf['enableBookingLinkAvailabilityCheck'];
+		else if (!empty($this->lConf['enableBookingLinkCalendar']))
+			$this->lConf['enableBookingLink'] = $this->lConf['enableBookingLinkCalendar'];
+		else
+			$this->lConf['enableBookingLink'] = 0;
 
 		if (! isset($this->lConf['daySteps']))
 			$this->lConf['daySteps'] = 1;
@@ -416,6 +428,7 @@ print_r($this->lConf);
 		if (count($this->conf['form.']) > 0)
 			$this->lConf['form'] = $this->conf['form.'];
 
+//~ print_r($this->lConf);
 		// ---------------------------------
 		// get Product Properties
 		// ---------------------------------
@@ -423,19 +436,20 @@ print_r($this->lConf);
 		if (intval($this->conf['useTSconfiguration']) == 1) {
 			$this->lConf['useTSconfiguration'] = 1;
 			if (isset($this->lConf['ProductID'])) {
-				$this->lConf['productDetails'] = $this->getTSproductProperties($this->lConf['ProductID']);
+				$this->lConf['productDetails'] = $this->getProductPropertiesFromTS($this->lConf['ProductID']);
 				// merge array of available and offtime product IDs
 				$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
 			}
 		} else {
 			if (isset($this->lConf['ProductID'])) {
-				$this->lConf['productDetails'] = $this->get_product_properties($this->lConf['ProductID']);
+				$this->lConf['productDetails'] = $this->getProductPropertiesFromDB($this->lConf['ProductID']);
 				// merge array of available and offtime product IDs
 				$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
 			}
 		}
-
-		// save session data
+		// ---------------------------------
+		// save user session data
+		// ---------------------------------
 		if (isset($this->piVars['submit_button'])) {
 			$customerData = $this->piVars; // copy all - is this bad?
 			if (empty($this->piVars['name']))
@@ -836,11 +850,10 @@ print_r($this->lConf);
 	 * @param	[type]		$ProductUID: ...
 	 * @return	[type]		array of properties..
 	 */
-	public function get_product_properties($ProductUID) {
+	public function getProductPropertiesFromDB($ProductUID) {
 
 		$availableProductIDs = array();
 		$offTimeProductIDs = array();
-
 
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
@@ -908,7 +921,7 @@ print_r($this->lConf);
 	 * @param	[type]		$ProductUID: ...
 	 * @return	[type]		array of properties..
 	 */
-	public function getTSproductProperties($ProductUID) {
+	public function getProductPropertiesFromTS($ProductUID) {
 
 		$availableProductIDs = array();
 		$offTimeProductIDs = array();
@@ -977,7 +990,7 @@ print_r($this->lConf);
 	 * @param	[type]		$storagePid: ...
 	 * @return	0		on success, 1 on error
 	 */
-	function check_availability($storagePid) {
+	function check_availability() {
 		$item = array();
 
 		if (!isset($interval['startDate'])) {
@@ -1010,7 +1023,7 @@ print_r($this->lConf);
 		}
 
 		// 1. step through bookings to find maximum availability
-		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $storagePid, $interval);
+		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
 
 		foreach ($bookings['bookings'] as $key => $row) {
 			if (!isset($item[$row['uid']]['maxAvailable']))
@@ -1058,7 +1071,9 @@ print_r($this->lConf);
 			// find maximum available period for item[UID]
 			if ($item[$uid]['available'] < $item[$uid]['maxAvailable'])
 				$item[$uid]['maxAvailable'] = $item[$uid]['available'];
+
 		}
+
 
 		// 3. look for off-times and reduce maxAvailable for all items
 		$maxAvailableAll = $this->lConf['numCheckMaxInterval'];
@@ -1093,6 +1108,7 @@ print_r($this->lConf);
 			}
 
 		}
+//~ print_r("check_availability\n");
 //~ print_r($this->lConf['productDetails']);
 
 		return 0;
@@ -1573,18 +1589,12 @@ print_r($this->lConf);
 			$d < $periodDateStamp;
 				$d = strtotime('+1 day', $d)) {
 				$rateValue = $this->getDiscountRate($product['prices'][$d][$key], $period);
-//~ print_r($rateValue);
-
-//				$rateValue = $rateValue['discountRate'];
 
 				if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
 						continue;
 
-//~ 				$rateValue = $this->getDiscountRate($product['prices'][$d]['adult'.$max_persons], $period);
 				if ($operator == '*+')
 					$rateValue['discountRate'] = $max_persons * $rateValue['discountRate'];
-
-//~  				$total_amount += $rateValue['discountRate'];
 
 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
 
@@ -1933,7 +1943,7 @@ print_r($this->lConf);
 			// step through used dates and create date interval string
 			$openInterval = 0;
 			$lastday = 0;
-//~ print_r($value);
+
 			foreach ($value['usedDates'] as $id => $currday) {
 				$dayDiff = (int)($currday - $lastday);
 				if ($id == 0 || $openInterval == 0) {
@@ -1948,7 +1958,6 @@ print_r($this->lConf);
 				}
 				$lastday = $currday;
 			}
-//~ print_r($dateUsed."\n");
 
 			if ($openInterval == 1) {
 				if ($value['priceIsPerWeek'] == '1')
@@ -1956,8 +1965,6 @@ print_r($this->lConf);
 				else
 					$dateUsed .= strftime('%a %x', $lastday+($value['dayStep']*86400) );
 			}
-//~ print_r($dateUsed."\n");
-//~ print_r("------------\n");
 
 			$lDetails['dates'][] = $dateUsed;
 			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
@@ -2013,7 +2020,6 @@ print_r($this->lConf);
 //~ 		print_r($rateValueArray);
 //~ 		print_r("---ab--ratesPerStay-\n");
 
-//~ print_r($priceDetails);
 		$rate['priceTotalAmount'] = number_format($total_amount, 2, ',', '');
 		$rate['priceCurrency'] = $currency;
 		$rate['priceDetails'] = $priceDetails;

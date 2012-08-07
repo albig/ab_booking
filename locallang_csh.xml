@@ -21,12 +21,17 @@
 						 ]]>
 			</label>
 
-			<label index="ProductID.description">Select the products you want to be used in this plugin.</label>
-			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box,
-			you first have to enter the storage pid and you have to add products,
-			prices and seasons into this storage folder.
+			<label index="ProductID.description">Select the products you want to be used in this widget.</label>
+			<label index="ProductID.details"><![CDATA[
+			In the right box, you find all available products.
+
+			If the box is empty, you first have to enter the storage pid where your products,
+			prices and seasons are stored.
 					]]>
 			</label>
+
+			<label index="numCheckNextMonths.description">Define how many months in the future the plugin accepts bookings.</label>
+
 
 			<label index="enableCalendarBookingLink.description">Enable booking links on available dates in the calendar.</label>
 			<label index="showDateNavigator.description">Show date navigation above the calendar.</label>

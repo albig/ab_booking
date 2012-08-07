@@ -24,19 +24,50 @@
 			</config>
 			</TCEforms>
 		</ProductID>
-
-		<enableCalendarBookingLink>
-			<TCEforms>
-				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCalendarBookingLink</label>
-				<displayCond>FIELD:pluginSelection:=:CALENDAR</displayCond>
-				<config>
-					<type>check</type>
-					<default>1</default>
-				</config>
-			</TCEforms>
-		</enableCalendarBookingLink>
-
-
+			<numCheckNextMonths>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckNextMonths</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>12</default>
+					</config>
+				</TCEforms>
+			</numCheckNextMonths>
+			<numCheckMinInterval>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMinInterval</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</numCheckMinInterval>
+			<numCheckMaxInterval>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxInterval</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>21</default>
+					</config>
+				</TCEforms>
+			</numCheckMaxInterval>
+			<numCheckDaySteps>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</numCheckDaySteps>
 		<PIDstorage>
 			<TCEforms>
 				<exclude>1</exclude>
@@ -121,16 +152,6 @@
 				</TCEforms>
 			</pluginSelection>
 
-			<enableCalendarBookingLink>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCalendarBookingLink</label>
-					<displayCond>FIELD:pluginSelection:=:0</displayCond>
-					<config>
-						<type>check</type>
-						<default>1</default>
-					</config>
-				</TCEforms>
-			</enableCalendarBookingLink>
 			<showDateNavigator>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showDateNavigator</label>
@@ -199,16 +220,16 @@
 					</config>
 				</TCEforms>
 			</numDefaultPersonsCalendar>
-			<enableCheckBookingLink>
+			<enableBookingLinkCalendar>
 				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableCheckBookingLink</label>
-					<displayCond>FIELD:pluginSelection:=:1</displayCond>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableBookingLinkCalendar</label>
+					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>check</type>
 						<default>1</default>
 					</config>
 				</TCEforms>
-			</enableCheckBookingLink>
+			</enableBookingLinkCalendar>
 			<numDefaultNightsAvailabilitycheck>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
@@ -234,54 +255,7 @@
 				</TCEforms>
 			</numDefaultPersonsAvailabilitycheck>
 
-			<numCheckNextMonths>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckNextMonths</label>
-					<displayCond>FIELD:pluginSelection:=:1</displayCond>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>12</default>
-					</config>
-				</TCEforms>
-			</numCheckNextMonths>
-			<numCheckMinInterval>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMinInterval</label>
-					<displayCond>FIELD:pluginSelection:=:1</displayCond>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>1</default>
-					</config>
-				</TCEforms>
-			</numCheckMinInterval>
-			<numCheckMaxInterval>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxInterval</label>
-					<displayCond>FIELD:pluginSelection:=:1</displayCond>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>21</default>
-					</config>
-				</TCEforms>
-			</numCheckMaxInterval>
-			<numCheckDaySteps>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
-					<displayCond>FIELD:pluginSelection:=:1</displayCond>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>1</default>
-					</config>
-				</TCEforms>
-			</numCheckDaySteps>
+
 			<numCheckMaxPersons>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckMaxPersons</label>
@@ -305,6 +279,16 @@
 				</TCEforms>
 			</showPersonsSelector>
 
+			<enableBookingLinkAvailabilityCheck>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.enableBookingLinkAvailabilityCheck</label>
+					<displayCond>FIELD:pluginSelection:=:2</displayCond>
+					<config>
+						<type>check</type>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</enableBookingLinkAvailabilityCheck>
 			<sendCustomerConfirmation>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.sendCustomerConfirmation</label>

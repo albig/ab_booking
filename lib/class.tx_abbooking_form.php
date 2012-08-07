@@ -23,7 +23,7 @@
 ***************************************************************/
 
 /**
- * ab_booking misc functions
+ * ab_booking form functions
  *
  * @author	Alexander Bigga <linux@bigga.de>
  * @package	TYPO3
@@ -94,7 +94,7 @@ class tx_abbooking_form {
 					break;
 				case 'radio':
 					$out .= '<div class="'.$cssClass.'">';
-					
+
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
 					else {
@@ -102,7 +102,7 @@ class tx_abbooking_form {
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
-					
+
 					if ($showHidden == 1) {
 						foreach ($form['radio.'] as $radioname => $radio) {
 								if ($radioname == $customer[$formname])
@@ -130,7 +130,7 @@ class tx_abbooking_form {
 					break;
 				case 'checkbox':
 					$out .= '<div class="'.$cssClass.'">';
-					
+
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
 					else {
@@ -138,12 +138,12 @@ class tx_abbooking_form {
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
-					
+
 					$out .= '</div>';
 					break;
 				case 'selector':
 					$out .= '<div class="'.$cssClass.'">';
-					
+
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
 					else {
@@ -202,7 +202,7 @@ class tx_abbooking_form {
 					break;
 				case 'textarea':
 					$out .= '<div class="'.$cssClass.'">';
-					
+
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
 					else {
@@ -222,7 +222,7 @@ class tx_abbooking_form {
 					break;
 				case 'infobox':
 					$out .= '<div class="'.$cssClass.'">';
-					
+
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
 					else {
@@ -236,8 +236,6 @@ class tx_abbooking_form {
 				default:
 					break;
 			}
-//~ 			$out .= $formname.": ".$form['type'].": ".$form['required'].": ".$form['size']."\n";
-
 		}
 		return $out;
 	}
@@ -256,7 +254,6 @@ class tx_abbooking_form {
 
 		$interval = array();
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-//~ print_r($product);
 		$customer = $this->lConf['customerData'];
 
 		// first check errors...
@@ -390,13 +387,6 @@ class tx_abbooking_form {
 				$content.= '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noEmailConfigured').'</b></h2>';
 			}
 
-
-
-
-
-
-
-
 		/* handle stages */
 		if ($stage == 3) {
 			$content.='<div class="noteForm"><p>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</p></div>';
@@ -425,11 +415,6 @@ class tx_abbooking_form {
 		}
 		else {
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_check'));
-
-//~ 			if (isset($this->lConf['startDateStamp']))
-//~ 				$startdate = $this->lConf['startDateStamp'];
-//~ 			else
-//~ 				$startdate = time();
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 			$content .= tx_abbooking_form::printUserFormElements($numErrors, 0);

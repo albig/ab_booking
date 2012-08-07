@@ -85,9 +85,10 @@ class tx_abbooking_div {
 	 * @param	array		$interval: ...
 	 * @return	array		with booking periods
 	 */
-	function getBookings($uid, $storagePid, $interval) {
+	function getBookings($uid, $interval) {
 
 		$bookingsRaw = array();
+		$storagePid = $this->lConf['PIDstorage'];
 
 		if (!isset($uid))
 			$uid = $this->lConf['ProductID'];
@@ -125,10 +126,10 @@ class tx_abbooking_div {
 	 */
 	function getAllRates($interval) {
 
-		foreach ( $this->lConf['productDetails'] as $key => $val ) {
-
+//~ print_r('getAllRates: START'."\n");
+		foreach ( $this->lConf['productDetails'] as $uid => $val ) {
 			// get all prices for given UID and given dates
-			$this->lConf['productDetails'][$key]['prices'] = tx_abbooking_div::getPrices($key, $interval);
+			$this->lConf['productDetails'][$uid]['prices'] = tx_abbooking_div::getPrices($uid, $interval);
 		}
 
 		return 0;
@@ -141,12 +142,13 @@ class tx_abbooking_div {
 	 * @param	[type]		$maxAvailable: ...
 	 * @return	string		with amount, currency...
 	 */
-	function getPrices($key, $interval) {
+	function getPrices($uid, $interval) {
+//~ print_r('getPrices: '.$uid."\n");
 
 			if ($this->lConf['useTSconfiguration'] == 1)
-				return tx_abbooking_div::getRatesFromTS($key, $interval);
+				return tx_abbooking_div::getRatesFromTS($uid, $interval);
 			else
-				return tx_abbooking_div::getRatesFromDB($key, $interval);
+				return tx_abbooking_div::getRatesFromDB($uid, $interval);
 
 	}
 
@@ -474,7 +476,7 @@ class tx_abbooking_div {
 
 		$out = $content;
 
-		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		// keep uids in fixed order...
 		function cmpUIDs($a, $b)
 		{
@@ -568,6 +570,7 @@ class tx_abbooking_div {
 	 * @return	HTML-list		of calendar days
 	 */
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
+//~ print_r('printAvailabilityCalendarDiv'.$uid."\n");
 
 		// disable caching of target booking page
 		$this->pi_USER_INT_obj = 1;
@@ -575,7 +578,7 @@ class tx_abbooking_div {
 
 		// disable booking links for robots
 		if ($this->isRobot())
-			$this->lConf['enableCalendarBookingLink'] = 0;
+			$this->lConf['enableBookingLink'] = 0;
 
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
 			$today = strtotime(strftime("%Y-%m-%d"));
@@ -600,8 +603,14 @@ class tx_abbooking_div {
 				(date('Y', $interval['endList']) - date('Y', $interval['startList']) +1)*12;
 
 
-		$prices = tx_abbooking_div::getPrices($uid, $interval);
-		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
+		// only check prices if not yet available...
+		if (!empty($this->lConf['productDetails'][$uid]['prices'])) {
+			print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
+			$prices = $this->lConf['productDetails'][$uid]['prices'];
+		}
+		else
+			$prices = tx_abbooking_div::getPrices($uid, $interval);
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
 		if (empty($this->lConf['ProductID']) && empty($uid)) {
@@ -663,8 +672,7 @@ class tx_abbooking_div {
 				if ($this->lConf['showBookingRate'] && strstr($cssClass, 'booked') && !strstr($cssClass, 'booked End'))
 					$bookingRate ++;
 
-
-				if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+				if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
 						&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 						&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 					) {
@@ -723,7 +731,7 @@ class tx_abbooking_div {
 
 		// disable booking links for robots
 		if ($this->isRobot())
-			$this->lConf['enableCalendarBookingLink'] = 0;
+			$this->lConf['enableBookingLink'] = 0;
 
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
 			$today = strtotime(strftime("%Y-%m-%d"));
@@ -737,8 +745,14 @@ class tx_abbooking_div {
 		$interval['startList'] = strtotime( 'last monday', $interval['startList'] );
 		$interval['endList'] = strtotime( 'next sunday', $interval['endList'] );
 
-		$prices = tx_abbooking_div::getPrices($uid, $interval);
-		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
+		// only check prices if not yet available...
+		if (!empty($this->lConf['productDetails'][$uid]['prices'])) {
+			print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
+			$prices = $this->lConf['productDetails'][$uid]['prices'];
+		}
+		else
+			$prices = tx_abbooking_div::getPrices($uid, $interval);
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
 		$printDayNames = 1;
@@ -758,7 +772,7 @@ class tx_abbooking_div {
 				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
 			}
 
-			if ($this->lConf['enableCalendarBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 				) {
@@ -878,7 +892,7 @@ class tx_abbooking_div {
 			// check if checkIn is ok for startDate
 			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
 				$contentError[] = $this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']);
-				$enableCheckBookingLink = 0;
+				$enableBookingLink = 0;
 				for ($j=$this->lConf['startDateStamp']; $j < strtotime('+14 day', $this->lConf['startDateStamp']); $j=strtotime('+1 day', $j)) {
 
 					if ($product['prices'][$j]['checkInOk'] == '1') {
@@ -887,7 +901,7 @@ class tx_abbooking_div {
 						$params = array (
 							$this->prefixId.'[ABx]' => $params_united,
 						);
-						if ($this->lConf['enableCheckBookingLink'])
+						if ($this->lConf['enableBookingLink'])
 							$link = $this->pi_linkTP(strftime('%a, %x', $interval['startDate']), $params, $cache, $this->lConf['gotoPID']);
 						else
 							$link = strftime('%a, %x', $j);
@@ -897,7 +911,7 @@ class tx_abbooking_div {
 					}
 				}
 			} else
-				$enableCheckBookingLink = $this->lConf['enableCheckBookingLink'];
+				$enableBookingLink = $this->lConf['enableBookingLink'];
 
 			// show calendar list only up to the vacant day
 			if (empty($interval['startDate']))
@@ -922,7 +936,7 @@ class tx_abbooking_div {
 			}
 
 
-			if ($enableCheckBookingLink)
+			if ($enableBookingLink)
 				$link = $this->pi_linkTP($title, $params, $cache, $this->lConf['gotoPID']);
 			else
 				$link = $title;
@@ -941,12 +955,12 @@ class tx_abbooking_div {
 				}
 				$offers[$i] .= $bodytext;
 
-				if ($enableCheckBookingLink)
+				if ($enableBookingLink)
 					$offers[$i] .='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
 
 				$offers[$i] .= $this->printCalculatedRates($uid, $bookNights, 1, 1);
 
-				if ($enableCheckBookingLink)
+				if ($enableBookingLink)
 					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
 									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 									<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
@@ -975,7 +989,7 @@ class tx_abbooking_div {
 			} else
 				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $interval);
 
-			if ($enableCheckBookingLink)
+			if ($enableBookingLink)
 				$offers[$i] .= $linkBookNow;
 			// close list item...
 			$offers[$i] .= '</li>';
