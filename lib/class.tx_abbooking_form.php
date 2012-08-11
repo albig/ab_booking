@@ -262,6 +262,11 @@ class tx_abbooking_form {
 			return $content;
 		}
 
+		if (empty($this->lConf['form'])) {
+			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noFormDefined').'</b></h2>';
+			return $content;
+		}
+
 		$interval['startDate'] = $this->lConf['startDateStamp'];
 		$interval['endDate'] = $this->lConf['endDateStamp'];
 		$interval['startList'] = strtotime('-2 day', $interval['startDate']);

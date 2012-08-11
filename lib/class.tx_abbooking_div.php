@@ -983,7 +983,6 @@ class tx_abbooking_div {
 
 			} else if ($this->lConf['form']['showCalendarWeek']>0) {
 					$intval['startDate'] = $interval['startDate'];
-
 				$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarWeek'].' weeks', $intval['startDate']);
 				$offers[$i] .= tx_abbooking_div::printAvailabilityCalendarLine($product['uid'].$offTimeProducts, $intval);
 			} else

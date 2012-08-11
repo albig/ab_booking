@@ -163,26 +163,22 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						/* booking request formular  */
 						/* ------------------------- */
 						$this->lConf['stage'] = 0;
-						$out .= $this->formBookingUserData($stage = 1);
+						$out .= tx_abbooking_form::printUserForm($stage = 1);
 						break;
 					case 'bor1':
 						$this->lConf['stage'] = 1;
-						$out .= $this->formBookingUserData($stage = 1);
+						$out .= tx_abbooking_form::printUserForm($stage = 1);
 						break;
 					case 'bor2':
 						$this->lConf['stage'] = 2;
-						$out .= $this->formBookingUserData($stage = 2);
+						$out .= tx_abbooking_form::printUserForm($stage = 2);
 						break;
 					case 'bor3':
 						/* --------------------------- */
 						/* booking final - send mails  */
 						/* --------------------------- */
 						$this->lConf['stage'] = 3;
-						if ($this->lConf['useTSconfiguration'] == 1)
-							$numErrors = tx_abbooking_form::formVerifyUserInput();
-						else
-							$numErrors = $this->formVerifyUserInput();
-
+						$numErrors = tx_abbooking_form::formVerifyUserInput();
 
 						if ($numErrors == 0) {
 							$out .= tx_abbooking_div::printBookingStep($stage = 4);
@@ -203,7 +199,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							}
 
 						} else {
-							$out .= $this->formBookingUserData($stage = 2);
+							$out .= tx_abbooking_form::printUserForm($stage = 2);
 						}
 
 						break;
@@ -479,259 +475,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	}
 
 
-	/**
-	 * Request Formular
-	 * The customer enters his personal data and submits the form.
-	 *
-	 * @param	[type]		$conf: ...
-	 * @param	integer		$stage of booking process
-	 * @param	[type]		$stage: ...
-	 * @return	HTML		form with booking details
-	 */
-	public function formBookingUserData($stage) {
-
-		// jump to dynamic form if configured
- 		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1)
-			return tx_abbooking_form::printUserForm($stage);
-
-		$interval = array();
-		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-		if (empty($product)) {
-			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
-			return $content;
-		}
-
-		$interval['startDate'] = $this->lConf['startDateStamp'];
-		$interval['endDate'] = $this->lConf['endDateStamp'];
-		$interval['startList'] = strtotime('-2 day', $interval['startDate']);
-		$interval['endList'] = strtotime('+2 day', $interval['startDate']);
-
-		if ($stage > 1) {
-			$numErrors = $this->formVerifyUserInput();
-			if ($stage == 2 && $numErrors > 0)
-					$stage = 1;
-			else
-					$stage = 3;
-			if ($stage == 3 && $numErrors > 0)
-					$stage = 2;
-		}
-		$customer = $this->lConf['customerData'];
-
-		$content .= tx_abbooking_div::printBookingStep($stage);
-
-		$content .='<div class="requestForm">';
-
-		$content .='<h3>'.htmlspecialchars($this->pi_getLL('title_request')).' '.$product['detailsRaw']['header'].'</h3>';
-
-		$content .= '<p class=available><b>'.$this->pi_getLL('result_available').'</b>';
-		$content .= ' '.strftime('%A, %x', $this->lConf['startDateStamp']) . ' - ';
-		$availableMaxDate = strtotime('+ '.$product['maxAvailable'].' days', $this->lConf['startDateStamp']);
-		$content .= ' '.strftime('%A, %x', $availableMaxDate);
-		$content .= '</p><br />';
-		$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
-
-		$selected='selected="selected"';
-		if (isset($this->lConf['adultSelector']))
-			if ($this->lConf['adultSelector'] > $product['capacitymax'])
-				$seladultSelector[$product['capacitymax']] = $selected;
-			else if ($this->lConf['adultSelector'] < $product['capacitymin'])
-				$seladultSelector[$product['capacitymin']] = $selected;
-			else
-				$seladultSelector[$this->lConf['adultSelector']] = $selected;
-		else
-			$seladultSelector[2] = $selected;
-
-		if (isset($this->lConf['daySelector']))
-			$seldaySelector[$this->lConf['daySelector']] = $selected;
-		else
-			$seldaySelector[2] = $selected;
-
-		$contentError = '';
-		/* handle errors */
-		if (isset($this->form_errors['name'])) {
-			$ErrorName='class="error"';
-			$contentError.='<li>'.$this->form_errors['name'].'</li>';
-		}
-		if (isset($this->form_errors['street'])) {
-			$ErrorStreet='class="error"';
-			$contentError.='<li>'.$this->form_errors['street'].'</li>';
-		}
-		if (isset($this->form_errors['email'])) {
-			$ErrorEmail='class="error"';
-			$contentError.='<li>'.$this->form_errors['email'].'</li>';
-		}
-		if (isset($this->form_errors['city'])) {
-			$ErrorTown='class="error"';
-			$contentError.='<li>'.$this->form_errors['city'].'</li>';
-		}
-		if (isset($this->form_errors['PLZ'])) {
-			$ErrorPLZ='class="error"';
-			$contentError.='<li>'.$this->form_errors['PLZ'].'</li>';
-		}
-		if (isset($this->form_errors['vacancies'])) {
-			$ErrorVacancies='class="error"';
-			$contentError.='<li>'.$this->form_errors['vacancies'].'</li>';
-		}
-		if (isset($this->form_errors['vacancies_limited'])) {
-			$ErrorVacanciesLimited='class="error"';
-			$contentError.='<li>'.$this->form_errors['vacancies_limited'].'</li>';
-		}
-		if (isset($this->form_errors['startDateInThePast'])) {
-			$ErrorVacancies='class="error"';
-			$contentError.='<li>'.$this->form_errors['startDateInThePast'].'</li>';
-		}
-		if (isset($this->form_errors['endDateNotValid'])) {
-			$ErrorVacanciesLimited='class="error"';
-			$contentError.='<li>'.$this->form_errors['endDateNotValid'].'</li>';
-		}
-		if (isset($this->form_errors['daySelectorNotValid'])) {
-			$ErrorVacanciesLimited='class="error"';
-			$contentError.='<li>'.$this->form_errors['daySelectorNotValid'].'</li>';
-		}
-
-		if ($product['minimumStay'] > $product['maxAvailable']) {
-			$ErrorVacanciesLimited='class="error"';
-			if ($product['minimumStay'] == 1)
-				$text_periods = ' '.$this->pi_getLL('period');
-			else
-				$text_periods = ' '.$this->pi_getLL('periods');
-
-			$contentError.='<li>'.$this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods.'</li>';
-		}
-
-		if (!empty($contentError)) {
-			$content.='<div class="errorForm">';
-			$content.='<ul>';
-			$content.= $contentError;
-			$content.='</ul>';
-			$content.='</div>';
-		}
-
-		/* handle stages */
-		if ($stage == 3) {
-			$content.='<div class="noteForm"><p>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</p></div>';
-
-			$SubmitButtonEdit=htmlspecialchars($this->pi_getLL('submit_button_edit'));
-			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_final'));
-
-			$content.='<form class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
-
-					<p class="yourSettings">'.htmlspecialchars($customer['address_name']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($customer['address_name']).'" >
-					<p class="yourSettings">'.htmlspecialchars($customer['address_street']).'</p>
-					<input  type="hidden" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" >
-					<p class="yourSettings">'.htmlspecialchars($customer['address_zip']).' '.htmlspecialchars($customer['address_city']).'</p>
-					<input  type="hidden" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_zip']).'" >
-					<input  type="hidden" name="'.$this->prefixId.'[city]" value="'.htmlspecialchars($customer['address_city']).'">
-					<p class="yourSettings">'.htmlspecialchars($customer['address_email']).'</p>
-					<input  type="hidden" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" >
-					<p class="yourSettings">'.htmlspecialchars($customer['address_telephone']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[telephone]" value="'.htmlspecialchars($customer['address_telephone']).'" >
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></div>
-					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[checkinDateStamp]" value="'.$this->lConf['startDateStamp'].'" >
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_abreise')).'</b></div>
-					<p class="yourSettings">'.strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp']).'</p>
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).':</b></div>
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['daySelector']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[daySelector]" value="'.htmlspecialchars($this->lConf['daySelector']).'" >
-´
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).':</b></div>
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['adultSelector']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[adultSelector]" value="'.htmlspecialchars($this->piVars['adultSelector']).'" >
-
-					<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
-					<p class="yourSettings">'.htmlspecialchars($this->piVars['mitteilung']).'</p>
-					<input type="hidden" name="'.$this->prefixId.'[mitteilung]" value="'.$this->piVars['mitteilung'].'">';
-
-					$content .= $this->printCalculatedRates($product['uid'], $this->piVars['daySelector'], 1);
-
-					$params_united = $this->lConf['startDateStamp'].'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage);
-					$params = array (
-						$this->prefixId.'[ABx]' => $params_united,
-					);
-
-					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="2">
-							<div class="buttons">
-							<input class="edit" type="submit" name="'.$this->prefixId.'[submit_button_edit]" value="'.$SubmitButtonEdit.'">
-							<input class="submit_final" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
-							</div>
-				</form>
-			';
-		}
-		else {
-			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_check'));
-
-			if (isset($this->lConf['startDateStamp']))
-				$startdate = $this->lConf['startDateStamp'];
-			else
-				$startdate = time();
-
-			$content.='<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_name')).'</b></div>
-					<input '.$ErrorName.' type="text" name="'.$this->prefixId.'[name]" value="'.htmlspecialchars($customer['address_name']).'" ><br/>
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_street')).'</b></div>
-					<input '.$ErrorStreet.' type="text" name="'.$this->prefixId.'[street]" value="'.htmlspecialchars($customer['address_street']).'" ><br/>
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_zip')).' '.htmlspecialchars($this->pi_getLL('feld_town')).'</b></div>
-					<input '.$ErrorPLZ.' type="text" size="5" maxlength="10" name="'.$this->prefixId.'[zip]" value="'.htmlspecialchars($customer['address_zip']).'" >
-					<input '.$ErrorTown.' type="text" name="'.$this->prefixId.'[city]" value="'.htmlspecialchars($customer['address_city']).'"><br/>
-
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_email')).'</b></div>
-					<input '.$ErrorEmail.' type="text" name="'.$this->prefixId.'[email]" value="'.htmlspecialchars($customer['address_email']).'" ><br/>
-					'.htmlspecialchars($this->pi_getLL('feld_telephone')).'<br/><input type="text" name="'.$this->prefixId.'[telephone]" value="'.htmlspecialchars($customer['address_telephone']).'" ><br/>
-					<b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b><br/>';
-			$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $startdate, $ErrorVacancies);
-			$content .= '<br/>
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></div>
-						<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" size="1">';
-
-					/* how many days/nights are available? */
-					for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
-							$endDate = strtotime('+'.$i.' day', $startdate);
-							$content.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.strftime('%d.%m.%Y', $endDate).')</option>';
-					}
-					$content .= '</select><br/>
-					<div class="elementForm"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></div>
-						<select name="'.$this->prefixId.'[adultSelector]" size="1">';
-
-					/* how many persons are possible? */
-					for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
-						if ($this->lConf['numCheckMaxInterval'] < $this->lConf['daySelector'])
-							$daySelector = $this->lConf['numCheckMaxInterval'];
-						else
-							$daySelector = $this->lConf['daySelector'];
-						$content.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
-					}
-
-					$params_united = '0_0_0_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage + 1);
-					$params = array (
-						$this->prefixId.'[ABx]' => $params_united,
-					);
-
-					$content .= '</select><br/>';
-
-					$content .= $this->printCalculatedRates($product['uid'], $this->lConf['daySelector'], 1);
-
-					$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-					$content .= '<div class="elementForm">'.htmlspecialchars($this->pi_getLL('feld_mitteilung')).'</div>
-							<textarea name="'.$this->prefixId.'[mitteilung]" rows=5 cols=30 wrap="PHYSICAL">'.htmlspecialchars($this->piVars['mitteilung']).'</textarea><br/>
-							<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="2"><br/>
-							<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
-				</form>
-				<br />
-			';
-			}
-		$content.='</div>';
-		return $content;
-	}
 
 	/**
 	 * availability prices form ;-)
@@ -1115,88 +858,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	}
 
 
-	/*
-	 * Checks the form data for validity
-	 *
-	 * @return	amount		of errors found
-	 */
-	function formVerifyUserInput() {
-
-		$this->pi_loadLL();
-		$this->form_errors = array();
-		$numErrors = 0;
-		$dns_ok = 0;
-
-		if (empty($this->lConf['productDetails'])) {
-			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
-			return $content;
-		} else {
-			foreach ( $this->lConf['productDetails'] as $key => $val ) {
-				$product = $val;
-			}
-		}
-
-		$customer = $this->lConf['customerData'];
-
-		// check for limited vacancies...
-		if ($product['maxAvailable'] < $this->lConf['daySelector']) {
-			$this->form_errors['vacancies_limited'] = $this->pi_getLL('error_vacancies_limited')."<br/>";
-			$numErrors++;
-		}
-
-		// Email mit Syntax und Domaincheck
-		$motif1="#^[[:alnum:]]([[:alnum:]\._-]{0,})[[:alnum:]]";
-		$motif1.="@";
-		$motif1.="[[:alnum:]]([[:alnum:]\._-]{0,})[\.]{1}([[:alpha:]]{2,})$#";
-
-		if (preg_match($motif1, $customer['address_email'])){
-			list($user, $domain)=preg_split('/@/', $customer['address_email'], 2);
-			$dns_ok=checkdnsrr($domain, "MX");
-			// nobody of this domain will write an email - expect spamers...
-			if ($domain == $mail_from_domain)
-				$dns_ok = 0;
-		}
-		if (!$dns_ok || !t3lib_div::validEmail($customer['address_email'])){
-			$this->form_errors['email'] = $this->pi_getLL('error_email')."<br/>";
-			$numErrors++;
-		}
-
-
-
-		if (empty($customer['address_name'])) {
-			$this->form_errors['name'] = $this->pi_getLL('error_empty_name')."<br/>";
-			$numErrors++;
-		}
-		if (empty($customer['address_street'])) {
-			$this->form_errors['street'] = $this->pi_getLL('error_empty_street')."<br/>";
-			$numErrors++;
-		}
-		if (empty($customer['address_city'])) {
-			$this->form_errors['city'] = $this->pi_getLL('error_empty_town')."<br/>";
-			$numErrors++;
-		}
-		if (empty($customer['address_zip'])) {
-			$this->form_errors['PLZ'] = $this->pi_getLL('error_empty_zip')."<br/>";
-			$numErrors++;
-		}
-
-		if ($this->lConf['startDateStamp'] < (time()-86400)) {
-			$this->form_errors['startDateInThePast'] = $this->pi_getLL('error_startDateInThePast')."<br/>";
-			$numErrors++;
-		}
-		if ($this->lConf['startDateStamp']+86400 > $this->lConf['endDateStamp']) {
-			$this->form_errors['endDateNotValid'] = $this->pi_getLL('error_endDateNotValid')."<br/>";
-			$numErrors++;
-		}
-
-		if (empty($this->lConf['daySelector'])) {
-			$this->form_errors['daySelectorNotValid'] = $this->pi_getLL('error_daySelectorNotValid')."<br/>";
-			$numErrors++;
-		}
-
-		return $numErrors;
-	}
-
 
 	/**
 	 * Logs
@@ -1252,24 +913,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				else
 					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
 			}
+		} else {
+			$send_success = 0;
+			return $send_success;
 		}
-		// use builtin fixed form settings
-		else {
-			$text_mail .= $this->pi_getLL('feld_name').": ".$customer['address_name']."\n";
-			$text_mail .= $this->pi_getLL('feld_street').": ".$customer['address_street']."\n";
-			$text_mail .= $this->pi_getLL('feld_zip').": ".$customer['address_zip']."\n";
-			$text_mail .= $this->pi_getLL('feld_town').": ".$customer['address_city']."\n\n";
-			$text_mail .= $this->pi_getLL('feld_email').": ".$customer['address_email']."\n";
-			$text_mail .= $this->pi_getLL('feld_telephone').": ".$customer['address_telephone']."\n\n";
 
-			$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
-			$text_mail .= $this->pi_getLL('feld_anreise').": ".strftime("%A, %d.%m.%Y", $this->lConf['startDateStamp'])."\n";
-			$text_mail .= $this->pi_getLL('feld_abreise').": ".strftime("%A, %d.%m.%Y", $this->lConf['endDateStamp'])."\n";
-			$text_mail .= $this->pi_getLL('feld_naechte').": ".$this->lConf['daySelector']."\n";
-			$text_mail .= $this->pi_getLL('feld_personen').": ".$this->piVars['adultSelector']."\n\n";
-			if (isset($this->piVars['mitteilung']))
-				$text_mail .= $this->pi_getLL('feld_mitteilung').": ".$this->piVars['mitteilung']."\n\n";
-		}
 		$text_mail .= "---------------------------------------------------------\n";
 
 		// text for text/plain mail part

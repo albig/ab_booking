@@ -26,4 +26,183 @@ plugin.tx_abbooking_pi1 {
 			specialComponent2 = Room Cleaning
 		}
 	}
+
+	# default form. you can overwrite it via TS
+	form {
+		# show calendar on top of form
+		# - show full months:
+		#showCalendarMonth = 3
+		# - show full months and start X months before start date
+		#   --> only valid if showCalendarMonth >= showMonthsBeforeStart
+		# showMonthsBeforeStart = 1
+		# - show only X weeks around the booking date not the full month
+		showCalendarWeek = 1
+		firstname {
+		  required = 0
+		  type = input
+		  size = 17
+		  maxsize = 40
+		  validation =
+		  title {
+			de = Vorname
+			en = First name
+		  }
+		}
+		lastname {
+		  required = 1
+		  type = input
+		  size = 25
+		  maxsize = 40
+		  validation =
+		  title {
+			de = Nachname
+		    en = Last name
+		  }
+		}
+		street {
+		  required = 1
+		  type = input
+		  size = 44
+		  maxsize=60
+		  validation =
+		  title {
+			de = Straße und Hausnummer
+			en = Street
+		  }
+		}
+		zip {
+		  required = 1
+		  type = input
+		  size = 8
+		  maxsize=60
+		  validation =
+		  title {
+			de = Postleitzahl
+		    en = ZIP code
+		  }
+		}
+		city {
+		  required = 1
+		  type = input
+		  size = 33
+		  maxsize=40
+		  validation =
+		  title {
+			de = Ort
+		    en = City
+		  }
+		}
+		email {
+		  required = 1
+		  type = input
+		  size = 30
+		  maxsize=40
+		  validation =
+		  title {
+			de = E-Mail
+			en = Email
+		  }
+		  errorText {
+			de = Bitte geben Sie eine gültige Email-Adresse ein!
+			en = Please enter a valid email address!
+		  }
+		}
+		telephone {
+		  required = 0
+		  type = input
+		  size = 20
+		  validation =
+		  title {
+		    de = Telefon
+			en = Telephone
+		  }
+		  errorText  {
+			de = Bitte geben Sie Ihre Telefonnummer ein!
+			en = Please enter your Telephone Number!
+		  }
+		}
+		message {
+		  required = 0
+		  type = textarea
+		  size = 250
+		  validation =
+		  title {
+			de = Mitteilung
+			en = Message
+		  }
+		  # add tooltip info
+		  info {
+			de (
+			Möchten Sie uns zu Ihrer Buchung noch etwas mitteilen? <br />
+			Dann nutzen Sie folgendes Feld. <br />
+			Natürlich können Sie uns auch jederzeit <a href='kontakt/'>eine Email</a> schicken.
+			)
+			en (
+			If you want to add some notes to your booking, please use this field.
+			)
+			useTooltip = 1
+		  }
+		}
+		checkinDate {
+		  required = 1
+		  type = input
+		  size = 10
+		  maxsize = 12
+		  title {
+			de = Anreise
+			en = Check-In
+		  }
+		}
+		daySelector {
+		  required = 1
+		  type = selector
+		  validation =
+		  title {
+			de = Anzahl der Übernachtungen
+		    en = Number of Nights
+		  }
+		}
+		adultSelector {
+		  required = 1
+		  type = selector
+		  validation =
+		  title {
+			de = Anzahl der Erwachsenen
+			en = Number of adults
+		  }
+		}
+		extraInfos {
+		  required = 0
+		  type = infobox
+		  info {
+			de = Sie erhalten von uns eine vollständige Reservierungsbestätigung meist noch am selben Tag.
+			en = You'll receive a complete confirmation of your reservation usually within one day.
+		  }
+		  title {
+			de = Hinweis
+		    en = Special Info
+		  }
+		}
+		checkinTime {
+		  required = 0
+		  type = input
+		  size = 20
+		  validation =
+		  title {
+		    de = ungefähre Anreisezeit
+		    en = Proximately Arrival Time
+		  }
+		  info {
+			de (
+			Sie erleichtern uns die Planung, wenn Sie uns Ihre ungefähre Anreisezeit mitteilen.<br />
+			Vielen Dank.
+			)
+			en (
+			You help us with the daily planing if you fill in your approximately arrival time.<br />
+			Thank you very much.
+			)
+			useTooltip = 1
+		  }
+		}
+	} # form end
 }
