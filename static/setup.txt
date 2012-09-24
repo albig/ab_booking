@@ -1,4 +1,4 @@
-plugin.tx_abbooking_pi1 = USER_INT
+plugin.tx_abbooking_pi1 = USER
 plugin.tx_abbooking_pi1 {
 
 	# show prices in the availability list and in the confirmation view
@@ -135,7 +135,7 @@ plugin.tx_abbooking_pi1 {
 			de (
 			Möchten Sie uns zu Ihrer Buchung noch etwas mitteilen? <br />
 			Dann nutzen Sie folgendes Feld. <br />
-			Natürlich können Sie uns auch jederzeit <a href='kontakt/'>eine Email</a> schicken.
+			Natürlich können Sie uns auch jederzeit eine Email schicken.
 			)
 			en (
 			If you want to add some notes to your booking, please use this field.

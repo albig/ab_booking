@@ -33,32 +33,37 @@ class tx_abbooking_Hook_Flexform {
 
 	/**
 	 * Hook function of tcemain
+	 * 
+	 * We cleanup flexform after saving to database because TYPO3 has 
+	 * only in this case a cleanFlexFormXML-function().
+	 * If we don't cleanup the flexform, a lot of old configuration may 
+	 * confuse the extension because it remains untouched
 	 *
-	 * @param array &$fieldArray Array of changed values
-	 * @param array $table current table
-	 * @param array $id uid of the table row
-	 * @param array &$pObj
 	 * @return void
 	 */
 
-	function processDatamap_preProcessFieldArray(&$fieldArray, $table, $id, &$pObj) {
-		// only check changes in tt_content
-		if ($table === 'tt_content' && $fieldArray['list_type'] === 'ab_booking_pi1') {
-			$recRow = t3lib_BEfunc::getRecordRaw('tt_content','uid='.$id);
+
+	function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj) {
+		// only check changes in tt_content with ab_booking_pi1 and status update:
+		if ($table === 'tt_content'
+			&& $status == 'update') {
+			$recRow = t3lib_BEfunc::getRecordRaw('tt_content','uid=' . intval($id));
+//~ 		print_r($recRow);
+			// if new record --> getRecordRaw will return FALSE
+			if ($recRow == FALSE && $recRow['list_type'] != 'ab_booking_pi1')
+				return;
 
 			$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 			// clean flexform and save to XML-Structure ready to save to database
 			$xml = $flexObj->cleanFlexFormXML('tt_content', 'pi_flexform', $recRow);
-			// convert to array for easier comparisson
-			$cleanFlexArray = t3lib_div::xml2array($xml);
-			// compare the old and new pluginSelection value:
-			// if the onChange Selection has changed, don't cleanup Flexform
-			// otherwise always the same flexform is shown as onChange doesn't work anymore
-			if ($cleanFlexArray['data']['sheetPluginOptions']['lDEF']['pluginSelection']['vDEF'] ==
-				$fieldArray['pi_flexform']['data']['sheetPluginOptions']['lDEF']['pluginSelection']['vDEF']) {
-				$fieldArray['pi_flexform'] = $xml;
-			}
+			
+			$fields = array('pi_flexform' => $xml);
+			$where = 'uid = '. intval($id) .' ';
+			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields);
+
+		return;
 		}
-      }
+	}
+	
 }
 ?>

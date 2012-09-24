@@ -231,6 +231,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					case '5': // booking rate overview
 						$out .= tx_abbooking_div::printBookingRateOverview($this->lConf['ProductID']);
 						break;
+					case '6': // list of future bookings
+						$out .= tx_abbooking_div::printFutureBookings($this->lConf['ProductID']);
+						break;
 					default:
 						/* ------------------------- */
 						/* show calendar             */

@@ -563,6 +563,57 @@ class tx_abbooking_div {
 	}
 
 	/**
+	 * Display the future bookings (including current)
+	 *
+	 * @param	integer		$uid: ...
+	 * @param	array		$interval: ...
+	 * @return	HTML-table		with calendar view
+	 */
+	function printFutureBookings($uid, $interval = array()) {
+		
+		$this->pi_loadLL();
+		$myBooked = array();
+
+		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
+			if ($this->lConf['startDateStamp']>0)
+				$interval['startDate'] = $this->lConf['startDateStamp'];
+			else {
+				$today = strtotime(strftime("%Y-%m-%d"));
+				$interval['startDate'] = $today;
+			}
+			$interval['endDate'] = strtotime('+1 month', $interval['startDate']);
+		}
+		$interval['startList'] = $interval['startDate'];
+		$interval['endList'] = $interval['endDate'];
+
+print_r($interval);
+		// date select form
+		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
+				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
+
+		if (!$this->isRobot())
+			$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+		$content .= '</form>
+			<br />
+		';
+
+		$out = $content;
+
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
+		
+		$out .= '<ul>';
+		foreach ($bookedPeriods['bookings'] as $id => $booking) {
+			$out .= '<li>'.strftime('%a, %x', $booking['startdate']) . ' - ' . strftime('%a, %x', $booking['enddate']) . ': '. $booking['title'].'</li>';
+		}
+		$out .= '</ul>';
+print_r($uid);
+print_r($bookedPeriods);
+
+		return $out;
+	}
+	
+	
+	/**
 	 * Display the availability calendar as single line for a given interval
 	 *
 	 * @param	integer		$uid: ...
@@ -664,7 +715,7 @@ class tx_abbooking_div {
 
 				if ($d < strtotime('first day of this month', $m) || $d > strtotime('last day of this month', $m)) {
 					$cssClass = 'noDay';
-					$printDay = '&nbsp;';$printDay = strftime("%d", $d);
+					$printDay = strftime("%d", $d);
 				} else {
 					$cssClass = $myBooked[$d];
 					$printDay = strftime("%d", $d);
