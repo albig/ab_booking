@@ -19,7 +19,7 @@ $TCA['tx_abbooking_booking'] = array (
 			'disabled' => 'hidden',	## WOP:[tables][1][add_hidden]
 		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_booking.gif',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_booking.png',
 	),
 );
 
@@ -49,7 +49,7 @@ $TCA['tx_abbooking_product'] = array (
 			'endtime' => 'endtime',	## WOP:[tables][2][add_endtime]
 		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_product.gif',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_product.png',
 	),
 );
 

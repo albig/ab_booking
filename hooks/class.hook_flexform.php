@@ -33,10 +33,10 @@ class tx_abbooking_Hook_Flexform {
 
 	/**
 	 * Hook function of tcemain
-	 * 
-	 * We cleanup flexform after saving to database because TYPO3 has 
+	 *
+	 * We cleanup flexform after saving to database because TYPO3 has
 	 * only in this case a cleanFlexFormXML-function().
-	 * If we don't cleanup the flexform, a lot of old configuration may 
+	 * If we don't cleanup the flexform, a lot of old configuration may
 	 * confuse the extension because it remains untouched
 	 *
 	 * @return void
@@ -48,7 +48,6 @@ class tx_abbooking_Hook_Flexform {
 		if ($table === 'tt_content'
 			&& $status == 'update') {
 			$recRow = t3lib_BEfunc::getRecordRaw('tt_content','uid=' . intval($id));
-//~ 		print_r($recRow);
 			// if new record --> getRecordRaw will return FALSE
 			if ($recRow == FALSE && $recRow['list_type'] != 'ab_booking_pi1')
 				return;
@@ -56,7 +55,7 @@ class tx_abbooking_Hook_Flexform {
 			$flexObj = t3lib_div::makeInstance('t3lib_flexformtools');
 			// clean flexform and save to XML-Structure ready to save to database
 			$xml = $flexObj->cleanFlexFormXML('tt_content', 'pi_flexform', $recRow);
-			
+
 			$fields = array('pi_flexform' => $xml);
 			$where = 'uid = '. intval($id) .' ';
 			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery($table, $where, $fields);
@@ -64,6 +63,6 @@ class tx_abbooking_Hook_Flexform {
 		return;
 		}
 	}
-	
+
 }
 ?>
