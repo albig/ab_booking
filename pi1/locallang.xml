@@ -9,35 +9,7 @@
 			<label index="vacant day">vacant</label>
 			<label index="booked day">booked</label>
 
-			<label index="Jan">January</label>
-			<label index="Feb">February</label>
-			<label index="Mar">March</label>
-			<label index="Apr">April</label>
-			<label index="May">May</label>
-			<label index="Jun">June</label>
-			<label index="Jul">July</label>
-			<label index="Aug">August</label>
-			<label index="Sep">September</label>
-			<label index="Oct">October</label>
-			<label index="Nov">November</label>
-			<label index="Dec">December</label>
-
 			<label index="booking calendar">booking calendar</label>
-
-			<label index="Mon">Monday</label>
-			<label index="Tus">Tuesday</label>
-			<label index="Wed">Wednesday</label>
-			<label index="Thu">Thursday</label>
-			<label index="Fri">Friday</label>
-			<label index="Sat">Saturday</label>
-			<label index="Sun">Sunday</label>
-			<label index="Mo">M</label>
-			<label index="Tu">T</label>
-			<label index="We">W</label>
-			<label index="Th">T</label>
-			<label index="Fr">F</label>
-			<label index="Sa">S</label>
-			<label index="Su">S</label>
 
 			<label index="back">Back</label>
 			<label index="feld_name">Name</label>
@@ -79,7 +51,7 @@
 			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
 			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
 			<label index="error_numNightsNotValid">Number of Nights is not valid!</label>
-			<label index="error_minimumStay">There is a minimum stay of </label>
+			<label index="error_minimumStay">There is a minimum stay of %s </label>
 
 
 			<label index="product_title">Description</label>
@@ -120,35 +92,9 @@
 			<label index="vacant day">frei</label>
 			<label index="booked day">gebucht</label>
 			<label index="overbooked">Tag überbucht</label>
-			<label index="Jan">Januar</label>
-			<label index="Feb">Februar</label>
-			<label index="Mar">März</label>
-			<label index="Apr">April</label>
-			<label index="May">Mai</label>
-			<label index="Jun">Juni</label>
-			<label index="Jul">Juli</label>
-			<label index="Aug">August</label>
-			<label index="Sep">September</label>
-			<label index="Oct">Oktober</label>
-			<label index="Nov">November</label>
-			<label index="Dec">Dezember</label>
 			<label index="booking calendar">Buchungskalender</label>
-			<label index="Mon">Montag</label>
-			<label index="Tus">Dienstag</label>
-			<label index="Wed">Mittwoch</label>
-			<label index="Thu">Donnerstag</label>
-			<label index="Fri">Freitag</label>
-			<label index="Sat">Samstag</label>
-			<label index="Sun">Sonntag</label>
-			<label index="Mo">M</label>
-			<label index="Tu">D</label>
-			<label index="We">M</label>
-			<label index="Th">D</label>
-			<label index="Fr">F</label>
-			<label index="Sa">S</label>
-			<label index="Su">S</label>
-			<label index="back">Zurück</label>
 
+			<label index="back">Zurück</label>
 			<label index="feld_name">Vorname Name</label>
 			<label index="feld_street">Straße Hausnummer</label>
 			<label index="feld_town">Wohnort</label>
@@ -185,7 +131,7 @@
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
 			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht gültig!</label>
-			<label index="error_minimumStay">Es ist eine Mindestaufenthaltsdauer gesetzt von </label>
+			<label index="error_minimumStay">Die Mindestaufenthaltsdauer beträgt %s.</label>
 
 
 			<label index="product_title">Bezeichnung</label>
@@ -226,35 +172,9 @@
 			<label index="vacant day">Vrij</label>
 			<label index="booked day">Bezet</label>
 			<label index="overbooked">Overboekt</label>
-			<label index="Jan">Januari</label>
-			<label index="Feb">Februari</label>
-			<label index="Mar">Maart</label>
-			<label index="Apr">April</label>
-			<label index="May">Mei</label>
-			<label index="Jun">Juni</label>
-			<label index="Jul">Juli</label>
-			<label index="Aug">Augustus</label>
-			<label index="Sep">September</label>
-			<label index="Oct">Oktober</label>
-			<label index="Nov">November</label>
-			<label index="Dec">December</label>
 			<label index="booking calendar">Boekingskalender</label>
-			<label index="Mon">Maandag</label>
-			<label index="Tus">Dinsdag</label>
-			<label index="Wed">Woensdag</label>
-			<label index="Thu">Donderdag</label>
-			<label index="Fri">Vrijdag</label>
-			<label index="Sat">Zaterdag</label>
-			<label index="Sun">Zondag</label>
-			<label index="Mo">Ma</label>
-			<label index="Tu">Di</label>
-			<label index="We">Wo</label>
-			<label index="Th">Do</label>
-			<label index="Fr">Vr</label>
-			<label index="Sa">Za</label>
-			<label index="Su">Zo</label>
+			
 			<label index="back">Terug</label>
-
 			<label index="feld_name">Voornaam Achternaam</label>
 			<label index="feld_street">Straat Huisnummer</label>
 			<label index="feld_town">Woonplaats</label>
@@ -321,35 +241,9 @@
 			<label index="vacant day">libre</label>
 			<label index="booked day">réservé</label>
 			<label index="overbooked">Surpeuplé</label>
-			<label index="Jan">Janvier</label>
-			<label index="Feb">Février</label>
-			<label index="Mar">Mars</label>
-			<label index="Apr">Avril</label>
-			<label index="May">Mai</label>
-			<label index="Jun">Juin</label>
-			<label index="Jul">Juillet</label>
-			<label index="Aug">Août</label>
-			<label index="Sep">Septembre</label>
-			<label index="Oct">Octobre</label>
-			<label index="Nov">Novembre</label>
-			<label index="Dec">Décembre</label>
 			<label index="booking calendar">Calendrier des réservations</label>
-			<label index="Mon">Lundi</label>
-			<label index="Tus">Mardi</label>
-			<label index="Wed">Mercredi</label>
-			<label index="Thu">Jeudi</label>
-			<label index="Fri">Vendredi</label>
-			<label index="Sat">Samedi</label>
-			<label index="Sun">Dimanche</label>
-			<label index="Mo">Lu</label>
-			<label index="Tu">Ma</label>
-			<label index="We">Me</label>
-			<label index="Th">Je</label>
-			<label index="Fr">Ve</label>
-			<label index="Sa">Sa</label>
-			<label index="Su">Di</label>
-			<label index="back">en retour</label>
 
+			<label index="back">en retour</label>
 			<label index="feld_name">Prénom Nom de famille</label>
 			<label index="feld_street">Rue  No.</label>
 			<label index="feld_town">Domicile</label>
@@ -385,7 +279,7 @@
 			<label index="error_endDateNotValid">La date de votre départ n'est pas valable!</label>
 			<label index="error_tooFarInFuture">Votre demande est trop lointaine!</label>
 			<label index="error_numNightsNotValid">Le nombre de nuitées n'est pas valable!</label>
-			<label index="error_minimumStay">La durée minimale du séjour est de </label>
+			<label index="error_minimumStay">La durée minimale du séjour est de %s</label>
 
 
 			<label index="product_title">Désignation</label>
@@ -427,35 +321,9 @@
 			<label index="vacant day">libera</label>
 			<label index="booked day">riservato</label>
 			<label index="overbooked">Sovrappopolato</label>
-			<label index="Jan">Gennaio</label>
-			<label index="Feb">Febbraio</label>
-			<label index="Mar">Marzo</label>
-			<label index="Apr">Aprile</label>
-			<label index="May">Maggio</label>
-			<label index="Jun">Giugno</label>
-			<label index="Jul">Luglio</label>
-			<label index="Aug">Agosto</label>
-			<label index="Sep">Settembre </label>
-			<label index="Oct">Ottobre</label>
-			<label index="Nov">Novembre</label>
-			<label index="Dec">Dezembre</label>
 			<label index="booking calendar">Calendario di prenotazioni</label>
-			<label index="Mon">Lunedì</label>
-			<label index="Tus">Martedì</label>
-			<label index="Wed">Mercoledì</label>
-			<label index="Thu">Giovedì</label>
-			<label index="Fri">Venerdì </label>
-			<label index="Sat">Sabato</label>
-			<label index="Sun">Domenica</label>
-			<label index="Mo">Lu</label>
-			<label index="Tu">Ma</label>
-			<label index="We">Me</label>
-			<label index="Th">Gi</label>
-			<label index="Fr">Ve</label>
-			<label index="Sa">Sa</label>
-			<label index="Su">Do</label>
-			<label index="back">Indietro</label>
 
+			<label index="back">Indietro</label>
 			<label index="feld_name">Prenome Cognome </label>
 			<label index="feld_street">Strada N.</label>
 			<label index="feld_town">Domicilio</label>
@@ -491,7 +359,7 @@
 			<label index="error_endDateNotValid">La sua data di partenza non è valida!</label>
 			<label index="error_tooFarInFuture">La sua richiesta è ancora troppo lontana!</label>
 			<label index="error_numNightsNotValid">Il numero di pernottamenti non è valido!</label>
-			<label index="error_minimumStay">La durata di soggiorno minima ammonta a </label>
+			<label index="error_minimumStay">La durata di soggiorno minima ammonta a % </label>
 
 
 			<label index="product_title">Designazione</label>

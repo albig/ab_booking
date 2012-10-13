@@ -221,9 +221,12 @@ $TCA['tx_abbooking_product'] = array (
 				'type' => 'select',	## WOP:[tables][2][fields][4][conf_rel_type]
 				'internal_type' => 'db',	## WOP:[tables][2][fields][4][conf_rel_type]
 				'allowed' => 'tx_abbooking_price',	## WOP:[tables][2][fields][4][conf_rel_table]
-				'size' => 5,	## WOP:[tables][2][fields][4][conf_relations_selsize]
+				'size' => 7,	## WOP:[tables][2][fields][4][conf_relations_selsize]
 				'minitems' => 0,
 				'maxitems' => 10,	## WOP:[tables][2][fields][4][conf_relations]
+				'autoSizeMax' => 1000,
+				'selectedListStyle' => 'width:400px;',
+				'itemListStyle' => 'width:400px;',
 				'foreign_table' => 'tx_abbooking_price',
 				# quite stupid syntax introduced in TYPO3 4.4.1 :-(
 				'foreign_table_where' => 'AND tx_abbooking_price.title like "%"\'###REC_FIELD_filterprice###\'"%" ORDER BY title ASC',
@@ -501,7 +504,7 @@ $TCA['tx_abbooking_price'] = array (
 				'default' => '*',
 			)
 		),
-		
+
 		'seasonid' => array (        ## WOP:[tables][4][fields][1][fieldname]
 			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,        ## WOP:[tables][4][fields][1][excludeField]

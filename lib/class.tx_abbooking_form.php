@@ -375,7 +375,7 @@ class tx_abbooking_form {
 			else
 				$text_periods = ' '.$this->pi_getLL('periods');
 
-			$contentError.='<li>'.$this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods.'</li>';
+			$contentError.='<li>'.sprintf($this->pi_getLL('error_minimumStay'), $product['minimumStay'].' '.$text_periods).'</li>';
 		}
 
 		if (!empty($contentError)) {

@@ -935,7 +935,7 @@ print_r($bookedPeriods);
 				else
 					$text_periods = ' '.$this->pi_getLL('periods');
 
-				$contentError[] = $this->pi_getLL('error_minimumStay').' '.$product['minimumStay'].' '.$text_periods;
+				$contentError[] = sprintf($this->pi_getLL('error_minimumStay'), $product['minimumStay'].' '.$text_periods);
 				if ($bookNights < $product['minimumStay'])
 				$bookNights = $product['minimumStay'];
 			}

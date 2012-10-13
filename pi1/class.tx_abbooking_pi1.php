@@ -89,7 +89,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!isset($interval['startDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+//~ 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
 		if (!isset($interval['endDate'])) {
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
@@ -110,7 +111,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				// update/check all rates
 				tx_abbooking_div::getAllRates($interval);
-				$this->check_availability();
+				$this->check_availability($interval);
 
 				// one product is allowed at a time:
 				foreach ( $this->lConf['productDetails'] as $key => $val ) {
@@ -733,10 +734,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 *
 	 * all information is filled in global $this->lConf['productDetails'] array
 	 *
-	 * @param	[type]		$storagePid: ...
+	 * @param	none
 	 * @return	0		on success, 1 on error
 	 */
-	function check_availability() {
+	function check_availability($interval) {
 		$item = array();
 
 		if (!isset($interval['startDate'])) {
@@ -807,6 +808,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// reduce available days by minimumStay value
 				if ($product['prices'][$d]['minimumStay'] > $item[$uid]['minimumStay']) {
 					$item[$uid]['minimumStay'] = $this->getMinimumStay($product['prices'][$d]['minimumStay'], $startDate);
+//~ 					print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
 				}
 
 				// get highest daySteps...

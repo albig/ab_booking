@@ -3,6 +3,7 @@ if (!defined ('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
+
 ## WOP:[tables][1][allow_on_pages]
 t3lib_extMgm::allowTableOnStandardPages('tx_abbooking_booking');
 
@@ -141,4 +142,5 @@ include_once(t3lib_extMgm::extPath($_EXTKEY).'lib/class.tx_abbooking_remote.php'
 // include userfunc
 // add CSH (context sensitive help) to TYPO3 >= 4.5
 t3lib_extMgm::addLLrefForTCAdescr('tt_content.pi_flexform.ab_booking_pi1.list', 'EXT:'.$_EXTKEY.'/locallang_csh.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_product','EXT:' . $_EXTKEY. '/locallang_csh_product.xml');
 ?>
