@@ -89,8 +89,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!isset($interval['startDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-//~ 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
-			$interval['endDate'] = $this->lConf['endDateStamp'];
+			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+//~ 			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
 		if (!isset($interval['endDate'])) {
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
@@ -1207,11 +1207,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	function calcRatesDBMode($key, $period) {
 
 		$priceDetails = array();
-		$customer = $this->lConf['customerData'];
 
+		$customer = $this->lConf['customerData'];
 		$product = $this->lConf['productDetails'][$key];
 
-		$periodDateStamp = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
+		$interval['startDate'] = $this->lConf['startDateStamp'];
+		$interval['endDate'] = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
+
+		$dayStep = 1;
+
 		$max_amount = 0;
 		// assuming every adult costs more;
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
@@ -1219,8 +1223,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		for ($i=1; $i<=$product['capacitymax']; $i++) {
 //~ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
 //~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
-			if ($product['prices'][$this->lConf['startDateStamp']]['adult'.$i] >= $max_amount) {
-				$max_amount = $product['prices'][$this->lConf['startDateStamp']]['adult'.$i];
+			if ($product['prices'][$interval['startDate']]['adult'.$i] >= $max_amount) {
+				$max_amount = $product['prices'][$interval['startDate']]['adult'.$i];
 				$max_persons = $i;
 			}
 			if ($max_amount > 0 && $i >= $this->lConf['adultSelector'])
@@ -1238,9 +1242,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		foreach($priceArray as $key => $operator) {
 			unset($cur_title);
 			unset($pre_title);
-			for ($d = $this->lConf['startDateStamp'];
-			$d < $periodDateStamp;
-				$d = strtotime('+1 day', $d)) {
+
+			for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
 				$rateValue = $this->getDiscountRate($product['prices'][$d][$key], $period);
 
 				if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
@@ -1282,7 +1285,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				}
 				// cleanup at the end
-				if (strtotime('+1 day', $d) == strtotime('+'.$period.' day', $this->lConf['startDateStamp'])) {
+				if (strtotime('+1 day', $d) == strtotime('+'.$period.' day', $interval['startDate'])) {
 					if (! empty($usedPrices[$cur_title]['dateStart'])) {
 // 						if ($usedPrices[$cur_title]['rateUsed'] > 1)
 						if ($usedPrices[$cur_title]['dateStart'] < $d)
@@ -1304,7 +1307,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			else
 				$text_persons = ', '.$max_persons.' '.$this->pi_getLL('persons');
 		}
-
 		// input form element for selectable options
 		if (is_array($usedPrices))
 			foreach ($usedPrices as $title => $value) {
@@ -1347,8 +1349,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$priceDetails[] = $lDetails;
 		}
 		// get singleComponent from startDate
-		if ($product['prices'][$this->lConf['startDateStamp']]['singleComponent1']>0) {
-			$singleComponent1 = $this->getDiscountRate($product['prices'][$this->lConf['startDateStamp']]['singleComponent1'], $period);
+		if ($product['prices'][$interval['startDate']]['singleComponent1']>0) {
+			$singleComponent1 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent1'], $period);
 			$singleComponent1 = $singleComponent1['discountRate'];
 			if ($singleComponent1 >= 0) {
 				$total_amount += $singleComponent1;
@@ -1360,9 +1362,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$priceDetails[] = $lDetails;
 			}
 		}
-		if ($product['prices'][$this->lConf['startDateStamp']]['singleComponent2']>0) {
+		if ($product['prices'][$interval['startDate']]['singleComponent2']>0) {
 			if ($singleComponent2 >= 0) {
-				$singleComponent2 = $this->getDiscountRate($product['prices'][$this->lConf['startDateStamp']]['singleComponent2'], $period);
+				$singleComponent2 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent2'], $period);
 				$singleComponent2 = $singleComponent2['discountRate'];
 				$total_amount += $singleComponent2;
 
@@ -1379,6 +1381,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$rate['priceDetails'] = $priceDetails;
 
 		$rate['textPriceTotalAmount'] = number_format($total_amount, 2, ',', '').' '.$currency;
+
 		return $rate;
 	}
 
@@ -1393,22 +1396,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 //~ print_r("calcRatesTSMode\n");
 //~ print_r($period);
-		$product = $this->lConf['productDetails'][$key];
-
 		$priceDetails = array();
 		$pricePerDay = array();
 		$keyArray = array();
 
 		$customer = $this->lConf['customerData'];
+		$product = $this->lConf['productDetails'][$key];
 
 		$maxAdults = $this->lConf['adultSelector'];
 		$maxChildren = $this->lConf['numChildren'];
 		$maxTeens = $this->lConf['numTeens'];
-
-
-//~ 		print_r("-calcRatesTSMode---START---\n");
-//~ 		print_r($product);
-//~ 		print_r("-calcRatesTSMode---End---\n");
 
 		$interval['startDate'] = $this->lConf['startDateStamp'];
 		$interval['endDate'] = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
@@ -1701,7 +1698,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if ($this->lConf['showPrice'] == '1') {
 			$rates = $this->calcRates($key, $period);
-//~ print_r($rates);
 			if ($printHTML == 1) {
 				if ($this->lConf['showPriceDetails'] == '1') {
 					$content .= '<div class="priceDetails">';

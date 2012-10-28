@@ -340,7 +340,7 @@ input.submit_dateSelect {
 /* 	float: right; */
 }
 
-.tx-abbooking-pi1  li.offerList {
+.tx-abbooking-pi1 li.offerList {
 	float: left;
 	list-style-type: none;
  	margin: 5px 0 5px 0;
@@ -348,10 +348,14 @@ input.submit_dateSelect {
   	border: 1px solid #aaa;
 	width: 95%;
 }
-
-.tx-abbooking-pi1  ul.errorHints li {
+.tx-abbooking-pi1 ul.errorHints {
+	margin: 5px;
+}
+.tx-abbooking-pi1 ul.errorHints li {
 	list-style-type: circle;
-	color: red;
+	list-style-image:url(error.png);
+	margin-left: 20px;
+	color: #a00;
 	font-weight: bold;
 	font-style: italic;
 }
@@ -437,6 +441,10 @@ input.submit_dateSelect {
 }
 .tx-abbooking-pi1  form.requestForm .errorText {
 	color: black;
+}
+.tx-abbooking-pi1  form.requestForm .errorText::before {
+	content:url(error.png);
+	margin-right: 5px;
 }
 
 .tx-abbooking-pi1  div.errorForm {

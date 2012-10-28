@@ -44,7 +44,7 @@
 			<label index="error_empty_town">Please enter your town!</label>
 			<label index="error_empty_zip">Please enter your zip code!</label>
 			<label index="error_no_vacancies">Unfortunately, the room is already booked!</label>
-			<label index="error_vacancies_limited">Unfortunately, the vacancy is limited for the given times!</label>
+			<label index="error_vacancies_limited">Unfortunately, the vacancy is limited to %s!</label>
 			<label index="error_no_checkIn_on">Sorry, Checkin is not possible on</label>
 			<label index="error_next_checkIn_on">Next possible Checkin Date is</label>
 			<label index="error_startDateInThePast">Your seleted start date is in the past!</label>
@@ -124,7 +124,7 @@
 			<label index="error_empty_town">Bitte geben Sie Ihren Wohnort an!</label>
 			<label index="error_empty_zip">Bitte geben Sie Ihre Postleitzahl an!</label>
 			<label index="error_no_vacancies">Leider ist das Zimmer zum gewünschten Zeitpunkt belegt!</label>
-			<label index="error_vacancies_limited">Leider steht das Zimmer nur für die angegebenen Zeiten zur Verfügung!</label>
+			<label index="error_vacancies_limited">Leider steht das Zimmer nur für die angegebenen %s zur Verfügung!</label>
 			<label index="error_no_checkIn_on">Leider ist die Anreise nicht möglich am</label>
 			<label index="error_next_checkIn_on">Nächste mögliche Anreise ist am</label>
 			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
@@ -173,7 +173,7 @@
 			<label index="booked day">Bezet</label>
 			<label index="overbooked">Overboekt</label>
 			<label index="booking calendar">Boekingskalender</label>
-			
+
 			<label index="back">Terug</label>
 			<label index="feld_name">Voornaam Achternaam</label>
 			<label index="feld_street">Straat Huisnummer</label>
@@ -272,7 +272,7 @@
 			<label index="error_empty_town">Veuillez saisir le nom de votre domicile!</label>
 			<label index="error_empty_zip">Veuillez saisir votre numéro postal d'acheminement!</label>
 			<label index="error_no_vacancies">Hélas, la chambre est déjà occupée à la date désirée!</label>
-			<label index="error_vacancies_limited">Hélas, la chambre n'est disponible qu'aux périodes indiquées!</label>
+			<label index="error_vacancies_limited">Hélas, la chambre n'est disponible qu'aux périodes indiquées (%s)!</label>
 			<label index="error_no_checkIn_on">Hélas, l'arrivée n'est pas possible en date du</label>
 			<label index="error_next_checkIn_on">La prochaine arrivée possible est fixée au </label>
 			<label index="error_startDateInThePast">La date de votre arrivée est passée!</label>
@@ -352,7 +352,7 @@
 			<label index="error_empty_town">Per favore inserisca la località!</label>
 			<label index="error_empty_zip">Per favore inserisca il codice d'avviamento postale!</label>
 			<label index="error_no_vacancies">Purtroppo il locale non è disponibile nella data richiesta!</label>
-			<label index="error_vacancies_limited">Purtroppo il locale è disponibile solo negli orari indicati!</label>
+			<label index="error_vacancies_limited">Purtroppo il locale è disponibile solo negli orari indicati (%s)!</label>
 			<label index="error_no_checkIn_on">Purtroppo non è possibile arrivare il</label>
 			<label index="error_next_checkIn_on">Il prossimo arrivo è possibile il</label>
 			<label index="error_startDateInThePast">La sua data di arrivo appartiene al passato!</label>

@@ -570,7 +570,7 @@ class tx_abbooking_div {
 	 * @return	HTML-table		with calendar view
 	 */
 	function printFutureBookings($uid, $interval = array()) {
-		
+
 		$this->pi_loadLL();
 		$myBooked = array();
 
@@ -600,7 +600,7 @@ print_r($interval);
 		$out = $content;
 
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $this->lConf['PIDstorage'], $interval);
-		
+
 		$out .= '<ul>';
 		foreach ($bookedPeriods['bookings'] as $id => $booking) {
 			$out .= '<li>'.strftime('%a, %x', $booking['startdate']) . ' - ' . strftime('%a, %x', $booking['enddate']) . ': '. $booking['title'].'</li>';
@@ -611,8 +611,8 @@ print_r($bookedPeriods);
 
 		return $out;
 	}
-	
-	
+
+
 	/**
 	 * Display the availability calendar as single line for a given interval
 	 *
@@ -923,12 +923,17 @@ print_r($bookedPeriods);
 
 			if ($product['maxAvailable'] < $this->lConf['daySelector']) {
 				$interval['limitedVacancies'] = $availableMaxDate;
-				$contentError[] =  $this->pi_getLL('error_vacancies_limited');
 				$bookNights = $product['maxAvailable'];
-			}
-			else {
+				if ($product['maxAvailable'] == 1)
+					$text_periods = ' '.$this->pi_getLL('period');
+				else
+					$text_periods = ' '.$this->pi_getLL('periods');
+
+				$contentError[] = sprintf($this->pi_getLL('error_vacancies_limited'), $product['maxAvailable'].' '.$text_periods);
+			} else {
 				$bookNights = $this->lConf['daySelector'];
 			}
+
 			if ($product['minimumStay'] > $this->lConf['daySelector']) {
 				if ($product['minimumStay'] == 1)
 					$text_periods = ' '.$this->pi_getLL('period');
@@ -937,7 +942,7 @@ print_r($bookedPeriods);
 
 				$contentError[] = sprintf($this->pi_getLL('error_minimumStay'), $product['minimumStay'].' '.$text_periods);
 				if ($bookNights < $product['minimumStay'])
-				$bookNights = $product['minimumStay'];
+					$bookNights = $product['minimumStay'];
 			}
 
 			// check if checkIn is ok for startDate
@@ -1021,7 +1026,6 @@ print_r($bookedPeriods);
 			} else {
 				$offers[$i] .= '<li class="offerList"><div class="productTitle"><b>'.$title.' '.strtolower($this->pi_getLL('result_occupied')).'</b> </div>';
 			}
-
 
 			// show calendars following TS settings
 			if ($this->lConf['form']['showCalendarMonth']>0) {
