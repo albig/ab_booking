@@ -89,8 +89,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!isset($interval['startDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
-//~ 			$interval['endDate'] = $this->lConf['endDateStamp'];
+//~ 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
 		if (!isset($interval['endDate'])) {
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
@@ -98,7 +98,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!isset($interval['startList'])) {
 			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = $interval['endDate'];
+			$interval['endList'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+			#$interval['endDate'];
 		}
 
 
@@ -883,8 +884,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		//Daten schreiben
 		$fp2=fopen($logFile, "a");
-		fputs($fp2, $log);
-		fclose($fp2);
+		if ($fp2) {
+			fputs($fp2, $log);
+			fclose($fp2);
+		}
 	}
 
 	/**

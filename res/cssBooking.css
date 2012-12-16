@@ -9,8 +9,13 @@
 .tx-abbooking-pi1 {
 	overflow: auto;
 	padding: 5px 0;
+	width: 100%;
 }
 
+.tx-abbooking-pi1 .availabilityCalendarLine {
+	float: left;
+	padding: 5px;
+}
 .tx-abbooking-pi1 .availabilityCalendar li,
 .tx-abbooking-pi1 .availabilityCalendarLine li
 {
@@ -385,7 +390,7 @@ input.submit_dateSelect {
  	margin: 5px 0 5px 0;
  	padding: 10px;
   	border: 1px solid #aaa;
-	width: 95%;
+	width: 94%;
 }
 .tx-abbooking-pi1  form.requestForm {
 	float: left;
@@ -486,7 +491,7 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 .tx-abbooking-pi1 div.bookingSteps {
 	position: relative;
 	float: left;
-	width: 95%;
+	width: 94%;
 	border: 1px solid #aaa;
 	padding: 10px;
 }

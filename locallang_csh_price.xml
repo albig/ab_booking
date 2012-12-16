@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+  <meta type="array">
+    <description>CSH for pages table</description>
+    <type>CSH</type>
+    <csh_table>tx_abbooking_price</csh_table>
+  </meta>
+  <data type="array">
+    <languageKey index="default" type="array">
+		<label index="tstitle.description">Add the Typoscript identifier. Only needed if you continue all configuration with Typoscript.</label>
+		<label index="tstitle.details">If you use the Typoscript configuration all settings below this field are NOT USED!</label>
+
+		<label index="adult1.description">Enter the rate and discounts for one adult. See details for syntax.</label>
+		<label index="adult2.details">
+			<![CDATA[
+			The idea is: you have a default rate and you give discount after a given time (days).
+			The fields are comma separated. The values are separated by colon.
+
+			<b>Example: 47,D:3:10%</b>
+			- default rate is 47
+			- 10% discount after 3 days on the default rate
+			<b>Example: 47,D:2:45,D:4:40</b>
+			- default rate is 47
+			- after 2 days the rate is 45
+			- after 4 days the rate is 40
+			<b>Example: 47,D:2:45,D:4:40,D:7:20%</b>
+			- default rate is 47
+			- after 2 days the rate is 45
+			- after 4 days the rate is 40
+			- after 7 days the rate is (47 - 20%) = 37,60
+			<b>Example: 47,D:1:50,D:3:10%</b>
+			- default rate is 47
+			- the first night is 50
+			- after 2 days the rate is 47 (default)
+			- after 3 days the rate is (47 - 10%) = 42,30
+			]]>
+		</label>
+
+		<label index="adult2.description">Enter the rate and discounts for two adult. See details of <b>One Adult</b> for syntax.</label>
+
+		<label index="adult3.description">Enter the rate and discounts for three adult. See details of <b>One Adult</b> for syntax.</label>
+
+		<label index="adult4.description">Enter the rate and discounts for four adult. See details of <b>One Adult</b> for syntax.</label>
+
+		<label index="adultX.description">Enter the supplement for every further adult. See details of <b>One Adult</b> for syntax.</label>
+
+		<label index="child.description">This feature is not used yet.</label>
+		<label index="teen.description">This feature is not used yet.</label>
+
+		<label index="extraComponent1.description">Enter price for extra component. E.g. Breakfast or visitor tax. This is caluclated per person.</label>
+		<label index="extraComponent2.description">Enter price for extra component. E.g. Breakfast or visitor tax. This is caluclated per person.</label>
+
+		<label index="discount.description">If you don't use the discount feature in the Adult price, you may set a percentage here.</label>
+		<label index="discountPeriod.description">If you don't use the discount feature in the Adult price, you may set a period after the given percentage is applied.</label>
+
+		<label index="singleComponent1.description">Enter price for a single component like room cleaning. This is added only once for the stay.</label>
+		<label index="singleComponent1.details">
+			<![CDATA[
+			<b>Example: 10,D:2:-1</b>
+			- room cleaning is 10 for 1 night
+			- room cleaning is free as of 2 nights
+
+			You may overwrite the language labels via ts:
+
+			plugin.tx_abbooking_pi1 {
+				_LOCAL_LANG {
+					de {
+						discount = Rabatt
+						extraComponent1 = Frühstück
+						extraComponent2 = Kurtaxe
+						adultX = Weitere Person(en)
+						specialComponent1 = Endreinigungspauschale
+						specialComponent2 = Endreinigungspauschale
+					}
+					en {
+						discount = Discount
+						extraComponent1 = Breakfast
+						extraComponent2 = Vistor's Tax
+						adultX = More Person(s)
+						specialComponent1 = Room Cleaning
+						specialComponent2 = Room Cleaning
+					}
+				}
+			}
+			]]>
+		</label>
+
+		<label index="singleComponent2.description">See <b>Single Component 1</b> for a detailed description.</label>
+
+		<label index="minimumStay.description">Set a minimum stay.</label>
+		<label index="minimumStay.details"><![CDATA[
+			<b>Example: 3,W:8:2,W:1:1</b>
+			- the default minimum stay is 3 nights
+			- 8 weeks before start date the minimum stay is 2 nights
+			- 1 week before start date the minimum stay is 1 night
+		]]>
+		</label>
+
+		<label index="blockDaysAfterBooking.description">Mark given amount of days as booked with every booking. E.g. for longer cleaning periods.</label>
+
+		<label index="checkInWeekdays.description">Allowed weekdays (0-6, comma separated) for checkin for this rate. * is default.</label>
+		<label index="checkInWeekdays.details"><![CDATA[
+			<b>Example: 6,0</b>
+			- checkin is only possible on Saturdays and Sundays
+			<b>Example: *</b>
+			- checkin is possible all weekdays (default)
+		]]>
+		</label>
+
+    </languageKey>
+  </data>
+</T3locallang>

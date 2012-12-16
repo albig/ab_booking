@@ -336,7 +336,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][1][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
  				'eval' => 'nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
 			)
 		),
@@ -347,7 +347,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][2][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -358,7 +358,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][3][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -369,7 +369,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -391,7 +391,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][5][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -402,7 +402,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][6][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -413,7 +413,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -424,7 +424,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -457,7 +457,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -468,7 +468,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),
@@ -479,7 +479,7 @@ $TCA['tx_abbooking_price'] = array (
 			'config' => array (
 				'type' => 'input',	## WOP:[tables][3][fields][4][type]
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
-				'max' => '40',	## WOP:[tables][3][fields][1][conf_max]
+				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
 			)
 		),

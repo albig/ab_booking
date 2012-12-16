@@ -464,6 +464,7 @@ class tx_abbooking_div {
 
 		// date select form
 		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
+				<input type="hidden" name="no_cache" value="1">
 				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
 
 		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
