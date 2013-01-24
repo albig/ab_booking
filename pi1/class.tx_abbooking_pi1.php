@@ -1366,9 +1366,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 		}
 		if ($product['prices'][$interval['startDate']]['singleComponent2']>0) {
+			$singleComponent2 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent2'], $period);
+			$singleComponent2 = $singleComponent2['discountRate'];
 			if ($singleComponent2 >= 0) {
-				$singleComponent2 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent2'], $period);
-				$singleComponent2 = $singleComponent2['discountRate'];
 				$total_amount += $singleComponent2;
 
 				$lDetails['form'] = '';

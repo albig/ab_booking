@@ -5,7 +5,7 @@ plugin.tx_abbooking_pi1 {
   dateFormat = d.m.Y
   # week starts on 0: sunday, 1: monday
   weekStartsOn = 1
-  
+
   products {
     zimmer1 {
       capacitymin = 1
@@ -63,7 +63,7 @@ plugin.tx_abbooking_pi1 {
       #rate.4 = rate_small_house_default
     }
   }
-  
+
   rates {
     currency = €
     rate_small_house_highseason {
@@ -74,19 +74,19 @@ plugin.tx_abbooking_pi1 {
        1 = 50
        2 = 60
        3 = 70
-       4 = 80 
-       5 = 90,D:2:10% 
-       6 = 100 
-       7 = 100 
+       4 = 80
+       5 = 90,D:2:10%
+       6 = 100
+       7 = 100
       }
       child {
        1 = 5
-       2 = 10 
+       2 = 10
        3 = 10
     }
       teen {
        1 = 15
-       2 = 20 
+       2 = 20
        3 = 30
       }
       minimumStay = 7
@@ -106,28 +106,28 @@ plugin.tx_abbooking_pi1 {
         }
       }
       ratesPerDayAndPerson {
-        breakfast { 
+        breakfast {
           price = 7
           priceIsPerWeek = 0
           priceIsPerBooking = 0
           title.de = Frühstück
           title.en = Breakfast
-          isObligatory = 0
+          isOption = 0
         }
-        touristtax { 
+        touristtax {
           price = 1.2
           priceIsPerWeek = 0
           title.de = Kurtaxe
           title.en = Tourist Tax
-          isObligatory = 1
+          isOption = 1
         }
-        bedlinen { 
+        bedlinen {
           price = 10
           priceIsPerWeek = 1
           priceIsPerBooking = 0
           title.de = Bettwäsche
           title.en = Bed linen
-          isObligatory = 1
+          isOption = 1
         }
       }
       seasons.1 = eastern2011
@@ -141,19 +141,19 @@ plugin.tx_abbooking_pi1 {
        1 = 30
        2 = 40
        3 = 50
-       4 = 60 
-       5 = 70,D:2:10% 
-       6 = 70 
-       7 = 100 
+       4 = 60
+       5 = 70,D:2:10%
+       6 = 70
+       7 = 100
       }
       child {
        1 = 5
-       2 = 10 
+       2 = 10
        3 = 10
       }
       teen {
        1 = 15
-       2 = 20 
+       2 = 20
        3 = 30
       }
       priceIsPerWeek = 1
@@ -173,20 +173,20 @@ plugin.tx_abbooking_pi1 {
         }
       }
       ratesPerDayAndPerson {
-        breakfast { 
+        breakfast {
           price = 7
           priceIsPerWeek = 0
           priceIsPerBooking = 0
           title.de = Frühstück
           title.en = Breakfast
-          isObligatory = 0
+          isOption = 0
         }
-        touristtax { 
+        touristtax {
           price = 1.2
           priceIsPerWeek = 0
           title.de = Kurtaxe
           title.en = Tourist Tax
-          isObligatory = 1
+          isOption = 1
         }
       }
       seasons.1 = defaultseason
@@ -200,50 +200,50 @@ plugin.tx_abbooking_pi1 {
        1 = 30
        2 = 40
        3 = 50
-       4 = 60 
-       5 = 60 
-       6 = 60 
-       7 = 60 
+       4 = 60
+       5 = 60
+       6 = 60
+       7 = 60
       }
       child {
        1 = 5
-       2 = 10 
+       2 = 10
        3 = 10
       }
       priceIsPerWeek = 0
       minimumStay = 7
       daySteps = 7
       maximumStay = 28
-      seasons.1 = defaultseason 
+      seasons.1 = defaultseason
       checkInWeekdays = 6
       #season.2 = Ostern
       #season.99 = weihnachten
       ratesPerDayAndPerson {
-        breakfast { 
+        breakfast {
           price = 7
           priceIsPerWeek = 0
           priceIsPerBooking = 0
           title.de = Frühstück
           title.en = Breakfast
-          isObligatory = 0
+          isOption = 0
         }
-        touristtax { 
+        touristtax {
           price = 1.2
           priceIsPerWeek = 0
           title.de = Kurtaxe
           title.en = Tourist Tax
-          isObligatory = 1
+          isOption = 1
         }
-        bedlinen { 
+        bedlinen {
           price = 10
           priceIsPerWeek = 1
           priceIsPerBooking = 0
           title.de = Bettwäsche
           title.en = Bed linen
-          isObligatory = 1
+          isOption = 1
         }
       }
-      
+
       ratesPerStay {
         niceWeather {
           price = 10
@@ -251,7 +251,7 @@ plugin.tx_abbooking_pi1 {
           title.en = Nice Weather Supplement
         }
       }
-      
+
     }
   }
 
@@ -275,16 +275,16 @@ plugin.tx_abbooking_pi1 {
      # dateFormat = d.m.Y
     }
   }
-  
+
   form {
-    showCalendarMonth =3 
-    #showCalendarWeek = 1    
+    showCalendarMonth =3
+    #showCalendarWeek = 1
     firstname {
       required = 1
       type = input
       size = 20
       maxsize = 40
-      validation = 
+      validation =
       title.de = Vorname
       title.en = First name
     }
@@ -293,7 +293,7 @@ plugin.tx_abbooking_pi1 {
       type = input
       size = 20
       maxsize = 30
-      validation = 
+      validation =
       title.de = Nachname
       title.en = Last name
     }
@@ -301,7 +301,7 @@ plugin.tx_abbooking_pi1 {
       required = 1
       type = input
       size = 20
-      validation = 
+      validation =
       title.de = Straße
       title.en = Street
     }
@@ -309,7 +309,7 @@ plugin.tx_abbooking_pi1 {
       required = 1
       type = input
       size = 10
-      validation = 
+      validation =
       title.de = Postleitzahl
       title.en = ZIP code
     }
@@ -317,7 +317,7 @@ plugin.tx_abbooking_pi1 {
       required = 1
       type = input
       size = 20
-      validation = 
+      validation =
       title.de = Ort
       title.en = City
     }
@@ -325,19 +325,19 @@ plugin.tx_abbooking_pi1 {
       required = 1
       type = input
       size = 20
-      validation = 
+      validation =
       title.de = E-Mail
       title.en = Email
       errorText {
         de = Bitte geben Sie eine gültige Email-Adresse ein!
         en = Please enter a valid email address!
-      }      
+      }
     }
     telephone {
-      required =0 
+      required =0
       type = input
       size = 20
-      validation = 
+      validation =
       title.de = Telefon
       title.en = Telephone
       errorText  {
@@ -349,7 +349,7 @@ plugin.tx_abbooking_pi1 {
       required = 0
       type = textarea
       size = 250
-      validation = 
+      validation =
       title.de = Mitteilung
       title.en = Message
     }
@@ -357,7 +357,7 @@ plugin.tx_abbooking_pi1 {
       required = 0
       type = radio
       size = 250
-      validation = 
+      validation =
       title.de = Bitte kontaktieren Sie mich per
       title.en = Please contact me by
       radio {
@@ -383,35 +383,35 @@ plugin.tx_abbooking_pi1 {
       maxsize = 12
       title.de = Anreise
       title.en = Check-In
-    }            
+    }
     daySelector {
       required = 1
       type = selector
-      validation = 
+      validation =
       title.de = Anzahl der Übernachtungen
       title.en = Number of Nights
-    }            
+    }
     adultSelector {
       required = 1
       type = selector
-      validation = 
+      validation =
       title.de = Anzahl der Erwachsenen
       title.en = Number of adults
-    }    
+    }
     childSelector {
       required = 0
       type = selector
-      validation = 
+      validation =
       title.de = Anzahl der Kinder
       title.en = Number of children
-    }    
+    }
     teenSelector {
       required = 0
       type = selector
-      validation = 
+      validation =
       title.de = Anzahl der Jugendlichen
       title.en = Number of Teens
-    }    
+    }
     noDogs {
       required = 0
       type = infobox
@@ -420,7 +420,7 @@ plugin.tx_abbooking_pi1 {
       title.de = Besondere Hinweise
       title.en = Special Information
     }
-    
+
   }
-  
+
 }
