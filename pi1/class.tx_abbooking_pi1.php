@@ -1144,14 +1144,18 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$discountDetails = explode(',', $rate);
 
 		$discountRate['standardRate'] = $discountDetails[0];
-
 		foreach ($discountDetails as $id => $value) {
 			// D:3:10%
 			$dpd = explode(':', $value);
 			if ($dpd[0] == 'D' && is_numeric($dpd[1]))
 				$discountPeriodArray[$dpd[1]] = $dpd[2];
-			else if ($dpd[0] == 'O')
+			else if ($dpd[0] == 'O') {
 				$discountRate['isOption'] = 1;
+				if (strlen($dpd[1]) == 0 || $dpd[1] == 1)
+					$discountRate['isOptionSelected'] = 1;
+				else
+					$discountRate['isOptionSelected'] = 0;
+			}
 		}
 
 		if (sizeof($discountPeriodArray)>0)
@@ -1261,6 +1265,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
 				$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
 				$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
+				$usedPrices[$cur_title]['isOptionSelected'] = $rateValue['isOptionSelected'];
 
 				switch ($key) {
 					case 'extraComponent1':	$usedPrices[$cur_title]['title'] = $this->pi_getLL('extraComponent1');
@@ -1319,7 +1324,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$text_periods = ' '.$this->pi_getLL('periods');
 
 				if ($value['isOption'] == 1) {
-					if ($customer[$title] == 1 || $customer[$title] == '' ) {
+					if ($customer[$title] == 1 || ($customer[$title] == '' && $value['isOptionSelected'] == 1) ) {
 						$checked = ' checked="checked"';
 						$total_amount += $value['rateValue'] * $value['rateUsed'];
 					}
@@ -1352,32 +1357,47 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$priceDetails[] = $lDetails;
 		}
 		// get singleComponent from startDate
-		if ($product['prices'][$interval['startDate']]['singleComponent1']>0) {
-			$singleComponent1 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent1'], $period);
-			$singleComponent1 = $singleComponent1['discountRate'];
-			if ($singleComponent1 >= 0) {
-				$total_amount += $singleComponent1;
-
-				$lDetails['form'] = '';
-				$lDetails['description'] = $this->pi_getLL('specialComponent1');
-				$lDetails['dates'] = '';
-				$lDetails['value'] = number_format($singleComponent1, 2, ',', '').' '.$currency;
-				$priceDetails[] = $lDetails;
-			}
-		}
-		if ($product['prices'][$interval['startDate']]['singleComponent2']>0) {
-			$singleComponent2 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent2'], $period);
-			$singleComponent2 = $singleComponent2['discountRate'];
+//~ 		if ($product['prices'][$interval['startDate']]['singleComponent1']>0) {
+//~ 			$singleComponent1 = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent1'], $period);
+//~ 			$singleComponent1 = $singleComponent1['discountRate'];
+//~ 			if ($singleComponent1 >= 0) {
+//~ 				$total_amount += $singleComponent1;
+//~
+//~ 				$lDetails['form'] = '';
+//~ 				$lDetails['description'] = $this->pi_getLL('specialComponent1');
+//~ 				$lDetails['dates'] = '';
+//~ 				$lDetails['value'] = number_format($singleComponent1, 2, ',', '').' '.$currency;
+//~ 				$priceDetails[] = $lDetails;
+//~ 			}
+//~ 		}
+		for ($i=1; $i<3; $i++) {
+		if ($product['prices'][$interval['startDate']]['singleComponent'.$i]>0) {
+			$s2value = $this->getDiscountRate($product['prices'][$interval['startDate']]['singleComponent'.$i], $period);
+//~ print_r($s2value);
+			$singleComponent2 = $s2value['discountRate'];
 			if ($singleComponent2 >= 0) {
-				$total_amount += $singleComponent2;
-
-				$lDetails['form'] = '';
-				$lDetails['description'] = $this->pi_getLL('specialComponent2');
+				if ($s2value['isOption'] == 1) {
+					if ($customer['singleComponent'.$i] == 1 || ($customer['singleComponent'.$i] == '' && $s2value['isOptionSelected'] == 1) ) {
+						$checked = ' checked="checked"';
+						$total_amount += $singleComponent2;
+					}
+					else {
+						$checked = ' ';
+					}
+					$lDetails['form']  = '<input type="checkbox" name="tx_abbooking_pi1[rateOption][]" value="singleComponent'.$i.'" '.$checked.'>';
+					$lDetails['form'] .= '<input type="hidden" name="tx_abbooking_pi1[rateOption][]" value="singleComponent'.$i.'_1">';
+				}
+				else {
+					$lDetails['form'] = '';
+					$total_amount += $s2value['rateValue'] * $s2value['rateUsed'];
+				}
+				$lDetails['description'] = $this->pi_getLL('specialComponent'.$i);
 				$lDetails['dates'] = '';
 				$lDetails['value'] = number_format($singleComponent2, 2, ',', '').' '.$currency;
 				$priceDetails[] = $lDetails;
 			}
 		}
+	}
 
 		$rate['priceTotalAmount'] = number_format($total_amount, 2, ',', '');
 		$rate['priceCurrency'] = $currency;
