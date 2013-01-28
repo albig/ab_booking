@@ -518,6 +518,7 @@ $TCA['tx_abbooking_price'] = array (
 				'maxitems' => 100,    ## WOP:[tables][4][fields][1][conf_relations]
 				"MM" => "tx_abbooking_seasons_priceid_mm",    ## WOP:[tables][4][fields][1][conf_relations_mm]
 				'foreign_table' => 'tx_abbooking_seasons',
+				'foreign_sortby' => 'sorting',
 			)
 		),
 	),
