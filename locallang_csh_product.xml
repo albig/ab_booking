@@ -7,13 +7,13 @@
   </meta>
   <data type="array">
     <languageKey index="default" type="array">
+    
+		<label index="productid.description">Please set the page ID of the Sysfolder below or by TypoScript to see all available products.</label>
+
 		<label index="filterprice.description">Enter text to filter the available prices below. The filter applies after saving this entry.</label>
 
-		<label index="tstitle.description">Add the Typoscript identifier. Only needed if you continue all configuration with Typoscript.</label>
-		<label index="tstitle.details">If you use the Typoscript configuration all settings below this field are NOT USED!</label>
-
 		<label index="capacitymin.description">Minimum capacity of this product. E.g. how many adults per room is minimum.</label>
-		<label index="capacitymin.description">Maximum capacity of this product. E.g. how many adults per room is maximum.</label>
+		<label index="capacitymax.description">Maximum capacity of this product. E.g. how many adults per room is maximum.</label>
 
     </languageKey>
   </data>

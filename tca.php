@@ -170,16 +170,6 @@ $TCA['tx_abbooking_product'] = array (
 				'size' => '30',	## WOP:[tables][2][fields][1][conf_size]
 			)
 		),
-		'tstitle' => array (		## WOP:[tables][2][fields][1][fieldname]
-			'displayCond' => 'FIELD:sys_language_uid:<:1',
-			'exclude' => 0,		## WOP:[tables][2][fields][1][excludeField]
-			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.tstitle',		## WOP:[tables][2][fields][1][title]
-			'config' => array (
-				'type' => 'input',	## WOP:[tables][2][fields][1][type]
-				'size' => '30',	## WOP:[tables][2][fields][1][conf_size]
-				'eval' => 'nospace',
-			)
-		),
 		'capacitymin' => array (		## WOP:[tables][2][fields][2][fieldname]
 			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][2][excludeField]

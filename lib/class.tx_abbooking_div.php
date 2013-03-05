@@ -799,7 +799,7 @@ print_r($bookedPeriods);
 
 		// only check prices if not yet available...
 		if (!empty($this->lConf['productDetails'][$uid]['prices'])) {
-			print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
+			//~ print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
 			$prices = $this->lConf['productDetails'][$uid]['prices'];
 		}
 		else

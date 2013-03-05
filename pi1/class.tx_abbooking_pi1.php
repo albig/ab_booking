@@ -433,21 +433,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// ---------------------------------
 		// get Product Properties
 		// ---------------------------------
-		// if set, use the new (as of 0.6.0) TS configuration instead of db table settings
-		if (intval($this->conf['useTSconfiguration']) == 1) {
-			$this->lConf['useTSconfiguration'] = 1;
-			if (isset($this->lConf['ProductID'])) {
-				$this->lConf['productDetails'] = $this->getProductPropertiesFromTS($this->lConf['ProductID']);
-				// merge array of available and offtime product IDs
-				$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
-			}
-		} else {
-			if (isset($this->lConf['ProductID'])) {
-				$this->lConf['productDetails'] = $this->getProductPropertiesFromDB($this->lConf['ProductID']);
-				// merge array of available and offtime product IDs
-				$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
-			}
+		if (isset($this->lConf['ProductID'])) {
+			$this->lConf['productDetails'] = $this->getProductPropertiesFromDB($this->lConf['ProductID']);
+			// merge array of available and offtime product IDs
+			$this->lConf['ProductID'] = implode(',', array_unique(array_merge(explode(',', $this->lConf['ProductID']), $this->lConf['OffTimeProductIDs'])));
 		}
+
 		// ---------------------------------
 		// save user session data
 		// ---------------------------------
@@ -662,73 +653,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		return $langTitle;
 	}
 
-	/**
-	 * get all properties, description text and prices of a product
-	 * with the given UID
-	 *
-	 * @param	[type]		$ProductUID: ...
-	 * @return	[type]		array of properties..
-	 */
-	public function getProductPropertiesFromTS($ProductUID) {
-
-		$availableProductIDs = array();
-		$offTimeProductIDs = array();
-
-		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
-			$interval['startDate'] = $this->lConf['startDateStamp'];
-			$interval['endDate'] = $this->lConf['endDateStamp'];
-		}
-		if (!isset($interval['startList']) && !isset($interval['endList'])) {
-			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = strtotime('+'.$this->lConf['numCheckMaxInterval'].' day', $this->lConf['startDateStamp']);
-		}
-
-		if (!empty($ProductUID)) {
-			// SELECT:
-			// FixMe: we have to set the closingtimes by TS
-			#$where_extra = 'capacitymax > 0 ';
-			$table = 'tx_abbooking_product';
-			$select = 'uid, tstitle, uiddetails';
-			$order = '';
-			$group = '';
-			$limit = '';
-			$where = 'pid='.$this->lConf['PIDstorage'].' AND uid IN('.$ProductUID.') ';
-			//AND (sys_language_uid IN (-1,0) OR (sys_language_uid = ' .$GLOBALS['TSFE']->sys_language_uid. '))';
-			// use the TYPO3 default function for adding hidden = 0, deleted = 0, group and date statements
-			$where  .= $GLOBALS['TSFE']->sys_page->enableFields($table, $show_hidden = 0, $ignore_array);
-			if (!empty($where_extra))
-				$where  .= ' AND '.$where_extra;
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery($select, $table, $where, $group, $order, $limit);
-			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-				$out[$row['uid']] = $row;
-			}
-			$product_properties = $out;
-
-			// step through found products
-			foreach ( $product_properties as $uid => $product ) {
-
-				$product = array_merge($product, $this->conf['products.'][$product['tstitle'].'.']);
-				$product['title'] = $this->getTSTitle($product['title.']);
-
-				$availableProductIDs[] = $uid;
-
-				$product['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
-
-				// get uid and pid of the detailed description content element
-				$uidpid = explode("#", $product['uiddetails']);
-				if (is_numeric($uidpid[0])) {
-					$product['detailsRaw'] =  array_shift(tx_abbooking_div::getRecordRaw('tt_content', $uidpid[0], $uidpid[1]));
-  				}
-				$product_properties_return[$uid] = $product;
-			}
-		}
-
-		$offTimeProductIDs  = array_diff(explode(",", $ProductUID), $availableProductIDs);
-		$this->lConf['AvailableProductIDs'] = $availableProductIDs;
-		$this->lConf['OffTimeProductIDs'] = $offTimeProductIDs;
-
-		return $product_properties_return;
-	}
 
 	/**
 	 * Check vacancies for given date
@@ -1197,10 +1121,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 */
 	function calcRates($key, $period) {
 
-			if ($this->lConf['useTSconfiguration'] == 1)
-				return $this->calcRatesTSMode($key, $period);
-			else
-				return $this->calcRatesDBMode($key, $period);
+		return $this->calcRatesDBMode($key, $period);
 
 	}
 
@@ -1356,6 +1277,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$lDetails['value'] = '-'.number_format($discountValue, 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
 		}
+		
 		// get singleComponent 1 and 2 from startDate
 		for ($i=1; $i<3; $i++) {
 			if ($product['prices'][$interval['startDate']]['singleComponent'.$i]>0) {
@@ -1376,7 +1298,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					}
 					else {
 						$lDetails['form'] = '';
-						$total_amount += $s2value['rateValue'] * $s2value['rateUsed'];
+						$total_amount += $singleComponent;
 					}
 					$lDetails['description'] = $this->pi_getLL('specialComponent'.$i);
 					$lDetails['dates'] = '';
@@ -1393,301 +1315,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$rate['textPriceTotalAmount'] = number_format($total_amount, 2, ',', '').' '.$currency;
 
 		return $rate;
-	}
-
-	/**
-	 * Calculate the Rates from TS settings
-	 *
-	 * @param	[type]		$key: the rate tstitle
-	 * @param	[type]		$period: the period to stay
-	 * @return	array		with rate components ready to output...
-	 */
-	function calcRatesTSMode($key, $period) {
-
-//~ print_r("calcRatesTSMode\n");
-//~ print_r($period);
-		$priceDetails = array();
-		$pricePerDay = array();
-		$keyArray = array();
-
-		$customer = $this->lConf['customerData'];
-		$product = $this->lConf['productDetails'][$key];
-
-		$maxAdults = $this->lConf['adultSelector'];
-		$maxChildren = $this->lConf['numChildren'];
-		$maxTeens = $this->lConf['numTeens'];
-
-		$interval['startDate'] = $this->lConf['startDateStamp'];
-		$interval['endDate'] = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
-
-		$pricePerDay = $product['prices'];
-		if (!is_array($pricePerDay))
-			return FALSE;
-
-//~  		print_r("-pricePerDay---Start---\n");
-//~  		print_r($pricePerDay);
-//~  		print_r("-pricePerDay---End---\n");
-
-		// now we have an array with the right rates per day.
-		// let's begin magic in calculation for every day the final amount
-
-		if ($maxAdults > 0)
-			$keyArray[] = 'adult';
-		if ($maxChildren > 0)
-			$keyArray[] = 'child';
-		if ($maxTeens > 0)
-			$keyArray[] = 'teen';
-
-		foreach($keyArray as $key) {
-			unset($cur_title);
-			unset($pre_title);
-			unset($rateValueArray);
-
-			if (!is_array($pricePerDay[$interval['startDate']][$key.'.']))
-				continue;
-
-			if ($key != 'ratesPerDayAndPerson') {
-				if ($pricePerDay[$interval['startDate']]['priceIsPerWeek'] == 1)
-					$dayStep = 7;
-				else
-					$dayStep = 1;
-			}
-
-			for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
-
-				unset($rateValueArray);
-
-				$rateValueArray[] = $this->getDiscountRate($pricePerDay[$d][$key.'.'][$maxAdults], $period, $dayStep);
-
-				if (is_array($rateValueArray))
-				foreach ($rateValueArray as $rateValue) {
-					unset($cur_title);
-					unset($pre_title);
-					if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
-							continue;
-
-						if (empty($rateValue['title']))
-							$title = $pricePerDay[$d]['title'];
-						else
-							$title = $rateValue['title'];
-
-						$cur_title = str_replace(" ", "", $title.$rateValue['discountRate'].$key);
-						$usedPrices[$cur_title]['title'] = $title;
-//~ 						$usedPrices[$cur_title]['rateUsed']++;
-						$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
-						$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
-						$usedPrices[$cur_title]['dayStep'] = $dayStep;
-						$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
-						$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
-						$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
-						$usedPrices[$cur_title]['usedDates'][] = $d;
-
-						$pre_title = $cur_title;
-				}
-			}
-		}
-
-		//-------------------------------------------------------------
-		// now get the ratesPerDayAndPerson from the startDate
-		// --> this is almost the same as above but the dayStep value may
-		//     differ from rate to rate ...
-		//-------------------------------------------------------------
-
-		unset($keyArray);
- 		$keyArray[] = 'ratesPerDayAndPerson';
-
-		foreach($keyArray as $key) {
-			unset($cur_title);
-			unset($pre_title);
-			unset($rateValueArray);
-
-			if (!is_array($pricePerDay[$interval['startDate']][$key.'.']))
-				continue;
-
-			foreach ($pricePerDay[$interval['startDate']][$key.'.'] as $ratePerDayAndPerson) {
-				if ($ratePerDayAndPerson['priceIsPerWeek'] == 1)
-					$dayStep = 7;
-				else
-					$dayStep = 1;
-
-				for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
-					unset($rateValueArray);
-
-					$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, $dayStep, $maxAdults);
-
-					if (is_array($rateValueArray))
-					foreach ($rateValueArray as $rateValue) {
-						unset($cur_title);
-						unset($pre_title);
-						if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
-								continue;
-
-							if (empty($rateValue['title']))
-								$title = $pricePerDay[$d]['title'];
-							else
-								$title = $rateValue['title'];
-
-							$cur_title = str_replace(" ", "", $title.$rateValue['discountRate'].$key);
-							$usedPrices[$cur_title]['title'] = $title;
-							$usedPrices[$cur_title]['rateUsed'] += $rateValue['incrementUse'];
-							$usedPrices[$cur_title]['priceIsPerWeek'] = $rateValue['priceIsPerWeek'];
-							$usedPrices[$cur_title]['dayStep'] = $dayStep;
-							$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
-							$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
-							$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
-							$usedPrices[$cur_title]['usedDates'][] = $d;
-
-							$pre_title = $cur_title;
-					}
-				}
-			}
-		}
-
-		// now we have the simple rates per adult/child/teen
-		unset($keyArray);
-
-		// take currency from TS
-		$currency = $this->conf['rates.']['currency'];
-
-		// some useful texts
-		if ($this->lConf['showPersonsSelector'] == 1) {
-			if ($maxAdults == 1)
-				$text_persons = ', '.$maxAdults.' '.$this->pi_getLL('person');
-			else
-				$text_persons = ', '.$maxAdults.' '.$this->pi_getLL('persons');
-
-			if ($maxChildren == 1)
-				$text_children = ', '.$maxChildren.' '.$this->pi_getLL('child');
-			else
-				$text_children = ', '.$maxChildren.' '.$this->pi_getLL('children');
-
-			if ($maxTeens == 1)
-				$text_teens = ', '.$maxTeens.' '.$this->pi_getLL('teen');
-			else
-				$text_teens = ', '.$maxTeens.' '.$this->pi_getLL('teens');
-		}
-
-		// input form element for selectable options
-		if (is_array($usedPrices))
-		foreach ($usedPrices as $title => $value) {
-			unset($lDetails);
-			if ($value['priceIsPerWeek'] == 1) {
-				if ($value['rateUsed'] == 1)
-					$text_periods = ' '.$this->pi_getLL('week');
-				else
-					$text_periods = ' '.$this->pi_getLL('weeks');
-
-			} else {
-				if ($value['rateUsed'] == 1)
-					$text_periods = ' '.$this->pi_getLL('period');
-				else
-					$text_periods = ' '.$this->pi_getLL('periods');
-			}
-			if ($value['isOption'] == 1) {
-				if ($customer[$title] == 1 || $customer[$title] == '' ) {
-					$checked = ' checked="checked"';
-					$total_amount += $value['rateValue'] * $value['rateUsed'];
-				}
-				else {
-					$checked = ' ';
-				}
-				$lDetails['form']  = '<input type="checkbox" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'" '.$checked.'>';
-				$lDetails['form'] .= '<input type="hidden" name="tx_abbooking_pi1[rateOption][]" value="'.$title.'_1">';
-			}
-			else {
-				$lDetails['form'] = '';
-				$total_amount += $value['rateValue'] * $value['rateUsed'];
-			}
-//~ 			$lDetails['dates'] = $value['rateDates'];
-
-			// step through used dates and create date interval string
-			$openInterval = 0;
-			$lastday = 0;
-
-			foreach ($value['usedDates'] as $id => $currday) {
-				$dayDiff = (int)($currday - $lastday);
-				if ($id == 0 || $openInterval == 0) {
-					$dateUsed = strftime('%a %x', $currday).' - ';
-					$openInterval = 1;
-				} else if ($openInterval == 1 && $dayDiff > 86400) {
-					if ($value['priceIsPerWeek'] == '1')
-						$dateUsed .= strftime('%a %x', $currday+(($value['dayStep'])*86400));
-					else
-						$dateUsed .= strftime('%a %x', $lastday);
-					$openInterval = 0;
-				}
-				$lastday = $currday;
-			}
-
-			if ($openInterval == 1) {
-				if ($value['priceIsPerWeek'] == '1')
-					$dateUsed .= strftime('%a %x', $lastday+(($value['dayStep'])*86400));
-				else
-					$dateUsed .= strftime('%a %x', $lastday+($value['dayStep']*86400) );
-			}
-
-			$lDetails['dates'][] = $dateUsed;
-			$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
-			$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
-			$priceDetails[] = $lDetails;
-		}
-
-
-		//-------------------------------------------------------------
-		// now get the ratesPerStay from the startDate
-		//-------------------------------------------------------------
-		unset($rateValueArray);
-		if (is_array($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStay.']))
-			foreach ($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStay.'] as $ratePerDayAndPerson) {
-						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, 1, 1);
-			}
-
-		if (is_array($rateValueArray))
-			foreach ($rateValueArray as $rateValue) {
-				if ($rateValue['discountRate'] >= 0) {
-					$total_amount += $rateValue['discountRate'];
-
-					$lDetails['form'] = '';
-					$lDetails['description'] = $rateValue['title'];
-					$lDetails['dates'] = '';
-					$lDetails['value'] = number_format($rateValue['discountRate'], 2, ',', '').' '.$currency;
-					$priceDetails[] = $lDetails;
-				}
-			}
-
-		//-------------------------------------------------------------
-		// now get the ratesPerStayAndPerson from the startDate
-		//-------------------------------------------------------------
-		unset($rateValueArray);
-		if (is_array($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStayAndPerson.']))
-			foreach ($pricePerDay[$this->lConf['startDateStamp']]['ratesPerStayAndPerson.'] as $ratePerDayAndPerson) {
-						$rateValueArray[] = $this->getRatePerDayAndPerson($ratePerDayAndPerson, $period, 1, $maxAdults);
-			}
-
-		if (is_array($rateValueArray))
-			foreach ($rateValueArray as $rateValue) {
-				if ($rateValue['discountRate'] >= 0) {
-					$total_amount += $rateValue['discountRate'];
-
-					$lDetails['form'] = '';
-					$lDetails['description'] = $rateValue['title'].$text_persons;;
-					$lDetails['dates'] = '';
-					$lDetails['value'] = number_format($rateValue['discountRate'], 2, ',', '').' '.$currency;
-					$priceDetails[] = $lDetails;
-				}
-			}
-//~ 		print_r("---ab--ratesPerStay-\n");
-//~ 		print_r($rateValueArray);
-//~ 		print_r("---ab--ratesPerStay-\n");
-
-		$rate['priceTotalAmount'] = number_format($total_amount, 2, ',', '');
-		$rate['priceCurrency'] = $currency;
-		$rate['priceDetails'] = $priceDetails;
-
-		$rate['textPriceTotalAmount'] = number_format($total_amount, 2, ',', '').' '.$currency;
-
-		return $rate;
-
 	}
 
 	/**

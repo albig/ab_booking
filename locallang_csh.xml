@@ -51,9 +51,9 @@
 						</ul>
 						 ]]></label>
 			<label index="ProductID.description">Wählen Sie die Produkte, die Sie in diesem Plugin berücksichten wollen.</label>
-			<label index="ProductID.details"><![CDATA[ If you don't see any products to select in the right box,
-				you first have to enter the storage pid and you have to add products,
-				prices and seasons into this storage folder.
+			<label index="ProductID.details"><![CDATA[ Wenn Sie keine Produkte sehen, müssen Sie zunächst die Page-ID des Sysfolders 
+				(unten). Alternativ können Sie den "General Record Storage Place" für diese und alle untergeordneten Seiten in den
+				Seiteneinstellungen setzen.
 					]]></label>
 
 			<label index="enableCalendarBookingLink.description">Aktiviere Links zur Buchungsseite bei freien Tagen im Kalender.</label>
