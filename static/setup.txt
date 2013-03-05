@@ -206,3 +206,8 @@ plugin.tx_abbooking_pi1 {
 		}
 	} # form end
 }
+
+page.includeJSFooter.ab_booking_datepicker = {$plugin.tx_abbooking_pi1.file.jsDatepicker}
+
+#fetch localization files for datepicker:
+page.includeJSFooter.jquery-datepicker-de = EXT:ab_booking/res/jquery.ui.datepicker-de.js

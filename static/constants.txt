@@ -2,22 +2,13 @@
 # This are the default TS-constants for ab_booking
 ##
 
-plugin.tx_abbooking_pi1 = USER_INT
+plugin.tx_abbooking_pi1 = USER
 plugin.tx_abbooking_pi1 {
 
 	# cat=plugin.ab_booking//0; type=string; label= StyleSheet for Calendar:  CSS file for the calendar
 		file.cssBooking = EXT:ab_booking/res/cssBooking.css
-
-#	# cat=plugin.ab_booking//0; type=string; label= Enable Remote Access: fill out all settings below!
-#		remote.remoteSettingsEnable = 0
-#	# cat=plugin.ab_booking//0; type=string; label= Remote Storage URL:  e.g. http://www.bigga.de/
-#		remote.remoteURL =
-#	# cat=plugin.ab_booking//0; type=string; label= Page Type for Data Exchange: don't forget to configure PAGE object in root template!
-#		remote.remoteType = 788
-#	# cat=plugin.ab_booking//0; type=string; label= Pid of Storage Folder for Bookings, Products, Prices: check the foreign site!
-#		remote.remoteStoragePID =
-#	# cat=plugin.ab_booking//0; type=string; label= UID of Products to be checked: comma separated list
-#		remote.remoteProductUIDs =
-
+		
+	# cat=plugin.ab_booking//0; type=string; label= JS Datepicker for Calendar
+		file.jsDatepicker = EXT:ab_booking/res/jsDatepicker.js
 
 }
