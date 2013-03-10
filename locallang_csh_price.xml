@@ -98,6 +98,8 @@
 
 		<label index="blockDaysAfterBooking.description">Mark given amount of days as booked with every booking. E.g. for longer cleaning periods.</label>
 
+		<label index="daySteps.description">Interval of days the customer may book. E.g. set it to 7 to allow only week bookings. Set Minimumstay above to 7 too, to have the proper base.</label>
+
 		<label index="checkInWeekdays.description">Allowed weekdays (0-6, comma separated) for checkin for this rate. * is default.</label>
 		<label index="checkInWeekdays.details"><![CDATA[
 			<b>Example: 6,0</b>

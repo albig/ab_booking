@@ -39,7 +39,8 @@
 			<label index="tx_abbooking_price.singleComponent2">Single Component 2 (e.g. Roomcleaning)</label>
 			<label index="tx_abbooking_price.minimumStay">Minimum Stay (days)</label>
 			<label index="tx_abbooking_price.blockDaysAfterBooking">Block Days after Booking</label>
-			<label index="tx_abbooking_price.checkInWeekdays">Checkin Weekdays (e.g. '5,6': Fridays and Saturdays or '*' for all days) (NOT USED YET)</label>
+			<label index="tx_abbooking_price.daySteps">Day Steps</label>
+			<label index="tx_abbooking_price.checkInWeekdays">Checkin Weekdays (e.g. '5,6': Fridays and Saturdays or '*' for all days)</label>
 			<label index="tx_abbooking_price.seasonid">Corresponding Seasons</label>
 			<label index="tx_abbooking_seasons">Season</label>
 			<label index="tx_abbooking_seasons.title">Description</label>
@@ -79,7 +80,8 @@
 			<label index="tx_abbooking_price.singleComponent2">Einzelposten (z.B. Endreinigung)</label>
 			<label index="tx_abbooking_price.minimumStay">Mindestaufenthalt (Tagen)</label>
 			<label index="tx_abbooking_price.blockDaysAfterBooking">Zusätzlich X Tage nach der Buchung sperren</label>
-			<label index="tx_abbooking_price.checkInWeekdays">Anreise Wochentage (z.B. '5,6' für Freitag und Samstag oder '*' für alle Tage) (NOCH OHNE VERWENDUNG)</label>
+			<label index="tx_abbooking_price.daySteps">Tagesschritte</label>
+			<label index="tx_abbooking_price.checkInWeekdays">Anreise Wochentage (z.B. '5,6' für Freitag und Samstag oder '*' für alle Tage)</label>
 			<label index="tx_abbooking_price.seasonid">Saisonzeiten</label>
 			<label index="tx_abbooking_seasons">Saison</label>
 			<label index="tx_abbooking_seasons.title">Bezeichnung</label>

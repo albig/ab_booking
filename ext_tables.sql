@@ -109,6 +109,7 @@ CREATE TABLE tx_abbooking_price (
 	singleComponent2 tinytext,
 
 	minimumStay tinytext,
+	daySteps int(11) DEFAULT '1' NOT NULL,
 	blockDaysAfterBooking int(11) DEFAULT '0' NOT NULL,
 	checkInWeekdays tinytext,
 

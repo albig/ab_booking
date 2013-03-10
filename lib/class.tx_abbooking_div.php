@@ -144,12 +144,7 @@ class tx_abbooking_div {
 	 */
 	function getPrices($uid, $interval) {
 //~ print_r('getPrices: '.$uid."\n");
-
-			if ($this->lConf['useTSconfiguration'] == 1)
-				return tx_abbooking_div::getRatesFromTS($uid, $interval);
-			else
-				return tx_abbooking_div::getRatesFromDB($uid, $interval);
-
+		return tx_abbooking_div::getRatesFromDB($uid, $interval);
 	}
 
 	/**
@@ -206,7 +201,7 @@ class tx_abbooking_div {
 			tx_abbooking_price.title as title, currency,
 			adult1, adult2, adult3, adult4, adultX, child, teen,
 			extraComponent1, extraComponent2, discount, discountPeriod,
-			singleComponent1, singleComponent2, minimumStay,
+			singleComponent1, singleComponent2, minimumStay, daySteps,
 			blockDaysAfterBooking, checkInWeekdays',
 			'tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
 			$p = 0;
@@ -289,80 +284,6 @@ class tx_abbooking_div {
 		}
 		else
 			return FALSE;
-	}
-	/**
-	 * Get rates per day
-	 *
-	 * @param	string		$uid
-	 * @param	array		$interval: ...
-	 * @return	array		with booking periods
-	 */
-	function getRatesFromTS($key, $interval) {
-
-		$pricePerDay = array();
-
-		if (!isset($interval['startList']) && !isset($interval['endList'])) {
-			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = $interval['endDate'];
-		}
-
-		// 1. get the rates for the product
-		$ratesTitleArray = $this->lConf['productDetails'][$key]['rates.'];
-		if (is_array($ratesTitleArray))
-		foreach ($ratesTitleArray as $rate) {
-			$rateFound = $this->conf['rates.'][$rate.'.'];
-			$rateFound['title'] = $this->getTSTitle($this->conf['rates.'][$rate.'.']['title.']);
-			// 2. get the seasons for the rates and drop seasons outside interval
-			$seasonFound = 0;
-			if (is_array($this->conf['rates.'][$rate.'.']['seasons.']))
-			foreach ($this->conf['rates.'][$rate.'.']['seasons.'] as $season) {
-				$checkedSeason = tx_abbooking_div::checkSeasonValidation($this->conf['seasons.'][$season.'.'], $interval);
-				if ($checkedSeason !== FALSE) {
-					$rateFound['seasons'][$season] = $checkedSeason;
-					$seasonFound++;
-				}
-			}
-			// drop rates without any season/time description
-			if ($seasonFound>0)
-				$allRates[] = $rateFound;
-		}
-
-		// 3. get the rate for every day...
-		// get the valid prices per day
-		for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
-			$pricePerDay[$d] = 'noPrice';
-			if (is_array($allRates))
-				foreach ($allRates as $id => $singlePrice) {
-					$checkInOk = tx_abbooking_div::checkCheckinWeekDays($d, $singlePrice['checkInWeekdays']);
-					if ($checkInOk === FALSE) {
-						$singlePrice['checkInOk'] = '0';
-					}
-					else {
-						$singlePrice['checkInOk'] = '1';
-					}
-
-					$validPriceFound = 0;
-					foreach ($singlePrice['seasons'] as $seasonName => $season) {
-						if (($season['startDateStamp'] <= $d || $season['startDateStamp'] == 0)
-							&& ($season['endDateStamp'] >= $d || $season['endDateStamp'] == 0)) {
-							// if no valid price is found - go further in the price array.
-							// otherwise the first in the list is the right.
-							$validPriceFound = 1;
-							break;
-						}
-					}
-					if ($validPriceFound == 1) {
-						$pricePerDay[$d] = $singlePrice;
-						break;
-					}
-				}
-		}
-
-		if (count($pricePerDay)>0)
-			return $pricePerDay;
-		else
-			return FALSE;
-
 	}
 
 	/**

@@ -1277,7 +1277,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$lDetails['value'] = '-'.number_format($discountValue, 2, ',', '').' '.$currency;
 			$priceDetails[] = $lDetails;
 		}
-		
+
 		// get singleComponent 1 and 2 from startDate
 		for ($i=1; $i<3; $i++) {
 			if ($product['prices'][$interval['startDate']]['singleComponent'.$i]>0) {

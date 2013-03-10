@@ -57,17 +57,6 @@
 					</config>
 				</TCEforms>
 			</numCheckMaxInterval>
-			<numCheckDaySteps>
-				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
-					<config>
-						<type>input</type>
-						<size>2</size>
-						<max>2</max>
-						<default>1</default>
-					</config>
-				</TCEforms>
-			</numCheckDaySteps>
 		<PIDstorage>
 			<TCEforms>
 				<exclude>1</exclude>
@@ -232,7 +221,7 @@
 			</enableBookingLinkCalendar>
 			<numDefaultNightsAvailabilitycheck>
 				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNightsAvailabilitycheck</label>
 					<displayCond>FIELD:pluginSelection:=:1</displayCond>
 					<config>
 						<type>input</type>
@@ -242,6 +231,18 @@
 					</config>
 				</TCEforms>
 			</numDefaultNightsAvailabilitycheck>
+			<numCheckDaySteps>
+				<TCEforms>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckDaySteps</label>
+					<displayCond>FIELD:pluginSelection:=:1</displayCond>
+					<config>
+						<type>input</type>
+						<size>2</size>
+						<max>2</max>
+						<default>1</default>
+					</config>
+				</TCEforms>
+			</numCheckDaySteps>
 			<numDefaultPersonsAvailabilitycheck>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultPersons</label>

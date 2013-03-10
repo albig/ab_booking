@@ -257,7 +257,7 @@ $TCA['tx_abbooking_product'] = array (
 $TCA['tx_abbooking_price'] = array (
 	'ctrl' => $TCA['tx_abbooking_price']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,adultX,child,teen,extraComponent1,extraComponent2,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid',
+		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,adultX,child,teen,extraComponent1,extraComponent2,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, daySteps, checkInWeekdays, seasonid',
 		'always_description' => 1
 	),
 	'feInterface' => $TCA['tx_abbooking_price']['feInterface'],
@@ -484,6 +484,18 @@ $TCA['tx_abbooking_price'] = array (
 				'eval' => 'int,nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
 			)
 		),
+		'daySteps' => array (		## WOP:[tables][3][fields][1][fieldname]
+			'displayCond' => 'FIELD:sys_language_uid:<:1',
+			'exclude' => 0,		## WOP:[tables][3][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.daySteps',		## WOP:[tables][3][fields][1][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][3][fields][1][type]
+				'size' => '10',	## WOP:[tables][3][fields][1][conf_size]
+				'max' => '31',	## WOP:[tables][3][fields][1][conf_max]
+				'eval' => 'int,nospace',	## WOP:[tables][3][fields][1][conf_eval] / [tables][3][fields][1][conf_stripspace]
+				'default' => '1',
+			)
+		),
 		'checkInWeekdays' => array (		## WOP:[tables][3][fields][1][fieldname]
 			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][3][fields][1][excludeField]
@@ -513,7 +525,7 @@ $TCA['tx_abbooking_price'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, adultX, child, teen, extraComponent1, extraComponent2, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, checkInWeekdays, seasonid')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, title, hidden;;1;;1-1-1, currency, adult1, adult2, adult3, adult4, adultX, child, teen, extraComponent1, extraComponent2, discount, discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, daySteps, checkInWeekdays, seasonid')
 	),
 );
 $TCA['tx_abbooking_seasons'] = array (

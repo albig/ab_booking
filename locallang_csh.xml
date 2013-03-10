@@ -10,7 +10,6 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="tstitle.description">Title of the Typoscript Element</label>
 			<label index="pluginSelection.description">Define the view</label>
 			<label index="pluginSelection.details"><![CDATA[ On this TAB you enter
 						<ul>
@@ -32,16 +31,14 @@
 
 			<label index="numCheckNextMonths.description">Define how many months in the future the plugin accepts bookings.</label>
 
-
 			<label index="enableCalendarBookingLink.description">Enable booking links on available dates in the calendar.</label>
 			<label index="showDateNavigator.description">Show date navigation above the calendar.</label>
-
+			<label index="numCheckDaySteps.description">Set the day steps in the availability-check form. E.g. To allow only week bookings, set this value AND numCheckMinInterval to 7.</label>
 			<label index="numCheckMaxPersons.description">Shows only up to this maximum in selector box. Even if the capacity over all is higher. Leave empty for autoselect the maximum capacity!</label>
 
 		</languageKey>
 
 		<languageKey index="de" type="array">
-			<label index="tstitle.description">Titel des Typoscript Elements</label>
 			<label index="pluginSelection.description">Define the view</label>
 			<label index="pluginSelection.details"><![CDATA[ On this TAB you enter
 						<ul>
@@ -51,14 +48,14 @@
 						</ul>
 						 ]]></label>
 			<label index="ProductID.description">Wählen Sie die Produkte, die Sie in diesem Plugin berücksichten wollen.</label>
-			<label index="ProductID.details"><![CDATA[ Wenn Sie keine Produkte sehen, müssen Sie zunächst die Page-ID des Sysfolders 
+			<label index="ProductID.details"><![CDATA[ Wenn Sie keine Produkte sehen, müssen Sie zunächst die Page-ID des Sysfolders
 				(unten). Alternativ können Sie den "General Record Storage Place" für diese und alle untergeordneten Seiten in den
 				Seiteneinstellungen setzen.
 					]]></label>
 
 			<label index="enableCalendarBookingLink.description">Aktiviere Links zur Buchungsseite bei freien Tagen im Kalender.</label>
 			<label index="showDateNavigator.description">Zeige Datumswahl oberhalb der Kalender.</label>
-
+			<label index="numCheckDaySteps.description">Setzt die Tagesschrittweite im Verfügbarkeitscheeck Formular. Um nur Wochenbuchungen zu erlauben, setzen Sie diesen Wert UND numCheckMinInterval auf 7.</label>
 			<label index="numCheckMaxPersons.description">Zeigt maximal die angegebene Anzahl von Personen in der Auswahl. Selbst wenn die Gesamtkapazität höher ist. Wenn der Wert leer ist wird automatische die maximale Kapazität ermittelt.</label>
 		</languageKey>
 

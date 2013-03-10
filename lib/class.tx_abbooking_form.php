@@ -186,7 +186,7 @@ class tx_abbooking_form {
 									$seldaySelector[$this->lConf['daySelector']] = $selected;
 								else
 									$seldaySelector[2] = $selected;
-
+//~ print_r($product);
 								for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
 										$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
 										$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.date($this->lConf['dateFormat'], $endDate).')</option>';
