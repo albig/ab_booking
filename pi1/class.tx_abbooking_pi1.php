@@ -572,8 +572,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->prefixId.'[ABx]' => $params_united,
 		);
 
-		$content .= '
-		<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
+		$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
+		// always render the offer page...
+		$content .= '<input type="hidden" name="no_cache" value="1">';
+		
 		if (!$this->isRobot())
 			$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 		$content .= '</form><br />';

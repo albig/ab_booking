@@ -35,7 +35,8 @@
 			<label index="showDateNavigator.description">Show date navigation above the calendar.</label>
 			<label index="numCheckDaySteps.description">Set the day steps in the availability-check form. E.g. To allow only week bookings, set this value AND numCheckMinInterval to 7.</label>
 			<label index="numCheckMaxPersons.description">Shows only up to this maximum in selector box. Even if the capacity over all is higher. Leave empty for autoselect the maximum capacity!</label>
-
+			<label index="EmailAddress.description">Overwrite the Email-Address of the Sender: This will overwrite system wide configuration. To avoid bad spam-headers, it's recommended to use proper SMTP configuration of your TYPO3 installation. In this case keep this entry empty!</label>
+			<label index="EmailRealname.description">Overwrite the Name of the Sender: This will overwrite system wide configuration. To avoid bad spam-headers, it's recommended to use proper SMTP configuration of your TYPO3 installation. In this case keep this entry empty!</label>
 		</languageKey>
 
 		<languageKey index="de" type="array">
@@ -57,6 +58,8 @@
 			<label index="showDateNavigator.description">Zeige Datumswahl oberhalb der Kalender.</label>
 			<label index="numCheckDaySteps.description">Setzt die Tagesschrittweite im Verfügbarkeitscheeck Formular. Um nur Wochenbuchungen zu erlauben, setzen Sie diesen Wert UND numCheckMinInterval auf 7.</label>
 			<label index="numCheckMaxPersons.description">Zeigt maximal die angegebene Anzahl von Personen in der Auswahl. Selbst wenn die Gesamtkapazität höher ist. Wenn der Wert leer ist wird automatische die maximale Kapazität ermittelt.</label>
+			<label index="EmailAddress.description">Überschreiben der Absender-Email-Adresse: Dies wird die systemweite Konfiguration überschreiben. Um Spam-Header zu vermeiden, wird empfohlen TYPO3 für den systemweiten Versand per SMTP zu konfigurieren. In diesem Fall lassen Sie dieses Feld leer!</label>
+			<label index="EmailRealname.description">Überschreiben des Absender-Namens: Dies wird die systemweite Konfiguration überschreiben. Um Spam-Header zu vermeiden, wird empfohlen TYPO3 für den systemweiten Versand per SMTP zu konfigurieren. In diesem Fall lassen Sie dieses Feld leer!</label>
 		</languageKey>
 
 

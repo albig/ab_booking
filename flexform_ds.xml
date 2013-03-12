@@ -187,7 +187,7 @@
 			</showBookingRate>
 			<numDefaultNightsCalendar>
 				<TCEforms>
-					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNights</label>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numDefaultNightsCalendar</label>
 					<displayCond>FIELD:pluginSelection:=:0</displayCond>
 					<config>
 						<type>input</type>

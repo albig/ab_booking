@@ -508,7 +508,7 @@ class tx_abbooking_div {
 		$interval['startList'] = $interval['startDate'];
 		$interval['endList'] = $interval['endDate'];
 
-print_r($interval);
+//~ print_r($interval);
 		// date select form
 		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
@@ -528,8 +528,8 @@ print_r($interval);
 			$out .= '<li>'.strftime('%a, %x', $booking['startdate']) . ' - ' . strftime('%a, %x', $booking['enddate']) . ': '. $booking['title'].'</li>';
 		}
 		$out .= '</ul>';
-print_r($uid);
-print_r($bookedPeriods);
+//~ print_r($uid);
+//~ print_r($bookedPeriods);
 
 		return $out;
 	}
@@ -543,7 +543,6 @@ print_r($bookedPeriods);
 	 * @return	HTML-list		of calendar days
 	 */
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
-//~ print_r('printAvailabilityCalendarDiv'.$uid."\n");
 
 		// disable caching of target booking page
 		$this->pi_USER_INT_obj = 1;
@@ -578,7 +577,7 @@ print_r($bookedPeriods);
 
 		// only check prices if not yet available...
 		if (!empty($this->lConf['productDetails'][$uid]['prices'])) {
-			print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
+//~ 			print_r("printAvailabilityCalendarDiv ++++ Prices already available \n");
 			$prices = $this->lConf['productDetails'][$uid]['prices'];
 		}
 		else

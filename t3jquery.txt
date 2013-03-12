@@ -1,0 +1,2 @@
+script=/res/js/jsDatepicker.js
+components=jQuery,Core,Datepicker,Datepicker-DE,Datepicer-EN
