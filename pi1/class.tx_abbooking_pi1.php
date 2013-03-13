@@ -92,18 +92,21 @@ class tx_abbooking_pi1 extends tslib_pibase {
 //~ 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
 			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
+		
 		if (!isset($interval['endDate'])) {
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
 		}
 
 		if (!isset($interval['startList'])) {
 			$interval['startList'] = $interval['startDate'];
-			$interval['endList'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
-			#$interval['endDate'];
+
+			$maxListInterval = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
+			// increase endList to end for form with calendar month view.
+			if (!empty($this->lConf['form']['showCalendarMonth']) && strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $interval['startDate']) > $maxListInterval)
+				$maxListInterval = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $interval['startDate']);
+			$interval['endList'] = $maxListInterval;
 		}
 
-
-//~ print_r($this->lConf);
 		switch ( $this->lConf['mode'] ) {
 			case 'form':
 				// check first for submit button and second for View

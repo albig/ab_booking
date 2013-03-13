@@ -306,21 +306,16 @@ class tx_abbooking_form {
 		$content .= '</p><br />';
 
 		// show calendars following TS settings
-		if ($this->lConf['form']['showCalendarMonth']>0) {
+		if ($this->lConf['form']['showCalendarMonth'] > 0) {
 			if (intval($this->lConf['form']['showMonthsBeforeStart'])>0)
 				$intval['startDate'] = strtotime('-'.$this->lConf['form']['showMonthsBeforeStart'].' months', $interval['startDate']);
 			else
 				$intval['startDate'] = $interval['startDate'];
+
 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate']);
-//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
-//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
 			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'],  $intval, $this->lConf['form']['showCalendarMonth'], 0);
 
-//~ 			$intval['startDate'] = strtotime('first day of this month', $interval['startDate']);
-//~ 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $intval['startDate'])-86400;
-//~ 			$content .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], $this->lConf['form']['showCalendarMonth'], 0);
-
-		} else if ($this->lConf['form']['showCalendarWeek']>0) {
+		} else if ($this->lConf['form']['showCalendarWeek'] > 0) {
 			$intval['startDate'] = $interval['startDate'];
 			$intval['endDate'] = strtotime('+'.$this->lConf['form']['showCalendarWeek'].' weeks', $interval['startDate']);
 			$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $intval);
@@ -410,6 +405,7 @@ class tx_abbooking_form {
 
 
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
+			$content .= '<input type="hidden" name="no_cache" value="1">';
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING">
 							<div class="buttons">
 							<input class="edit" type="submit" name="'.$this->prefixId.'[submit_button_edit]" value="'.$SubmitButtonEdit.'">
@@ -431,8 +427,9 @@ class tx_abbooking_form {
 			);
 
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
+			$content .= '<input type="hidden" name="no_cache" value="1">';
 			$content .=	'<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
-							<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
+						<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
 				</form>';
 
 		}

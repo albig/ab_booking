@@ -545,8 +545,12 @@ class tx_abbooking_div {
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
 
 		// disable caching of target booking page
-		$this->pi_USER_INT_obj = 1;
-		$cache = 0;
+		$conf = array(
+		  // Link to booking page
+		  'parameter' => $this->lConf['gotoPID'],
+		  // We must add cHash because we use parameters
+		  'useCacheHash' => true,
+		);
 
 		// disable booking links for robots
 		if ($this->isRobot())
@@ -651,10 +655,12 @@ class tx_abbooking_div {
 					// set default daySelector = 2, adultSelector = 2
 					//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
 					$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-					$params = array (
-						$this->prefixId.'[ABx]' => $params_united,
-					);
-					$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP($printDay, $params, $cache, $this->lConf['gotoPID']).'</li>';
+
+					// create links with cHash...
+					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+					$url = $this->cObj->typoLink($printDay, $conf);
+
+					$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
 				}
 				else
 					$out .= '<li class="'.$cssClass.'">'.$printDay.'</li>';
@@ -696,8 +702,12 @@ class tx_abbooking_div {
 	function printAvailabilityCalendarLine($uid, $interval = array()) {
 
 		// disable caching of target booking page
-		$this->pi_USER_INT_obj = 1;
-		$cache = 0;
+		$conf = array(
+		  // Link to booking page
+		  'parameter' => $this->lConf['gotoPID'],
+		  // We must add cHash because we use parameters
+		  'useCacheHash' => true,
+		);
 
 		$this->pi_loadLL();
 
@@ -751,10 +761,11 @@ class tx_abbooking_div {
 				// set default daySelector = 2, adultSelector = 2
 				//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
 				$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-				$params = array (
-					$this->prefixId.'[ABx]' => $params_united,
-				);
-				$out .= '<li class="'.$cssClass.'">'.$this->pi_linkTP(strftime("%d", $d), $params, $cache, $this->lConf['gotoPID']).'</li>';
+
+				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
+
+				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
 			}
 			else
 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
@@ -819,8 +830,12 @@ class tx_abbooking_div {
 	function printOfferList() {
 
 		// disable caching of target booking page
-		$this->pi_USER_INT_obj = 1;
-		$cache = 0;
+		$conf = array(
+		  // Link to booking page
+		  'parameter' => $this->lConf['gotoPID'],
+		  // We must add cHash because we use parameters
+		  'useCacheHash' => true,
+		);
 
 		$contentError = array();
 		$offers['numOffers'] = 0;
@@ -874,12 +889,12 @@ class tx_abbooking_div {
 
 					if ($product['prices'][$j]['checkInOk'] == '1') {
 						$interval['startDate'] = $j;
-						$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
-						$params = array (
-							$this->prefixId.'[ABx]' => $params_united,
-						);
-						if ($this->lConf['enableBookingLink'])
-							$link = $this->pi_linkTP(strftime('%a, %x', $interval['startDate']), $params, $cache, $this->lConf['gotoPID']);
+
+						if ($this->lConf['enableBookingLink']) {
+							$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
+							$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+							$url = $this->cObj->typoLink(strftime('%a, %x', $interval['startDate']), $conf);
+						}
 						else
 							$link = strftime('%a, %x', $j);
 
@@ -897,9 +912,7 @@ class tx_abbooking_div {
 
 
 			$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
-			$params = array (
-				$this->prefixId.'[ABx]' => $params_united,
-			);
+
 			if (!empty($product['uiddetails']) && !empty($product['detailsRaw']['header'])) {
 				// get detailed description:
 				$title = $product['detailsRaw']['header'];
@@ -913,8 +926,10 @@ class tx_abbooking_div {
 			}
 
 
-			if ($enableBookingLink)
-				$link = $this->pi_linkTP($title, $params, $cache, $this->lConf['gotoPID']);
+			if ($enableBookingLink) {
+				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+				$link = $this->cObj->typoLink($title, $conf);
+			}
 			else
 				$link = $title;
 
