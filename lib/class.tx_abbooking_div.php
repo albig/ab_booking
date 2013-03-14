@@ -953,6 +953,7 @@ class tx_abbooking_div {
 
 				if ($enableBookingLink)
 					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
+									<input type="hidden" name="no_cache" value="1">
 									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 									<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
 									</form>

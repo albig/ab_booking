@@ -89,7 +89,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!isset($interval['startDate'])) {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
-//~ 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
 			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
 		
