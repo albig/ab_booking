@@ -223,8 +223,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$out .= tx_abbooking_div::printAvailabilityCalendarDiv($this->lConf['ProductID'], array(), (int)$this->lConf['numMonths'], (int)$this->lConf['numMonthsCols']);
 						break;
 					case '1':
-						// update/check all rates
-//~ 						tx_abbooking_div::getAllRates($interval);
 						$out .= $this->formCheckAvailability();
 						break;
 					case '3':
@@ -330,7 +328,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// overwrite some settings if post-vars are set:
 		if (isset($this->piVars['checkinDate'])) {
 			// set date timestamp to 00:00:00
-			$this->lConf['startDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormat'],$this->piVars['checkinDate']), 0, 0), 'U');
+			$this->lConf['startDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormat'], $this->piVars['checkinDate']), 0, 0), 'U');
 		}
 
 		if (isset($this->piVars['daySelector']))
@@ -408,12 +406,17 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (! isset($this->lConf['daySteps']))
 			$this->lConf['daySteps'] = 1;
 
+		// on missconfigurated servers, the TYPO3 backend timezone differs to the mysql timezone - or whatever
+		if (!empty($this->conf['overwritePHPTimezone']))
+			date_default_timezone_set($this->conf['overwritePHPTimezone']);
+
 		// ---------------------------------
 		// calculate endDateStamp
 		// ---------------------------------
 		if (empty($this->lConf['startDateStamp']))
-			$this->lConf['startDateStamp'] = strtotime(strftime("%Y-%m-%d 00:00:00"));
-			$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
+			$this->lConf['startDateStamp'] = strtotime('today'); //strftime("%Y-%m-%d 00:00:00"));
+//~ print_r($this->lConf['startDateStamp'].'startDateStamp: '. strftime('%x %H:%M:%S', $this->lConf['startDateStamp']) . "\n");
+		$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
 
 		// get the storage pid from flexform
 		if (! intval($this->lConf['PIDstorage'])>0) {
@@ -431,7 +434,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['showPriceDetails'] = $this->conf['showPriceDetails'];
 		if (count($this->conf['form.']) > 0)
 			$this->lConf['form'] = $this->conf['form.'];
-
 //~ print_r($this->lConf);
 		// ---------------------------------
 		// get Product Properties

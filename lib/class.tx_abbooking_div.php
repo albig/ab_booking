@@ -557,7 +557,6 @@ class tx_abbooking_div {
 			$this->lConf['enableBookingLink'] = 0;
 
 		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
-			$today = strtotime(strftime("%Y-%m-%d"));
 			if ($this->lConf['startDateStamp'] > 0) {
 				$interval['startDate'] =  strtotime('first day of this month', $this->lConf['startDateStamp']);
 			}
@@ -593,7 +592,6 @@ class tx_abbooking_div {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 		}
 
-
 		// date select form
 		if ($this->lConf['showDateNavigator']) {
 			$out .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
@@ -610,6 +608,7 @@ class tx_abbooking_div {
 
 		$out .= '<div class="availabilityCalendar">';
 		for ($m = $interval['startDate']; $m <= strtotime('+ '.($months-1).' months', $interval['startDate']); $m=strtotime('+1 month', $m)) {
+
 			$bookingRate = 0;
 			$colCount++;
 			$out .= '<div class="calendarMonth"><div class="calendarMonthName">'.strftime("%B %Y", $m).'</div>';
