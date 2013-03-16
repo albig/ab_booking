@@ -1168,8 +1168,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// step through days from startdate to (enddate | maxAvailable) and add rate for every day
 		$total_amount = 0;
 		$priceArray['adult'.$max_persons] = '+';
-		if ($this->lConf['adultSelector']>$max_persons)
-			$priceArray['adultX'] = '*+';
+
+		if ($this->lConf['adultSelector']>$max_persons) {
+			$adultX = $this->lConf['adultSelector']-$max_persons;
+			$priceArray['adultX'] = '*x';
+		}
+
 		$priceArray['extraComponent1'] = '*+';
 		$priceArray['extraComponent2'] = '*+';
 
@@ -1186,6 +1190,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				if ($operator == '*+')
 					$rateValue['discountRate'] = $max_persons * $rateValue['discountRate'];
 
+				if ($operator == '*x'){
+					$rateValue['discountRate'] = $adultX * $rateValue['discountRate'];
+					}
+				
 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
 
 				$usedPrices[$cur_title]['rateUsed']++;
@@ -1242,6 +1250,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			else
 				$text_persons = ', '.$max_persons.' '.$this->pi_getLL('persons');
 		}
+		
+		if ($adultX == 1)
+				$text_persons_more = ', '.$adultX.' '.$this->pi_getLL('person');
+			else
+				$text_persons_more = ', '.$adultX.' '.$this->pi_getLL('persons');
+		
 		// input form element for selectable options
 		if (is_array($usedPrices))
 			foreach ($usedPrices as $title => $value) {
@@ -1267,7 +1281,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 				$lDetails['dates'] = $value['rateDates'];
 				$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
-				$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+
+				if (strpos($value['title'], $this->pi_getLL('adultX')) === FALSE) {
+					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+				} else {
+					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons_more;
+				}
+
 				$priceDetails[] = $lDetails;
 			}
 
