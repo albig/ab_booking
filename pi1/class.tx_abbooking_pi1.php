@@ -1155,7 +1155,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
 		for ($i=1; $i<=$product['capacitymax']; $i++) {
-//~ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
+print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
 //~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
 			if ($product['prices'][$interval['startDate']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$interval['startDate']]['adult'.$i];
@@ -1192,7 +1192,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				if ($operator == '*x'){
 					$rateValue['discountRate'] = $adultX * $rateValue['discountRate'];
-					}
+				}
 				
 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
 
@@ -1281,12 +1281,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 				$lDetails['dates'] = $value['rateDates'];
 				$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
-
-				if (strpos($value['title'], $this->pi_getLL('adultX')) === FALSE) {
-					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
-				} else {
-					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons_more;
-				}
+$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+//~ 				if (strpos($value['title'], $this->pi_getLL('adultX')) === FALSE) {
+//~ 					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+//~ 				} else {
+//~ 					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons_more;
+//~ 				}
 
 				$priceDetails[] = $lDetails;
 			}
