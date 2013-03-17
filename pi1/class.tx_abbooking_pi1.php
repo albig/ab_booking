@@ -91,7 +91,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['startDate'] = $this->lConf['startDateStamp'];
 			$interval['endDate'] = $this->lConf['endDateStamp'];
 		}
-		
+
 		if (!isset($interval['endDate'])) {
 			$interval['endDate'] = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
 		}
@@ -149,7 +149,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 							$out .= '<p>'.strftime("%A, %x", $this->lConf['startDateStamp']).' - ';
 							$out .= ' '.strftime("%A, %x", $this->lConf['endDateStamp']).'</p><br />';
 							$out .= '<p>'.$this->pi_getLL('feld_naechte').': '.$this->lConf['daySelector'].'</p>';
-							if ($this->lConf['showPersonsSelector']==1)
+							if ($this->lConf['showPersonsSelector'] == 1)
 								$out .= '<p>'.$this->pi_getLL('feld_personen').': '.$this->lConf['adultSelector'].'</p>';
 							$out .= '<ul>';
 							for ($i=0; $i<=$offers['amount']; $i++)
@@ -579,7 +579,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
 		// always render the offer page...
 		$content .= '<input type="hidden" name="no_cache" value="1">';
-		
+
 		if (!$this->isRobot())
 			$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 		$content .= '</form><br />';
@@ -1155,7 +1155,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
 		for ($i=1; $i<=$product['capacitymax']; $i++) {
-print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
+//~ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
 //~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
 			if ($product['prices'][$interval['startDate']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$interval['startDate']]['adult'.$i];
@@ -1169,8 +1169,8 @@ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacityma
 		$total_amount = 0;
 		$priceArray['adult'.$max_persons] = '+';
 
-		if ($this->lConf['adultSelector']>$max_persons) {
-			$adultX = $this->lConf['adultSelector']-$max_persons;
+		if ($this->lConf['adultSelector'] > $max_persons) {
+			$adultX = $this->lConf['adultSelector'] - $max_persons;
 			$priceArray['adultX'] = '*x';
 		}
 
@@ -1182,19 +1182,26 @@ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacityma
 			unset($pre_title);
 
 			for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
+
+//~ 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
+				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$key);
+				// default number of persons for later output
+				$usedPrices[$cur_title]['numPersons'] = $max_persons;
+
 				$rateValue = $this->getDiscountRate($product['prices'][$d][$key], $period);
 
 				if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
 						continue;
 
-				if ($operator == '*+')
-					$rateValue['discountRate'] = $max_persons * $rateValue['discountRate'];
+				if ($operator == '*+') {
+					$rateValue['discountRate'] = ($max_persons + $adultX) * $rateValue['discountRate'];
+					$usedPrices[$cur_title]['numPersons'] = $max_persons + $adultX;
+				}
 
 				if ($operator == '*x'){
 					$rateValue['discountRate'] = $adultX * $rateValue['discountRate'];
+					$usedPrices[$cur_title]['numPersons'] = $adultX;
 				}
-				
-				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
 
 				$usedPrices[$cur_title]['rateUsed']++;
 				$usedPrices[$cur_title]['rateValue'] = $rateValue['discountRate'];
@@ -1243,22 +1250,11 @@ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacityma
 		// take currency from startDate
 		$currency = $product['prices'][$this->lConf['startDateStamp']]['currency'];
 
-		// some useful texts
-		if ($this->lConf['showPersonsSelector'] == 1) {
-			if ($max_persons == 1)
-				$text_persons = ', '.$max_persons.' '.$this->pi_getLL('person');
-			else
-				$text_persons = ', '.$max_persons.' '.$this->pi_getLL('persons');
-		}
-		
-		if ($adultX == 1)
-				$text_persons_more = ', '.$adultX.' '.$this->pi_getLL('person');
-			else
-				$text_persons_more = ', '.$adultX.' '.$this->pi_getLL('persons');
-		
 		// input form element for selectable options
 		if (is_array($usedPrices))
 			foreach ($usedPrices as $title => $value) {
+				if (empty($value['rateUsed']))
+					continue;
 				if ($value['rateUsed'] == 1)
 					$text_periods = ' '.$this->pi_getLL('period');
 				else
@@ -1280,8 +1276,17 @@ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacityma
 					$total_amount += $value['rateValue'] * $value['rateUsed'];
 				}
 				$lDetails['dates'] = $value['rateDates'];
+				// some useful texts
+				if ($this->lConf['showPersonsSelector'] == 1) {
+					if ($value['numPersons'] == 1)
+						$text_persons = ', '.$value['numPersons'].' '.$this->pi_getLL('person');
+					else
+						$text_persons = ', '.$value['numPersons'].' '.$this->pi_getLL('persons');
+				}
+
 				$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
-$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
+
+				$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
 //~ 				if (strpos($value['title'], $this->pi_getLL('adultX')) === FALSE) {
 //~ 					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
 //~ 				} else {
