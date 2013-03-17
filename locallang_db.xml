@@ -69,7 +69,7 @@
 			<label index="tx_abbooking_price.adult2">Zwei Erwachsene</label>
 			<label index="tx_abbooking_price.adult3">Drei Erwachsene</label>
 			<label index="tx_abbooking_price.adult4">Vier Erwachsene</label>
-			<label index="tx_abbooking_price.adultX">Jeder weitere Erwachsene (bix maximale Kapazität)</label>
+			<label index="tx_abbooking_price.adultX">Jeder weitere Erwachsene (bis zur maximale Kapazität)</label>
 			<label index="tx_abbooking_price.child">Kind (NOCH OHNE VERWENDUNG)</label>
 			<label index="tx_abbooking_price.teen">Jugendlicher (NOCH OHNE VERWENDUNG)</label>
 			<label index="tx_abbooking_price.extraComponent1">Extraposten pro Person (z.B. Frühstück)</label>

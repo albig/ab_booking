@@ -257,7 +257,7 @@ $TCA['tx_abbooking_product'] = array (
 $TCA['tx_abbooking_price'] = array (
 	'ctrl' => $TCA['tx_abbooking_price']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,adultX,child,teen,extraComponent1,extraComponent2,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, daySteps, checkInWeekdays, seasonid',
+		'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,adult1,adult2,adult3,adult4,adultX,extraComponent1,extraComponent2,discount,discountPeriod, singleComponent1, singleComponent2, minimumStay, blockDaysAfterBooking, daySteps, checkInWeekdays, seasonid',
 		'always_description' => 1
 	),
 	'feInterface' => $TCA['tx_abbooking_price']['feInterface'],
