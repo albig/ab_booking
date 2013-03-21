@@ -224,15 +224,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					case '1':
 						$out .= $this->formCheckAvailability();
 						break;
-					case '3':
-						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
-						break;
+//~ 					case '3':
+//~ 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
+//~ 						break;
 					case '4':
 						$out .= tx_abbooking_div::printCheckinOverview($this->lConf['ProductID']);
 						break;
-					case '5': // booking rate overview
-						$out .= tx_abbooking_div::printBookingRateOverview($this->lConf['ProductID']);
-						break;
+//~ 					case '5': // booking rate overview
+//~ 						$out .= tx_abbooking_div::printBookingRateOverview($this->lConf['ProductID']);
+//~ 						break;
 					case '6': // list of future bookings
 						$out .= tx_abbooking_div::printFutureBookings($this->lConf['ProductID']);
 						break;

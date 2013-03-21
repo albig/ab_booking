@@ -119,10 +119,12 @@
 								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.booking</numIndex>
 								<numIndex index="1">2</numIndex>
 							</numIndex>
+<!--
 							<numIndex index="3" type="array">
 								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.calendarline</numIndex>
 								<numIndex index="1">3</numIndex>
 							</numIndex>
+-->
 							<numIndex index="4" type="array">
 								<numIndex index="0">LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.pluginSelection.checkinoverview</numIndex>
 								<numIndex index="1">4</numIndex>
