@@ -35,7 +35,8 @@ Another view is an availability check.',
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-0.0.0',
+			'typo3' => '4.5.0-4.7.99',
+			'php'	=> '5.3.0-5.4.99',
 		),
 		'conflicts' => array(
 		),
