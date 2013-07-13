@@ -49,8 +49,6 @@
  *
  */
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
-
 /**
  * Plugin 'Booking Calendar' for the 'ab_booking' extension.
  *
