@@ -130,14 +130,12 @@ t3lib_extMgm::addPlugin(array(
 // $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 
-$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';                  // new!
-t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexform_ds.xml');            // new!
+$TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
+t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:'.$_EXTKEY.'/flexform_ds.xml');
 
 t3lib_extMgm::addStaticFile($_EXTKEY,'static/','Default ab_booking Template');
 
 include_once(t3lib_extMgm::extPath($_EXTKEY).'lib/class.tx_abbooking_remote.php');
-
-//t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_product','EXT:'.$_EXTKEY.'/locallang_csh_product.xml');
 
 // include userfunc
 // add CSH (context sensitive help) to TYPO3 >= 4.5

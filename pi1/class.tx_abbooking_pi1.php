@@ -81,7 +81,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$this->cssBooking = str_replace(PATH_site,'',t3lib_div::getFileAbsFileName($this->conf['file.']['cssBooking']));
 		$GLOBALS['TSFE']->additionalHeaderData['abbooking_css'] = '<link href="'.$this->cssBooking.'" rel="stylesheet" type="text/css" />'."\n";
-
+//~ print_r($this->piVars);
 		// get all initial settings
 		$this->init();
 
@@ -103,7 +103,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$maxListInterval = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $interval['startDate']);
 			$interval['endList'] = $maxListInterval;
 		}
-
+//~ print_r($this->lConf);
 		switch ( $this->lConf['mode'] ) {
 			case 'form':
 				// check first for submit button and second for View
@@ -121,14 +121,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					break;
 				}
 
-
 				switch ( $this->lConf['ABdo'] ) {
 					case 'availabilityList':
 						// DEBUG - log requests only if enableDebug in extConf is selected
 						if ($this->lConf['enableDebug'] == 1) {
 							$this->log_request($this->lConf['debugLogFile']);
 						}
-
 
  						$offers = tx_abbooking_div::printOfferList();
 
@@ -222,6 +220,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					case '1':
 						$out .= $this->formCheckAvailability();
 						break;
+					case '2':
+						$out .= '<div class="offer">';
+						$out .= 'Placeholder Availability List';
+						$out .= '</div>';
+						break;
 //~ 					case '3':
 //~ 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
 //~ 						break;
@@ -303,7 +306,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['ProductID'] = $this->piVars['ProductID'];
 
 		if (isset($this->piVars['ABx'])) {
-			list($this->lConf['startDateStamp'], $this->lConf['daySelector'], $this->lConf['adultSelector'], $this->lConf['ABProductID'], $this->lConf['ABuidpid'], $this->lConf['PIDbooking'], $this->lConf['ABdo']) = explode("_", $this->piVars['ABx']);
+			list($this->lConf['startDateStamp'], $this->lConf['daySelector'], $this->lConf['adultSelector'], $this->lConf['ABProductID'], $this->lConf['ABuidpid'], $this->lConf['ABPIDbooking'], $this->lConf['ABdo']) = explode("_", $this->piVars['ABx']);
 		}
 
 		// set dateFormat - prefered from TS otherwise from language defaults
@@ -337,11 +340,14 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		if (isset($this->piVars['teenSelector']))
 			$this->lConf['numTeens'] = $this->piVars['teenSelector'];
 
-		if (isset($this->piVars['ABuidpid']))
-			$this->lConf['ABuidpid'] = $this->piVars['ABuidpid'];
-		if (isset($this->lConf['ABProductID']))
+		if (!empty($this->lConf['ABProductID']))
 			$this->lConf['ProductID'] = $this->lConf['ABProductID'];
 
+		// if no booking PID is set, we assume the booking is the same
+		if (!empty($this->lConf['ABPIDbooking']))
+			$this->lConf['PIDbooking'] = $this->lConf['ABPIDbooking'];
+		else if (empty($this->lConf['PIDbooking']))
+			$this->lConf['PIDbooking'] = $this->cObj->data['pid'];
 
 		if (!isset($this->lConf['ABdo']))
 			$this->lConf['mode'] = 'display';
@@ -351,9 +357,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			      ($this->lConf['uidpid'] == $this->lConf['ABuidpid'] ||
 				$this->lConf['PIDbooking'] == $this->cObj->data['pid'])) {
 				$this->lConf['mode'] = 'form';
-				// overwrite flexform setting
-				if (isset($this->lConf['ABProductID']))
-					$this->lConf['ProductID'] = $this->lConf['ABProductID'];
 			} else
 				$this->lConf['mode'] = 'display';
 		}
@@ -481,13 +484,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 */
 	public function formCheckAvailability() {
 
-		// assume that only one valid uid and some offTimeProducts in ProductID..
-		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-
 		if (empty($this->lConf['productDetails'])) {
 			$content = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 			return $content;
 		} else {
+			$overallCapacity = 0;
 			foreach ( $this->lConf['productDetails'] as $key => $val ) {
 				$overallCapacity += $val['capacitymax'];
 			}
@@ -524,7 +525,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$content.='<h2><b>'.$this->form_errors['endDateTooFarInFuture'].'</b></h2>';
 		}
 
-		$content .= '<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
+		$content .= '<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="post">';
 		// input div for startDate
 		$content .= '<div class="startdate">';
 		$content .= '<label for="'.$this->prefixId.'[checkinDate]'.$this->lConf['uidpid'].'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
@@ -551,7 +552,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= '</select>';
 		$content .= '</div>';
 
-		if ($this->lConf['showPersonsSelector'] == 1) {
+		if ($this->lConf['showPersonsSelector'] == 1 && $overallCapacity > 0) {
 			$content .= '<div class="selector">';
 			$content .= '<label for="fieldadultSelector"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
 					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector" size="1">';
@@ -575,8 +576,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		);
 
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
+		$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
 		// always render the offer page...
-		$content .= '<input type="hidden" name="no_cache" value="1">';
+//~ 		$content .= '<input type="hidden" name="no_cache" value="1">';
 
 		if (!$this->isRobot())
 			$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
@@ -609,7 +611,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!empty($ProductUID)) {
 			// SELECT:
-			$where_extra = 'capacitymax > 0 ';
+			$where_extra = 'capacitymax >= 0 ';
 			$product_properties =  tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $ProductUID, $where_extra);
 
 			$pi = 0;

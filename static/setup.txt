@@ -1,4 +1,8 @@
 plugin.tx_abbooking_pi1 = USER
+[globalVar = GP:tx_abbooking_pi1|abnocache = 1]
+plugin.tx_abbooking_pi1 = USER_INT
+[global]
+
 plugin.tx_abbooking_pi1 {
 
 	# show prices in the availability list and in the confirmation view
