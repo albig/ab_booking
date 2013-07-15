@@ -143,7 +143,7 @@ class tx_abbooking_div {
 	 * @return	string		with amount, currency...
 	 */
 	function getPrices($uid, $interval) {
-//~ print_r('getPrices: '.$uid."\n");
+
 		return tx_abbooking_div::getRatesFromDB($uid, $interval);
 	}
 
@@ -166,7 +166,7 @@ class tx_abbooking_div {
 			$interval['endList'] = $interval['endDate'];
 		}
 
-		if ($uid !='') {
+		if ($uid != '') {
 			// SELECT
 
 			// 1. get priceid for uid (old way)
@@ -178,12 +178,15 @@ class tx_abbooking_div {
 			};
 
 			// 1. get priceid for uid (new way)
-			$where_extra = "capacitymax>0 ";
+			$where_extra = "capacitymax > 0 ";
 			$mrow = tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $uid, $where_extra);
 
 			foreach ($mrow as $muid => $mproduct) {
 				$priceids =  $mproduct['priceid'];
 			}
+
+			if (empty($priceids))
+				return;
 
 			// 2. get prices for priceid in interval
 			$myquery = 'tx_abbooking_price.pid='.$this->lConf['PIDstorage'].' AND tx_abbooking_price.uid IN ('.$priceids.') AND tx_abbooking_price.deleted=0 AND tx_abbooking_price.hidden=0';
@@ -204,8 +207,8 @@ class tx_abbooking_div {
 			singleComponent1, singleComponent2, minimumStay, daySteps,
 			blockDaysAfterBooking, checkInWeekdays',
 			'tx_abbooking_price,tx_abbooking_seasons_priceid_mm,tx_abbooking_seasons',$myquery,'',' FIND_IN_SET(tx_abbooking_price.uid, '.$GLOBALS['TYPO3_DB']->fullQuoteStr($priceids, 'tx_abbooking_price').') ','');
-			$p = 0;
 
+			$p = 0;
 			while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))) {
 				$pricesAvailable[$p] = $row;
 				$languageOverlay =  tx_abbooking_div::getRecordRaw('tx_abbooking_price', $this->lConf['PIDstorage'], $row['uid']);
@@ -508,7 +511,6 @@ class tx_abbooking_div {
 		$interval['startList'] = $interval['startDate'];
 		$interval['endList'] = $interval['endDate'];
 
-//~ print_r($interval);
 		// date select form
 		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
@@ -528,8 +530,6 @@ class tx_abbooking_div {
 			$out .= '<li>'.strftime('%a, %x', $booking['startdate']) . ' - ' . strftime('%a, %x', $booking['enddate']) . ': '. $booking['title'].'</li>';
 		}
 		$out .= '</ul>';
-//~ print_r($uid);
-//~ print_r($bookedPeriods);
 
 		return $out;
 	}
@@ -834,7 +834,7 @@ class tx_abbooking_div {
 		  // Link to booking page
 		  'parameter' => $this->lConf['gotoPID'],
 		  // We must add cHash because we use parameters
-		  'useCacheHash' => true,
+		  'useCacheHash' => false,
 		);
 
 		$contentError = array();
@@ -844,7 +844,7 @@ class tx_abbooking_div {
 		$productIds=explode(',', $this->lConf['ProductID']);
 
 		foreach ( $productIds as $key => $uid ) {
-			if (!empty($this->lConf['productDetails'][$uid]))
+			if (($this->lConf['productDetails'][$uid]['capacitymin']+$this->lConf['productDetails'][$uid]['capacitymax']) > 0)
 				$product = $this->lConf['productDetails'][$uid];
 			else
 				continue; // skip because empty or OffTimeProductID
@@ -927,7 +927,7 @@ class tx_abbooking_div {
 
 
 			if ($enableBookingLink) {
-				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
 				$link = $this->cObj->typoLink($title, $conf);
 			}
 			else
@@ -954,7 +954,7 @@ class tx_abbooking_div {
 
 				if ($enableBookingLink)
 					$linkBookNow = '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">
-									<input type="hidden" name="no_cache" value="1">
+									<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">
 									<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 									<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.htmlspecialchars($this->pi_getLL('bookNow')).'">
 									</form>
