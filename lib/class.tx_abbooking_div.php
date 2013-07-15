@@ -549,7 +549,7 @@ class tx_abbooking_div {
 		  // Link to booking page
 		  'parameter' => $this->lConf['gotoPID'],
 		  // We must add cHash because we use parameters
-		  'useCacheHash' => true,
+		  'useCacheHash' => false,
 		);
 
 		// disable booking links for robots
@@ -574,7 +574,7 @@ class tx_abbooking_div {
 		$interval['endList'] = strtotime( 'next sunday', $interval['endDate'] );
 
 		if ($months == 0)
-		$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
+			$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
 				(date('Y', $interval['endList']) - date('Y', $interval['startList']) +1)*12;
 
 
@@ -585,6 +585,7 @@ class tx_abbooking_div {
 		}
 		else
 			$prices = tx_abbooking_div::getPrices($uid, $interval);
+
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
@@ -656,7 +657,7 @@ class tx_abbooking_div {
 					$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 					// create links with cHash...
-					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
 					$url = $this->cObj->typoLink($printDay, $conf);
 
 					$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
@@ -705,7 +706,7 @@ class tx_abbooking_div {
 		  // Link to booking page
 		  'parameter' => $this->lConf['gotoPID'],
 		  // We must add cHash because we use parameters
-		  'useCacheHash' => true,
+		  'useCacheHash' => false,
 		);
 
 		$this->pi_loadLL();
@@ -761,7 +762,7 @@ class tx_abbooking_div {
 				//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
 				$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
-				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united;
+				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
 
 				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';

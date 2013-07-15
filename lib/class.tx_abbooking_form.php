@@ -408,7 +408,7 @@ class tx_abbooking_form {
 
 
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-			$content .= '<input type="hidden" name="no_cache" value="1">';
+			$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING">
 							<div class="buttons">
 							<input class="edit" type="submit" name="'.$this->prefixId.'[submit_button_edit]" value="'.$SubmitButtonEdit.'">
@@ -430,7 +430,7 @@ class tx_abbooking_form {
 			);
 
 			$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-			$content .= '<input type="hidden" name="no_cache" value="1">';
+			$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
 			$content .=	'<input type="hidden" name="'.$this->prefixId.'[ABwhatToDisplay]" value="BOOKING"><br/>
 						<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button]" value="'.$SubmitButton.'">
 				</form>';

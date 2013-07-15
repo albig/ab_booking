@@ -63,7 +63,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	var $prefixId      = 'tx_abbooking_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_abbooking_pi1.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'ab_booking';	// The extension key.
-	var $pi_checkCHash = TRUE; // if this is a USER plugin
+	//~ var $pi_checkCHash = TRUE; // if this is a USER plugin
 
 	/**
 	 * The main method of the PlugIn

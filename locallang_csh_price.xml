@@ -109,6 +109,8 @@
 		]]>
 		</label>
 
+		<label index="seasonid.description">You need to select at least one season. If there is no season you have to create one. E.g. a default season has no start- and stopdate.</label>
+
     </languageKey>
   </data>
 </T3locallang>
