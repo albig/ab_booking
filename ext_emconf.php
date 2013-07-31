@@ -16,7 +16,7 @@ $EM_CONF[$_EXTKEY] = array(
 Another view is an availability check.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '0.6.7',
+	'version' => '0.6.8',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
@@ -35,7 +35,7 @@ Another view is an availability check.',
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
-			'typo3' => '4.5.0-4.7.99',
+			'typo3' => '4.5.0-6.1.99',
 			'php'	=> '5.3.0-5.4.99',
 		),
 		'conflicts' => array(

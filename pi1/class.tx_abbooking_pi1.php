@@ -592,8 +592,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 * get all properties, description text and prices of a product
 	 * with the given UID
 	 *
-	 * @param	[type]		$ProductUID: ...
-	 * @return	[type]		array of properties..
+	 * @param	string	$ProductUID: comma separated list of ids
+	 * @return	[type]	array of properties..
 	 */
 	public function getProductPropertiesFromDB($ProductUID) {
 
@@ -611,7 +611,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		if (!empty($ProductUID)) {
 			// SELECT:
-			$where_extra = 'capacitymax >= 0 ';
+			$where_extra = 'capacitymax >= 0 AND offtime_dummy = 0';
 			$product_properties =  tx_abbooking_div::getRecordRaw('tx_abbooking_product', $this->lConf['PIDstorage'], $ProductUID, $where_extra);
 
 			$pi = 0;
@@ -631,6 +631,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 		}
 
+		// given UIDs not in availableProductIDs must be OffTimeProductIDs
 		$offTimeProductIDs  = array_diff(explode(",", $ProductUID), $availableProductIDs);
 		$this->lConf['AvailableProductIDs'] = $availableProductIDs;
 		$this->lConf['OffTimeProductIDs'] = $offTimeProductIDs;

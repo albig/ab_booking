@@ -21,6 +21,7 @@
 			<label index="tx_abbooking_product.filterprice">Filter prices by the following text (e.g. Single)</label>
 			<label index="tx_abbooking_product.priceid">Price ID</label>
 			<label index="tx_abbooking_product.uiddetails">UID details</label>
+			<label index="tx_abbooking_product.offtimeDummy">Is Offtime Dummy Product</label>
 			<label index="tx_abbooking_price">Product Prices</label>
 			<label index="tx_abbooking_price.title">Title</label>
 			<label index="tx_abbooking_price.currency">Currency</label>
@@ -63,6 +64,7 @@
 			<label index="tx_abbooking_product.filterprice">Preise nach folgendem Text filtern (z.B. Einzelzimmer)</label>
 			<label index="tx_abbooking_product.priceid">Preis ID</label>
 			<label index="tx_abbooking_product.uiddetails">UID Details</label>
+			<label index="tx_abbooking_product.offtimeDummy">Ist Schließzeit-Produkt</label>
 			<label index="tx_abbooking_price">Produkt Preis</label>
 			<label index="tx_abbooking_price.title">Titel</label>
 			<label index="tx_abbooking_price.adult1">Ein Erwachsener</label>

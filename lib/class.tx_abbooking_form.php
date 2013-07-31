@@ -327,7 +327,7 @@ class tx_abbooking_form {
 
 
 
-		$selected='selected="selected"';
+		$selected = 'selected="selected"';
 		if (isset($this->lConf['adultSelector']))
 			if ($this->lConf['adultSelector'] > $product['capacitymax'])
 				$seladultSelector[$product['capacitymax']] = $selected;
@@ -384,12 +384,6 @@ class tx_abbooking_form {
 			$content.='</div>';
 		}
 
-		// check if configured email is present
-		if (version_compare(TYPO3_version, '4.5', '<'))
-			if ((!class_exists('tx_abswiftmailer_pi1') || !$this->lConf['useSwiftMailer']) && empty($this->lConf['EmailAddress'])) {
-				$content.= '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noEmailConfigured').'</b></h2>';
-			}
-
 		/* handle stages */
 		if ($stage == 3) {
 			$content.='<div class="noteForm"><p>'.htmlspecialchars($this->pi_getLL('please_confirm')).'</p></div>';
@@ -416,8 +410,7 @@ class tx_abbooking_form {
 							</div>
 				</form>';
 
-		}
-		else {
+		} else {
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_check'));
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';

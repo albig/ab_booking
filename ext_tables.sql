@@ -34,7 +34,7 @@ CREATE TABLE tx_abbooking_booking (
 );
 
 #
-# Table structure for table 'tx_abbooking_booking'
+# Table structure for table 'tx_abbooking_booking_meta'
 #
 CREATE TABLE tx_abbooking_booking_meta (
 	uid int(11) NOT NULL auto_increment,
@@ -71,6 +71,7 @@ CREATE TABLE tx_abbooking_product (
 	filterprice tinytext,
 	priceid text,
 	uiddetails tinytext,
+	offtime_dummy tinyint(1) unsigned DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)

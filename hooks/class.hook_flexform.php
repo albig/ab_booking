@@ -42,7 +42,6 @@ class tx_abbooking_Hook_Flexform {
 	 * @return void
 	 */
 
-
 	function processDatamap_afterDatabaseOperations($status, $table, $id, $fieldArray, $pObj) {
 		// only check changes in tt_content with ab_booking_pi1 and status update:
 		if ($table === 'tt_content'

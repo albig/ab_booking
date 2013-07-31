@@ -170,6 +170,14 @@ $TCA['tx_abbooking_product'] = array (
 				'size' => '30',	## WOP:[tables][2][fields][1][conf_size]
 			)
 		),
+		'offtime_dummy' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_product.offtimeDummy',
+			'config' => array(
+				'type' => 'check',
+				'default' => 0
+			),
+		),
 		'capacitymin' => array (		## WOP:[tables][2][fields][2][fieldname]
 			'displayCond' => 'FIELD:sys_language_uid:<:1',
 			'exclude' => 0,		## WOP:[tables][2][fields][2][excludeField]
@@ -245,7 +253,7 @@ $TCA['tx_abbooking_product'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title;;;;2-2-2, tstitle, capacitymin;;;;3-3-3, capacitymax, filterprice, priceid, uiddetails')
+		'0' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, title;;;;2-2-2, tstitle, offtime_dummy, capacitymin;;;;3-3-3, capacitymax, filterprice, priceid, uiddetails')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => 'starttime, endtime')
