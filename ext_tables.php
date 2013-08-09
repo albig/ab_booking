@@ -19,6 +19,7 @@ $TCA['tx_abbooking_booking'] = array (
 		'enablecolumns' => array (		## WOP:[tables][1][add_hidden] / [tables][1][add_starttime] / [tables][1][add_endtime] / [tables][1][add_access]
 			'disabled' => 'hidden',	## WOP:[tables][1][add_hidden]
 		),
+		'searchFields' => 'title',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_booking.png',
 	),
