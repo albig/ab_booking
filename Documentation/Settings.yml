@@ -1,0 +1,21 @@
+# This is the project specific Settings.yml file.
+# Place Sphinx specific build information here.
+# Settings given here will replace the settings of 'conf.py'.
+
+---
+conf.py:
+  copyright: 2013
+  project: ab_booking
+  version: 1.0
+  release: 0.6.6
+  latex_documents:
+  - - Index
+    - ab_booking.tex
+    - ab_booking
+    - Alexander Bigga
+    - manual
+  latex_elements:
+    papersize: a4paper
+    pointsize: 10pt
+    preamble: \usepackage{typo3}
+...
