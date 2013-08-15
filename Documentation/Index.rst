@@ -27,7 +27,7 @@ ab_booking
 		enter description.
 
 	:Keywords:
-		booking,flats,guestrooms
+		booking, flat, root, hotel
 
 	:Copyright:
 		2013
@@ -59,3 +59,4 @@ ab_booking
 	Introduction/Index
 	UserManual/Index
 	AdministratorManual/Index
+	Changelog/Index

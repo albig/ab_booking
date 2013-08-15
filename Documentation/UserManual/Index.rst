@@ -19,26 +19,14 @@ Provide screenshots of a neutral Backend such as the Backend of the Introduction
 
 Target group: **Users**
 
-.. figure:: ../Images/UserManual/BackendView.png
+.. figure:: ../Images/screenshot_ab_booking_backend_flexform.jpg
 	:width: 500px
-	:alt: Backend view
+	:alt: Backend Plugin Configuration
 
-	Default Backend view (caption of the image)
-
-	The Backend view of TYPO3 after the user has clicked on module "Page". (legend of the image)
+	Backend Plugin Configuration
 
 
-Link to official documentation
-""""""""""""""""""""""""""""""
 
-Sphinx makes it easy to link to official TYPO3 documentation:
-
-- :ref:`TYPO3 Tutorial for Editors <t3editors:start>`
-- :ref:`Getting Started Tutorial <t3start:start>`
-
-and you may even link to a very specific chapter explaining how to :ref:`create a browser condition <t3tsref:condition-browser>` within the TypoScript Reference.
-
-For a complete reference of available cross-link prefixes, please consult file ``_make/conf.py``.
 
 
 FAQ
