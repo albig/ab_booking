@@ -9,13 +9,27 @@
 Users manual
 ------------
 
-Documentation of how to use the extension, how it works, how to apply it, if it's a website plugin.
+This manual describes the installation of ab_booking using some use cases.
 
-Language should be non-technical, explaining, using small examples. Don't use to many acronyms unless they have been explained.
+Use Cases
+^^^^^^^^^
 
-Examples: For the "News" plugin this would be a manual showing how to create the news items, explaining the options etc.
+# **Holiday Flat** This example will show the configuration for a house
+with 3 different flats. The flats are rent only from March to December
+23th. There is a high season from June to September and a low season for
+the reset of the year. During high season, the check-in is only possible
+on Saturdays. In the low season, there is a minimum stay of 3 nights.
 
-Provide screenshots of a neutral Backend such as the Backend of the Introduction Package for instance. Have in mind that the User manual could possibly be re-used in a larger documentation compilation, for example when a company generates a documentation for its client.
+# **Caravan** One single caravan is offered. There are 3 seasons during
+the year. You can start the rental on every day but the minimum period
+is one week.
+
+# **Guestrooms** Four different guestrooms offer places for 1-5 persons
+each. The minimum stay depends on the time before the arrival. For only
+night an supplement is charged. A visitor tax (per person) is added and
+breakfast can be choosen as option.
+
+
 
 Target group: **Users**
 

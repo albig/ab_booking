@@ -7,7 +7,7 @@ conf.py:
   copyright: 2013
   project: ab_booking
   version: 1.0
-  release: 0.6.6
+  release: 0.6.8
   latex_documents:
   - - Index
     - ab_booking.tex
