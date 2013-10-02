@@ -45,6 +45,7 @@
 			<label index="tx_abbooking_price.seasonid">Corresponding Seasons</label>
 			<label index="tx_abbooking_seasons">Season</label>
 			<label index="tx_abbooking_seasons.title">Description</label>
+			<label index="tx_abbooking_seasons.validInWeekdays">Valid Weekdays (e.g. '5,6': Fridays and Saturdays or '*' for all days)</label>
 			<label index="tt_content.list_type_pi1">Simple Booking Extension</label>
 		</languageKey>
 		<languageKey index="de" type="array">
@@ -87,6 +88,7 @@
 			<label index="tx_abbooking_price.seasonid">Saisonzeiten</label>
 			<label index="tx_abbooking_seasons">Saison</label>
 			<label index="tx_abbooking_seasons.title">Bezeichnung</label>
+			<label index="tx_abbooking_seasons.validInWeekdays">Gültige Wochentage (z.B. '5,6' für Freitag und Samstag oder '*' für alle Tage)</label>
 			<label index="tt_content.list_type_pi1">Simple Booking Extension</label>
 		</languageKey>
 	</data>

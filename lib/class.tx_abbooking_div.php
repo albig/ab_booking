@@ -200,7 +200,7 @@ class tx_abbooking_div {
 			$myquery .= ' AND (tx_abbooking_seasons.endtime > '.$interval['startList'].' OR tx_abbooking_seasons.endtime = 0))';
 
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('tx_abbooking_price.uid as uid,
-			tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime,
+			tx_abbooking_seasons.starttime as starttime, tx_abbooking_seasons.endtime as endtime, tx_abbooking_seasons.validWeekdays as validWeekdays,
 			tx_abbooking_price.title as title, currency,
 			adult1, adult2, adult3, adult4, adultX, child, teen,
 			extraComponent1, extraComponent2, discount, discountPeriod,
@@ -219,9 +219,11 @@ class tx_abbooking_div {
 
 			// get the valid prices per day
 			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
-				for ($i=0; $i<$p; $i++) {
+				for ($i=0; $i < $p; $i++) {
 					if (($pricesAvailable[$i]['starttime'] <= $d || $pricesAvailable[$i]['starttime'] == 0)
-						&& ($pricesAvailable[$i]['endtime'] > $d || $pricesAvailable[$i]['endtime'] == 0))
+						&& ($pricesAvailable[$i]['endtime'] > $d || $pricesAvailable[$i]['endtime'] == 0)
+						&& (tx_abbooking_div::checkCheckinWeekDays($d, $pricesAvailable[$i]['validWeekdays']))
+						)
 						break;
 					// if no valid price is found - go further in the price array. otherwise the first in the list is the right.
 				}

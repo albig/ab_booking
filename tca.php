@@ -227,7 +227,7 @@ $TCA['tx_abbooking_product'] = array (
 				'itemListStyle' => 'width:400px;',
 				'foreign_table' => 'tx_abbooking_price',
 				# quite stupid syntax introduced in TYPO3 4.4.1 :-(
-				'foreign_table_where' => 'AND tx_abbooking_price.title like "%"\'###REC_FIELD_filterprice###\'"%" ORDER BY title ASC',
+				'foreign_table_where' => 'AND sys_language_uid = 0 AND tx_abbooking_price.title like "%"\'###REC_FIELD_filterprice###\'"%" ORDER BY title ASC',
 			)
 		),
 		'uiddetails' => array (        ## WOP:[tables][2][fields][5][fieldname]
@@ -539,7 +539,7 @@ $TCA['tx_abbooking_price'] = array (
 $TCA['tx_abbooking_seasons'] = array (
     'ctrl' => $TCA['tx_abbooking_seasons']['ctrl'],
     'interface' => array (
-        'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,starttime,endtime'
+        'showRecordFieldList' => 'sys_language_uid,l10n_parent,l10n_diffsource,title,hidden,starttime,endtime,validWeekdays'
     ),
     'feInterface' => $TCA['tx_abbooking_seasons']['feInterface'],
     'columns' => array (
@@ -584,6 +584,7 @@ $TCA['tx_abbooking_seasons'] = array (
 		),
         'hidden' => array (        ## WOP:[tables][4][add_hidden]
             'exclude' => 1,
+			'l10n_mode' => 'exclude',
             'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.hidden',
             'config'  => array (
                 'type'    => 'check',
@@ -592,6 +593,7 @@ $TCA['tx_abbooking_seasons'] = array (
         ),
         'starttime' => array (        ## WOP:[tables][4][add_starttime]
             'exclude' => 1,
+			'l10n_mode' => 'exclude',
             'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.starttime',
             'config'  => array (
                 'type'     => 'input',
@@ -604,6 +606,7 @@ $TCA['tx_abbooking_seasons'] = array (
         ),
         'endtime' => array (        ## WOP:[tables][4][add_endtime]
             'exclude' => 1,
+			'l10n_mode' => 'exclude',
             'label'   => 'LLL:EXT:lang/locallang_general.xml:LGL.endtime',
             'config'  => array (
                 'type'     => 'input',
@@ -614,9 +617,20 @@ $TCA['tx_abbooking_seasons'] = array (
                 'default'  => '0',
             )
         ),
+		'validWeekdays' => array (		## WOP:[tables][3][fields][1][fieldname]
+			'l10n_mode' => 'exclude',
+			'exclude' => 0,		## WOP:[tables][3][fields][1][excludeField]
+			'label' => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_price.validWeekdays',		## WOP:[tables][3][fields][1][title]
+			'config' => array (
+				'type' => 'input',	## WOP:[tables][2][fields][1][type]
+				'size' => '10',	## WOP:[tables][2][fields][1][conf_size]
+				'default' => '*',
+			)
+		),
+        
     ),
     'types' => array (
-        '0' => array('showitem' => 'title, sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1')
+        '0' => array('showitem' => 'title, sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1,validWeekdays')
     ),
     'palettes' => array (
         '1' => array('showitem' => 'starttime, endtime', 'canNotCollapse' => 1)

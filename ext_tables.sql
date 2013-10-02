@@ -152,6 +152,7 @@ CREATE TABLE tx_abbooking_seasons (
 	title tinytext,
 	starttime int(11) DEFAULT '0' NOT NULL,
 	endtime int(11) DEFAULT '0' NOT NULL,
+	validWeekdays tinytext,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)
