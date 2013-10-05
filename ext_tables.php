@@ -10,7 +10,7 @@ t3lib_extMgm::allowTableOnStandardPages('tx_abbooking_booking');
 $TCA['tx_abbooking_booking'] = array (
 	'ctrl' => array (
 		'title'     => 'LLL:EXT:ab_booking/locallang_db.xml:tx_abbooking_booking',		## WOP:[tables][1][title]
-		'label'     => 'startdate',	## WOP:[tables][1][header_field]
+		'label'     => 'title',
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
@@ -43,13 +43,15 @@ $TCA['tx_abbooking_product'] = array (
 		'languageField'            => 'sys_language_uid',	## WOP:[tables][2][localization]
 		'transOrigPointerField'    => 'l10n_parent',	## WOP:[tables][2][localization]
 		'transOrigDiffSourceField' => 'l10n_diffsource',	## WOP:[tables][2][localization]
-		'default_sortby' => 'ORDER BY title',	## WOP:[tables][2][sorting] / [tables][2][sorting_field] / [tables][2][sorting_desc]
+        'sortby' => 'sorting',
 		'delete' => 'deleted',	## WOP:[tables][2][add_deleted]
 		'enablecolumns' => array (		## WOP:[tables][2][add_hidden] / [tables][2][add_starttime] / [tables][2][add_endtime] / [tables][2][add_access]
 			'disabled' => 'hidden',	## WOP:[tables][2][add_hidden]
 			'starttime' => 'starttime',	## WOP:[tables][2][add_starttime]
 			'endtime' => 'endtime',	## WOP:[tables][2][add_endtime]
 		),
+        'requestUpdate' 	=> 'sys_language_uid,offtime_dummy',
+		'searchFields' => 'title',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_product.png',
 	),
@@ -73,11 +75,13 @@ $TCA['tx_abbooking_price'] = array (
 		'languageField'            => 'sys_language_uid',	## WOP:[tables][2][localization]
 		'transOrigPointerField'    => 'l10n_parent',	## WOP:[tables][2][localization]
 		'transOrigDiffSourceField' => 'l10n_diffsource',	## WOP:[tables][2][localization]
-		'default_sortby' => 'ORDER BY adult1',	## WOP:[tables][3][sorting] / [tables][3][sorting_field] / [tables][3][sorting_desc]
+        'sortby' => 'sorting',
 		'delete' => 'deleted',	## WOP:[tables][3][add_deleted]
 		'enablecolumns' => array (		## WOP:[tables][3][add_hidden] / [tables][3][add_starttime] / [tables][3][add_endtime] / [tables][3][add_access]
 			'disabled' => 'hidden',	## WOP:[tables][3][add_hidden]
 		),
+        'requestUpdate' 	=> 'sys_language_uid',
+		'searchFields' => 'title',
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
 		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_price.png',
 	),
@@ -100,7 +104,7 @@ $TCA['tx_abbooking_seasons'] = array (
         'languageField'            => 'sys_language_uid',    ## WOP:[tables][4][localization]
         'transOrigPointerField'    => 'l10n_parent',    ## WOP:[tables][4][localization]
         'transOrigDiffSourceField' => 'l10n_diffsource',    ## WOP:[tables][4][localization]
-        'sortby' => 'sorting',    ## WOP:[tables][4][sorting]
+        'sortby' => 'sorting',
         'delete' => 'deleted',    ## WOP:[tables][4][add_deleted]
         'enablecolumns' => array (        ## WOP:[tables][4][add_hidden] / [tables][4][add_starttime] / [tables][4][add_endtime] / [tables][4][add_access]
             'disabled' => 'hidden',    ## WOP:[tables][4][add_hidden]
@@ -108,7 +112,8 @@ $TCA['tx_abbooking_seasons'] = array (
             'endtime' => 'endtime',    ## WOP:[tables][4][add_endtime]
         ),
         'requestUpdate' 	=> 'sys_language_uid',
-        'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
+ 		'searchFields' => 'title',
+       'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
         'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_tx_abbooking_seasons.png',
     ),
 );
@@ -129,7 +134,6 @@ t3lib_extMgm::addPlugin(array(
 // flexform
 //---------------------------------
 // remove starting point (pages) and recursive from flexform
-// $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 $TCA['tt_content']['types']['list']['subtypes_excludelist'][$_EXTKEY.'_pi1']='layout,select_key,pages,recursive';
 
 $TCA['tt_content']['types']['list']['subtypes_addlist'][$_EXTKEY.'_pi1']='pi_flexform';
@@ -144,4 +148,5 @@ include_once(t3lib_extMgm::extPath($_EXTKEY).'lib/class.tx_abbooking_remote.php'
 t3lib_extMgm::addLLrefForTCAdescr('tt_content.pi_flexform.ab_booking_pi1.list', 'EXT:'.$_EXTKEY.'/locallang_csh.xml');
 t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_product','EXT:' . $_EXTKEY. '/locallang_csh_product.xml');
 t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_price','EXT:' . $_EXTKEY. '/locallang_csh_price.xml');
+t3lib_extMgm::addLLrefForTCAdescr('tx_abbooking_seasons','EXT:' . $_EXTKEY. '/locallang_csh_seasons.xml');
 ?>

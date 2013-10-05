@@ -7,8 +7,8 @@ plugin.tx_abbooking_pi1 {
 
 	# cat=plugin.ab_booking//0; type=string; label= StyleSheet for Calendar:  CSS file for the calendar
 		file.cssBooking = EXT:ab_booking/res/cssBooking.css
-		
+
 	# cat=plugin.ab_booking//0; type=string; label= JS Datepicker for Calendar
-		file.jsDatepicker = EXT:ab_booking/res/jsDatepicker.js
+		file.jsDatepicker = EXT:ab_booking/res/js/jsDatepicker.js
 
 }

@@ -48,6 +48,7 @@
 							<li><b>Buchungsformular</b>: Form for entering the user data and to do the booking.</li>
 						</ul>
 						 ]]></label>
+
 			<label index="ProductID.description">Wählen Sie die Produkte, die Sie in diesem Plugin berücksichten wollen.</label>
 			<label index="ProductID.details"><![CDATA[ Wenn Sie keine Produkte sehen, müssen Sie zunächst die Page-ID des Sysfolders
 				(unten). Alternativ können Sie den "General Record Storage Place" für diese und alle untergeordneten Seiten in den

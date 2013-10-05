@@ -194,7 +194,7 @@ plugin.tx_abbooking_pi1 {
 		  validation =
 		  title {
 		    de = ungefähre Anreisezeit
-		    en = Proximately Arrival Time
+		    en = Approximately Arrival Time
 		  }
 		  info {
 			de (
@@ -214,4 +214,6 @@ plugin.tx_abbooking_pi1 {
 page.includeJSFooter.ab_booking_datepicker = {$plugin.tx_abbooking_pi1.file.jsDatepicker}
 
 #fetch localization files for datepicker:
+[language = "*en*"]
 page.includeJSFooter.jquery-datepicker-language = EXT:ab_booking/res/js/jquery.ui.datepicker-de.js
+[global]
