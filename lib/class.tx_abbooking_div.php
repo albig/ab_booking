@@ -126,7 +126,6 @@ class tx_abbooking_div {
 	 */
 	function getAllRates($interval) {
 
-//~ print_r('getAllRates: START'."\n");
 		foreach ( $this->lConf['productDetails'] as $uid => $val ) {
 			// get all prices for given UID and given dates
 			$this->lConf['productDetails'][$uid]['prices'] = tx_abbooking_div::getPrices($uid, $interval);

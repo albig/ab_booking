@@ -1135,16 +1135,16 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Calculate the Rates
 	 *
-	 * @param	[type]		$uid: ...
-	 * @param	[type]		$maxAvailable: ...
+	 * @param	integer		$prId: the product id
+	 * @param	integer		$period: booking period in full days
 	 * @return	string		with amount, currency...
 	 */
-	function calcRatesDBMode($key, $period) {
+	function calcRatesDBMode($prId, $period) {
 
 		$priceDetails = array();
 
 		$customer = $this->lConf['customerData'];
-		$product = $this->lConf['productDetails'][$key];
+		$product = $this->lConf['productDetails'][$prId];
 
 		$interval['startDate'] = $this->lConf['startDateStamp'];
 		$interval['endDate'] = strtotime('+'.$period.' day', $this->lConf['startDateStamp']);
@@ -1184,15 +1184,23 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 			for ($d = $interval['startDate']; $d < $interval['endDate']; $d=strtotime('+'.$dayStep.' day', $d)) {
 
-//~ 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$rateValue['discountRate'].$key);
-				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$key);
-				// default number of persons for later output
-				$usedPrices[$cur_title]['numPersons'] = $max_persons;
-
 				$rateValue = $this->getDiscountRate($product['prices'][$d][$key], $period);
-
 				if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
 						continue;
+
+//~ 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$key);
+				switch ($key) {
+					case 'extraComponent1':	$cur_title = $this->pi_getLL('extraComponent1') . $rateValue['discountRate'];
+										break;
+					case 'extraComponent2':	$cur_title = $this->pi_getLL('extraComponent2'). $rateValue['discountRate'];
+										break;
+					case 'adultX':			$cur_title = $this->pi_getLL('adultX'). $rateValue['discountRate'];
+										break;
+					default: $cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$key);
+				}
+
+				$usedPrices[$cur_title]['numPersons'] = $max_persons;
+
 
 				if ($operator == '*+') {
 					$rateValue['discountRate'] = ($max_persons + $adultX) * $rateValue['discountRate'];
@@ -1238,7 +1246,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// cleanup at the end
 				if (strtotime('+1 day', $d) == strtotime('+'.$period.' day', $interval['startDate'])) {
 					if (! empty($usedPrices[$cur_title]['dateStart'])) {
-// 						if ($usedPrices[$cur_title]['rateUsed'] > 1)
 						if ($usedPrices[$cur_title]['dateStart'] < $d)
 							$usedPrices[$cur_title]['rateDates'][] = strftime('%a %x', $usedPrices[$cur_title]['dateStart']).' - '.strftime('%a %x', strtotime('+1 day', $d));
 						else
@@ -1377,8 +1384,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 								$cssExtra = "even";
 							else
 								$cssExtra = "odd";
+								
 							if ($id == 0)
 								$cssExtra = "first";
+								
 							$lengthOfDescription = strlen($priceLine['description'])+2+strlen($priceLine['value']);
 							$content .= '<li class="'.$cssExtra.'">';
 							if ($printForm == 1) {
