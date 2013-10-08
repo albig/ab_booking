@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2011 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2013 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -54,10 +54,14 @@ class tx_abbooking_form {
 				continue;
 
 			$formname = str_replace('.', '', $formname);
-			if ($form['required'] == 1)
+			if ($form['required'] == 1) {
 				$cssClass = 'item ' . $formname . ' required';
-			else
+				$required = 'required="required"';
+			}
+			else {
 				$cssClass = 'item ' . $formname;
+				$required = '';
+			}
 
 			// the parameter name
 			$formnameGET = $this->prefixId.'['.$formname.']';
@@ -92,19 +96,19 @@ class tx_abbooking_form {
 											break;
 							case 'number': 	$type = 'number';
 											break;
-							case 'telephone': 	$type = 'tel';
+							case 'tel': 	$type = 'tel';
 											break;
-							default:		$type = 'text';
+							default:	$type = 'text';
 						}
 					}
 
 					if ($formname == 'checkinDate' && $showHidden == 0) {
-						$out .= '<input class="'.$cssError.' datepicker" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.date($this->lConf['dateFormat'], $this->lConf['startDateStamp']).'"/>';
+						$out .= '<input class="'.$cssError.' datepicker" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.date($this->lConf['dateFormat'], $this->lConf['startDateStamp']).'" '.$required.' />';
 						//~ $out .= tx_abbooking_div::getJSCalendarInput($formnameGET, $this->lConf['startDateStamp'], $form['error']);
 						$cssDatepicker = 'datepicker';
 					}
 					else
-						$out .= '<input class="'.$cssError.'" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.$customer[$formname].'"/>';
+						$out .= '<input class="'.$cssError.'" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.$customer[$formname].'" '.$required.' />';
 
 					$out .= '</div>';
 
@@ -218,7 +222,7 @@ class tx_abbooking_form {
 								else
 									$seldaySelector[2] = $selected;
 //~ print_r($product);
-								for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i+=$product['daySteps']) {
+								for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i += $product['daySteps']) {
 										$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
 										$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.date($this->lConf['dateFormat'], $endDate).')</option>';
 								}
@@ -251,7 +255,7 @@ class tx_abbooking_form {
 
 					}
 					else
-						$out .= '<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'</textarea>';
+						$out .= '<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL" '.$required.'>'.$customer[$formname].'</textarea>';
 					$out .= '</div>';
 
 					if ($form['clearAfterThis'] == '1')
@@ -291,7 +295,6 @@ class tx_abbooking_form {
 	 * @return	HTML		form with booking details
 	 */
 	public function printUserForm($stage) {
-
 
 		$interval = array();
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];

@@ -204,7 +204,7 @@ plugin.tx_abbooking_pi1 {
 		  clearAfterThis = 1
 		  title {
 		    de = ungefähre Anreisezeit
-		    en = Approximately Arrival Time
+		    en = Approximate Arrival Time
 		  }
 		  info {
 			de (

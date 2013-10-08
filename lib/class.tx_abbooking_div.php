@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2012 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2013 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -545,6 +545,8 @@ class tx_abbooking_div {
 	 */
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
 
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
+		
 		// disable caching of target booking page
 		$conf = array(
 		  // Link to booking page
@@ -656,8 +658,7 @@ class tx_abbooking_div {
 						&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 					) {
 					// set default daySelector = 2, adultSelector = 2
-					//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
-					$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+					$params_united = $d.'_'.max($this->lConf['daySelector'], $product['minimumStay']).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 					// create links with cHash...
 					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
@@ -704,6 +705,8 @@ class tx_abbooking_div {
 	 */
 	function printAvailabilityCalendarLine($uid, $interval = array()) {
 
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
+		
 		// disable caching of target booking page
 		$conf = array(
 		  // Link to booking page
@@ -737,12 +740,13 @@ class tx_abbooking_div {
 		}
 		else
 			$prices = tx_abbooking_div::getPrices($uid, $interval);
+			
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
 		$printDayNames = 1;
 		$out = '<div class="availabilityCalendarLine">';
-		for ($d=$interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
 			if (date(w, $d) == 1) // open div on monday
 				$out .= '<div class="calendarWeek">';
 			$out .= '<ul class="CalendarLine">';
@@ -763,7 +767,7 @@ class tx_abbooking_div {
 				) {
 				// set default daySelector = 2, adultSelector = 2
 				//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
-				$params_united = $d.'_'.$this->lConf['daySelector'].'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+				$params_united = $d.'_'.max($this->lConf['daySelector'], $product['minimumStay']).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
