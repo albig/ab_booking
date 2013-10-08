@@ -12,6 +12,7 @@
 	width: 100%;
 }
 
+
 .tx-abbooking-pi1 .availabilityCalendarLine {
 	float: left;
 	padding: 5px;
@@ -342,7 +343,6 @@ input.submit_dateSelect {
 	position: relative;
 	bottom: -10px;
 	clear: both;
-/* 	float: right; */
 }
 
 .tx-abbooking-pi1 li.offerList {
@@ -384,7 +384,7 @@ input.submit_dateSelect {
  * Request Form
  */
 
-.tx-abbooking-pi1  div.requestForm {
+.tx-abbooking-pi1 div.requestForm {
 	float: left;
 	list-style-type: none;
  	margin: 5px 0 5px 0;
@@ -392,54 +392,55 @@ input.submit_dateSelect {
   	border: 1px solid #aaa;
 	width: 94%;
 }
-.tx-abbooking-pi1  form.requestForm {
+.tx-abbooking-pi1 form.requestForm {
 	float: left;
 	border-top: 1px solid #aaa;
 	width: 100%;
 	padding-top: 10px;
 }
-.tx-abbooking-pi1  form.requestForm .item {
+.tx-abbooking-pi1 form.requestForm .item {
 	border-bottom: 1px dotted #ddd;
 	padding: 2px 0;
+	display: block;
 }
-.tx-abbooking-pi1  form.requestForm .firstname{
+.tx-abbooking-pi1 form.requestForm .clear {
+	clear: both;
+}
+
+.tx-abbooking-pi1 form.requestForm .firstname,
+.tx-abbooking-pi1 form.requestForm .lastname,
+.tx-abbooking-pi1  form.requestForm .zip,
+.tx-abbooking-pi1 form.requestForm .city,
+.tx-abbooking-pi1 form.requestForm .email,
+.tx-abbooking-pi1 form.requestForm .checkinDate,
+.tx-abbooking-pi1 form.requestForm .singleradio,
+.tx-abbooking-pi1 form.requestForm .clearsingleradio
+{
 	float: left;
+}
+.tx-abbooking-pi1 form.requestForm .firstname,
+.tx-abbooking-pi1 form.requestForm .zip,
+.tx-abbooking-pi1 form.requestForm .checkinDate
+{
 	margin-right: 10px;
-}
-.tx-abbooking-pi1  form.requestForm .zip {
-	float: left;
-	margin-right: 10px;
-}
-.tx-abbooking-pi1  form.requestForm .city {
-	float: left;
-}
-.tx-abbooking-pi1  form.requestForm .email {
-	clear: left;
 }
 .tx-abbooking-pi1  form.requestForm .singleradio {
-	float: left;
 	clear: left;
 }
-.tx-abbooking-pi1  form.requestForm .clearsingleradio {
-	clear: left;
-}
-.tx-abbooking-pi1  form.requestForm .checkinDate {
-	clear: left;
-}
-.tx-abbooking-pi1  form.requestForm .required p.title {
+.tx-abbooking-pi1  form.requestForm .required label.title,
+.tx-abbooking-pi1  form.requestForm label.title {
 	font-weight: bold;
+	display: block;
 }
-.tx-abbooking-pi1  form.requestForm p.title {
-	font-weight: bold;
+.tx-abbooking-pi1  form.requestForm .required label.title:before {
+	content: '*';
 }
+
 .tx-abbooking-pi1  form.requestForm p.info {
 	font-weight: normal;
 	font-size: 90%;
 	padding: 1px;
 	margin: 0px;
-}
-.tx-abbooking-pi1  form.requestForm .required p.title:before {
-	content: '*';
 }
 .tx-abbooking-pi1  form.requestForm .errorField {
 	color: #aa0000;

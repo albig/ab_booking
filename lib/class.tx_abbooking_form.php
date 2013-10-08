@@ -58,7 +58,12 @@ class tx_abbooking_form {
 				$cssClass = 'item ' . $formname . ' required';
 			else
 				$cssClass = 'item ' . $formname;
+
+			// the parameter name
 			$formnameGET = $this->prefixId.'['.$formname.']';
+
+			// the parameter ID
+			$formnameID = $this->prefixId.'-'.$formname;
 
 			unset($cssError);
 			switch ($form['type']) {
@@ -67,10 +72,10 @@ class tx_abbooking_form {
 					if (!empty($form['error']))
 						$cssClass .= ' errorField';
 					$out .= '<div class="'.$cssClass.'">';
-					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					if (count($form['info.']) > 0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<label for="'.$formnameID.'" class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
-						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label for="'.$formnameID.'" class="title">'.$this->getTSTitle($form['title.']).'</label>';
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
@@ -81,25 +86,40 @@ class tx_abbooking_form {
 					if ($showHidden == 1) {
 						$type = 'hidden';
 						$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
+					} else {
+						switch ($form['validation']) {
+							case 'email': 	$type = 'email';
+											break;
+							case 'number': 	$type = 'number';
+											break;
+							case 'telephone': 	$type = 'tel';
+											break;
+							default:		$type = 'text';
+						}
+					}
+
+					if ($formname == 'checkinDate' && $showHidden == 0) {
+						$out .= '<input class="'.$cssError.' datepicker" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.date($this->lConf['dateFormat'], $this->lConf['startDateStamp']).'"/>';
+						//~ $out .= tx_abbooking_div::getJSCalendarInput($formnameGET, $this->lConf['startDateStamp'], $form['error']);
+						$cssDatepicker = 'datepicker';
 					}
 					else
-						$type = 'text';
-
-					if ($formname == 'checkinDate' && $showHidden == 0)
-						$out .= tx_abbooking_div::getJSCalendarInput($formnameGET, $this->lConf['startDateStamp'], $form['error']);
-					else
-						$out .= '<input '.$cssError.' name='.$formnameGET.' type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.$customer[$formname].'"/>';
+						$out .= '<input class="'.$cssError.'" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.$customer[$formname].'"/>';
 
 					$out .= '</div>';
+
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
+
 					break;
 				case 'radio':
 					$out .= '<div class="'.$cssClass.'">';
 
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
-						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
-						if (count($form['info.'])>0)
+						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
+						if (count($form['info.']) > 0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
 
@@ -125,29 +145,37 @@ class tx_abbooking_form {
 						}
 						$out .= '<div class="clearsingleradio"></div>';
 					}
+
 					$out .= '</div>';
+
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
 
 					break;
 				case 'checkbox':
 					$out .= '<div class="'.$cssClass.'">';
 
-					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+					if (count($form['info.']) > 0 && $form['info.']['useTooltip'] == '1')
+						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
-						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
 
 					$out .= '</div>';
+
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
+
 					break;
 				case 'selector':
 					$out .= '<div class="'.$cssClass.'">';
 
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
-						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
@@ -202,14 +230,17 @@ class tx_abbooking_form {
 					}
 					$out .= '</div>';
 
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
+
 					break;
 				case 'textarea':
 					$out .= '<div class="'.$cssClass.'">';
 
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<p class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
-						$out .= '<p class="title">'.$this->getTSTitle($form['title.']).'</p>';
+						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
@@ -222,6 +253,10 @@ class tx_abbooking_form {
 					else
 						$out .= '<textarea name='.$formnameGET.' cols="50" rows="'.(int)($form['size']/50).'" wrap="PHYSICAL">'.$customer[$formname].'</textarea>';
 					$out .= '</div>';
+
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
+
 					break;
 				case 'infobox':
 					$out .= '<div class="'.$cssClass.'">';
@@ -235,6 +270,9 @@ class tx_abbooking_form {
 					}
 
 					$out .= '</div>';
+					if ($form['clearAfterThis'] == '1')
+						$out .= '<div class="clear"></div>';
+
 					break;
 				default:
 					break;
@@ -414,7 +452,7 @@ class tx_abbooking_form {
 			$SubmitButton=htmlspecialchars($this->pi_getLL('submit_button_check'));
 
 			$content .= '<form  class="requestForm" action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="POST">';
-			$content .= tx_abbooking_form::printUserFormElements($numErrors, 0);
+			$content .= tx_abbooking_form::printUserFormElements($numErrors, $showHidden = 0);
 			$content .= $this->printCalculatedRates($product['uid'], $this->lConf['daySelector'], 1);
 
 			$params_united = '0_0_0_'.$this->lConf['ProductID'].'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor'.($stage + 1);

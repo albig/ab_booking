@@ -392,7 +392,7 @@ class tx_abbooking_div {
 				<input type="hidden" name="no_cache" value="1">
 				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
 
-		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
+		//~ $content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
 
 		if (!$this->isRobot())
 			$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
@@ -598,7 +598,9 @@ class tx_abbooking_div {
 		if ($this->lConf['showDateNavigator']) {
 			$out .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 					<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
-			$out .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
+
+			//~ $out .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
+
 			if (!$this->isRobot())
 				$out .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 			$out .= '</form>
@@ -1016,7 +1018,6 @@ class tx_abbooking_div {
 			}
 		} else
 			$out .= '<input '.$errorClass.' type="text" class="datepicker" name="'.$name.'" id="'.$name.'" value="'.strftime($dateFormat, $value).'" ><br/>';
-//~ 			$out .= '<input '.$errorClass.' type="text" class="jscalendar" name="'.$name.'" id="'.$name.'"  ><br/>';		}
 
 		if (isset($error)) {
 			$out = str_replace('class="jscalendar"', 'class="jscalendar error"', $out);

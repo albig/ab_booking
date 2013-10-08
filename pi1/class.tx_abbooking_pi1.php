@@ -415,7 +415,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// ---------------------------------
 		if (empty($this->lConf['startDateStamp']))
 			$this->lConf['startDateStamp'] = strtotime('today'); //strftime("%Y-%m-%d 00:00:00"));
-//~ print_r($this->lConf['startDateStamp'].'startDateStamp: '. strftime('%x %H:%M:%S', $this->lConf['startDateStamp']) . "\n");
+
 		$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
 
 		// get the storage pid from flexform
@@ -480,7 +480,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * availability prices form ;-)
 	 *
-	 * @return	HTML		form to check availability
+	 * @return	HTML	form to check availability
 	 */
 	public function formCheckAvailability() {
 
@@ -506,39 +506,47 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$seldaySelector[2] = $selected;
 
 		if (isset($this->form_errors['vacancies_limited'])) {
-			$ErrorVacanciesLimited='class="error"';
+			$ErrorVacanciesLimited='error';
 			$content.='<h2><b>'.$this->form_errors['vacancies_limited'].'</b></h2>';
 		}
 		if (isset($this->form_errors['vacancies'])) {
-			$ErrorVacancies='class="error"';
+			$ErrorVacancies='error';
 			$content.='<h2><b>'.$this->form_errors['vacancies'].'</b></h2>';
 		}
 		if (isset($this->form_errors['startDateInThePast'])) {
-			$ErrorVacancies='class="error"';
+			$ErrorVacancies='error';
 			$content.='<h2><b>'.$this->form_errors['startDateInThePast'].'</b></h2>';
 			// reset checkinDate
 			unset($this->lConf['startDate']);
 			unset($this->lConf['startDateStamp']);
 		}
 		if (isset($this->form_errors['endDateTooFarInFuture'])) {
-			$ErrorVacancies='class="error"';
+			$ErrorVacancies='error';
 			$content.='<h2><b>'.$this->form_errors['endDateTooFarInFuture'].'</b></h2>';
 		}
 
 		$content .= '<form action="'.$this->pi_getPageLink($this->lConf['gotoPID']).'" method="post">';
-		// input div for startDate
+		// -------------------------------------
+		// field startDate with - possible datepicker
+		// -------------------------------------
 		$content .= '<div class="startdate">';
-		$content .= '<label for="'.$this->prefixId.'[checkinDate]'.$this->lConf['uidpid'].'_hr"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
+		$content .= '<label for="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
 		if (isset($this->lConf['startDateStamp']))
 			$startdate = $this->lConf['startDateStamp'];
 		else
 			$startdate = time();
-		$content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
+
+		//~ $content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
+		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" value="'.date($this->lConf['dateFormat'], $startdate).'"/>';
+
 		$content .= '</div>';
 
+		// -------------------------------------
+		// field days select
+		// -------------------------------------
 		$content .= '<div class="selector">';
-		$content .= '<label for="fielddaySelector"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
-				<select '.$ErrorVacanciesLimited.' name="'.$this->prefixId.'[daySelector]" id="fielddaySelector" size="1">';
+		$content .= '<label for="fielddaySelector'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
+				<select class="'.$ErrorVacanciesLimited.'" name="'.$this->prefixId.'[daySelector]" id="fielddaySelector-'.$this->lConf['uidpid'].'" size="1">';
 
 		// set global day steps
 		if ((int)$this->lConf['numCheckDaySteps']>0)
@@ -552,10 +560,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$content .= '</select>';
 		$content .= '</div>';
 
+		// -------------------------------------
+		// field persons select
+		// -------------------------------------
 		if ($this->lConf['showPersonsSelector'] == 1 && $overallCapacity > 0) {
 			$content .= '<div class="selector">';
-			$content .= '<label for="fieldadultSelector"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
-					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector" size="1">';
+			$content .= '<label for="fieldadultSelector'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
+					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector'.$this->lConf['uidpid'].'" size="1">';
 			// you may set in flexform the maximum amount of persons to show in the selector
 			if (intval($this->lConf['numCheckMaxPersons'])>0)
 				$selectorMax = min($this->lConf['numCheckMaxPersons'],  $overallCapacity);
@@ -576,12 +587,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		);
 
 		$content .= '<input type="hidden" name="'.$this->prefixId.'[ABx]" value="'.$params_united.'">';
-		$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
 		// always render the offer page...
-//~ 		$content .= '<input type="hidden" name="no_cache" value="1">';
+		$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
 
 		if (!$this->isRobot())
 			$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+
 		$content .= '</form><br />';
 
 		return $content;
@@ -1384,10 +1395,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 								$cssExtra = "even";
 							else
 								$cssExtra = "odd";
-								
+
 							if ($id == 0)
 								$cssExtra = "first";
-								
+
 							$lengthOfDescription = strlen($priceLine['description'])+2+strlen($priceLine['value']);
 							$content .= '<li class="'.$cssExtra.'">';
 							if ($printForm == 1) {

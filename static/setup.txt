@@ -44,7 +44,7 @@ plugin.tx_abbooking_pi1 {
 		firstname {
 		  required = 0
 		  type = input
-		  size = 17
+		  size = 20
 		  maxsize = 40
 		  validation =
 		  title {
@@ -55,9 +55,10 @@ plugin.tx_abbooking_pi1 {
 		lastname {
 		  required = 1
 		  type = input
-		  size = 25
+		  size = 28
 		  maxsize = 40
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Nachname
 		    en = Last name
@@ -66,9 +67,10 @@ plugin.tx_abbooking_pi1 {
 		street {
 		  required = 1
 		  type = input
-		  size = 44
-		  maxsize=60
+		  size = 52
+		  maxsize = 70
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Straße und Hausnummer
 			en = Street
@@ -88,9 +90,10 @@ plugin.tx_abbooking_pi1 {
 		city {
 		  required = 1
 		  type = input
-		  size = 33
+		  size = 40
 		  maxsize=40
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Ort
 		    en = City
@@ -99,9 +102,10 @@ plugin.tx_abbooking_pi1 {
 		email {
 		  required = 1
 		  type = input
-		  size = 30
-		  maxsize=40
-		  validation =
+		  size = 52
+		  maxsize = 60
+		  validation = email
+		  clearAfterThis = 1
 		  title {
 			de = E-Mail
 			en = Email
@@ -115,7 +119,8 @@ plugin.tx_abbooking_pi1 {
 		  required = 0
 		  type = input
 		  size = 20
-		  validation =
+		  validation = tel
+		  clearAfterThis = 1
 		  title {
 		    de = Telefon
 			en = Telephone
@@ -130,6 +135,7 @@ plugin.tx_abbooking_pi1 {
 		  type = textarea
 		  size = 250
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Mitteilung
 			en = Message
@@ -150,7 +156,7 @@ plugin.tx_abbooking_pi1 {
 		checkinDate {
 		  required = 1
 		  type = input
-		  size = 10
+		  size = 12
 		  maxsize = 12
 		  title {
 			de = Anreise
@@ -161,6 +167,7 @@ plugin.tx_abbooking_pi1 {
 		  required = 1
 		  type = selector
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Anzahl der Übernachtungen
 		    en = Number of Nights
@@ -170,6 +177,7 @@ plugin.tx_abbooking_pi1 {
 		  required = 1
 		  type = selector
 		  validation =
+		  clearAfterThis = 1
 		  title {
 			de = Anzahl der Erwachsenen
 			en = Number of adults
@@ -178,6 +186,7 @@ plugin.tx_abbooking_pi1 {
 		extraInfos {
 		  required = 0
 		  type = infobox
+		  clearAfterThis = 1
 		  info {
 			de = Sie erhalten von uns eine vollständige Reservierungsbestätigung meist noch am selben Tag.
 			en = You'll receive a complete confirmation of your reservation usually within one day.
@@ -192,6 +201,7 @@ plugin.tx_abbooking_pi1 {
 		  type = input
 		  size = 20
 		  validation =
+		  clearAfterThis = 1
 		  title {
 		    de = ungefähre Anreisezeit
 		    en = Approximately Arrival Time
@@ -213,7 +223,21 @@ plugin.tx_abbooking_pi1 {
 
 page.includeJSFooter.ab_booking_datepicker = {$plugin.tx_abbooking_pi1.file.jsDatepicker}
 
-#fetch localization files for datepicker:
-[language = "*en*"]
-page.includeJSFooter.jquery-datepicker-language = EXT:ab_booking/res/js/jquery.ui.datepicker-de.js
+page.jsFooterInline {
+	10 = TEXT
+	10.value(
+		$(document).ready(function() {
+			$.datepicker.setDefaults($.datepicker.regional['de']);
+		});
+	)
+}
+[globalVar = GP:L = 1]
+page.jsFooterInline {
+	10 = TEXT
+	10.value(
+		$(document).ready(function() {
+			$.datepicker.setDefaults($.datepicker.regional['en-GB']);
+		});
+	)
+}
 [global]
