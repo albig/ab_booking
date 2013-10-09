@@ -387,10 +387,28 @@ class tx_abbooking_div {
 		$interval['startList'] = $interval['startDate'];
 		$interval['endList'] = $interval['endDate'];
 
+		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">';
+
+		// always render the page...
+		$content .= '<input type="hidden" name="'.$this->prefixId.'[abnocache]" value="1">';
+
+		// -------------------------------------
+		// field startDate with - possible datepicker
+		// -------------------------------------
 		// date select form
-		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
-				<input type="hidden" name="no_cache" value="1">
-				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
+		$content .= '<div class="startdate">';
+		$content .= '<label for="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
+		if (isset($this->lConf['startDateStamp']))
+			$startdate = $this->lConf['startDateStamp'];
+		else
+			$startdate = time();
+
+		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" value="'.date($this->lConf['dateFormat'],  $interval['startDate']).'"/>';
+
+		$content .= '</div>';
+
+
+		//~ $content .= '<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
 
 		//~ $content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
 
