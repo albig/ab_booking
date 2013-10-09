@@ -672,7 +672,7 @@ class tx_abbooking_div {
 					$bookingRate ++;
 
 				if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
-						&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths'] + 1).' months')
+						&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
 						&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 						&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 					) {
@@ -781,7 +781,7 @@ class tx_abbooking_div {
 			}
 
 			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
-					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths'] + 1).' months')
+					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 				) {

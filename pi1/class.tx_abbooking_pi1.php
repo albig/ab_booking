@@ -697,9 +697,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		//$endDate =  strtotime('+ '.$this->lConf['daySelector'].' days', $startDate);
 		$endDate = $interval['endDate'];
 
-		if ($endDate > strtotime('+ '.($this->lConf['numCheckNextMonths'] + 1).' months')) {
+		if ($endDate > strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')) {
 			$this->availability = 2;
-			$this->form_errors['endDateTooFarInFuture'] = sprintf($this->pi_getLL('error_tooFarInFuture'), strftime("%a, %x", strtotime('+ '.($this->lConf['numCheckNextMonths'] + 1).' months')))."<br />";
+			$this->form_errors['endDateTooFarInFuture'] = sprintf($this->pi_getLL('error_tooFarInFuture'), strftime("%a, %x", strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')))."<br />";
 			return 1;
 		}
 
