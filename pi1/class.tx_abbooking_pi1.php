@@ -95,7 +95,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		if (!isset($interval['startList'])) {
-			$interval['startList'] = $interval['startDate'];
+			$interval['startList'] = strtotime('-1 week', $interval['startDate']);
 
 			$maxListInterval = strtotime('+ '.$this->lConf['numCheckMaxInterval'].' days', $interval['startDate']);
 			// increase endList to end for form with calendar month view.

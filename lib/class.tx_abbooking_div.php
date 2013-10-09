@@ -546,7 +546,7 @@ class tx_abbooking_div {
 	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
 
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-		
+
 		// disable caching of target booking page
 		$conf = array(
 		  // Link to booking page
@@ -657,8 +657,8 @@ class tx_abbooking_div {
 						&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 						&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 					) {
-					// set default daySelector = 2, adultSelector = 2
-					$params_united = $d.'_'.max($this->lConf['daySelector'], $product['minimumStay']).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+					// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
+					$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 					// create links with cHash...
 					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
@@ -706,7 +706,7 @@ class tx_abbooking_div {
 	function printAvailabilityCalendarLine($uid, $interval = array()) {
 
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
-		
+
 		// disable caching of target booking page
 		$conf = array(
 		  // Link to booking page
@@ -740,7 +740,7 @@ class tx_abbooking_div {
 		}
 		else
 			$prices = tx_abbooking_div::getPrices($uid, $interval);
-			
+
 		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
 		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
 
@@ -765,9 +765,8 @@ class tx_abbooking_div {
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
 				) {
-				// set default daySelector = 2, adultSelector = 2
-				//#### 2_2 durch $this->lConf['daySelector'] und $this->lConf['adultSelector'] ersetzt ###
-				$params_united = $d.'_'.max($this->lConf['daySelector'], $product['minimumStay']).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
+				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
