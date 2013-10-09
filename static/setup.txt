@@ -227,6 +227,7 @@ page.jsFooterInline {
 	10 = TEXT
 	10.value(
 		$(document).ready(function() {
+			$.datepicker({ maxDate: +12M });
 			$.datepicker.setDefaults($.datepicker.regional['de']);
 		});
 	)
@@ -236,6 +237,7 @@ page.jsFooterInline {
 	10 = TEXT
 	10.value(
 		$(document).ready(function() {
+			$.datepicker({ maxDate: +12M });
 			$.datepicker.setDefaults($.datepicker.regional['en-GB']);
 		});
 	)

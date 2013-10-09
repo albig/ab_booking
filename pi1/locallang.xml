@@ -49,7 +49,7 @@
 			<label index="error_next_checkIn_on">Next possible Checkin Date is</label>
 			<label index="error_startDateInThePast">Your seleted start date is in the past!</label>
 			<label index="error_endDateNotValid">Your selected end date is not valid!</label>
-			<label index="error_tooFarInFuture">Your request is to far in the future!</label>
+			<label index="error_tooFarInFuture">Your request is to far in the future! At the moment we only accept bookings up to %s.</label>
 			<label index="error_numNightsNotValid">Number of Nights is not valid!</label>
 			<label index="error_minimumStay">There is a minimum stay of %s </label>
 
@@ -129,7 +129,7 @@
 			<label index="error_next_checkIn_on">Nächste mögliche Anreise ist am</label>
 			<label index="error_startDateInThePast">Ihr Anreise-Datum liegt in der Vergangenheit!</label>
 			<label index="error_endDateNotValid">Ihr Abreise-Datum ist nicht gültig!</label>
-			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft!</label>
+			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft! Wir akzeptieren momentan nur Buchungen bis %s.</label>
 			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht gültig!</label>
 			<label index="error_minimumStay">Die Mindestaufenthaltsdauer beträgt %s.</label>
 
