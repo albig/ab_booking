@@ -103,20 +103,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$maxListInterval = strtotime('+'.$this->lConf['form']['showCalendarMonth'].' months', $interval['startDate']);
 			$interval['endList'] = $maxListInterval;
 		}
-//~ print_r($this->lConf);
+
 		switch ( $this->lConf['mode'] ) {
 			case 'form':
 				// check first for submit button and second for View
 				if (isset ($this->piVars['submit_button_edit']) && $this->lConf['ABdo'] == 'bor3')
 					$this->lConf['ABdo'] = 'bor0';
-
+print_r($interval);
 				// update/check all rates
 				tx_abbooking_div::getAllRates($interval);
 				$this->check_availability($interval);
 
 				// one product is allowed at a time:
 				foreach ( $this->lConf['productDetails'] as $key => $val ) {
-
 					$product = $val;
 					break;
 				}
@@ -225,9 +224,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						$out .= 'Placeholder Availability List';
 						$out .= '</div>';
 						break;
-//~ 					case '3':
-//~ 						$out .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID']);
-//~ 						break;
 					case '4':
 						$out .= tx_abbooking_div::printCheckinOverview($this->lConf['ProductID']);
 						break;
@@ -360,6 +356,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			} else
 				$this->lConf['mode'] = 'display';
 		}
+
 		// ---------------------------------
 		// check flexform data
 		// ---------------------------------
@@ -375,6 +372,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else {
 			$this->lConf['gotoPID'] = $GLOBALS['TSFE']->id;
 		}
+
+		// set default 12 months
+		if (! is_numeric($this->lConf['numCheckNextMonths']) || empty($this->lConf['numCheckNextMonths']))
+			$this->lConf['numCheckNextMonths'] = 12;
 
 		// set defaults if still empty:
 		// the values are set either in Calendar or Availability Check view
@@ -414,7 +415,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// calculate endDateStamp
 		// ---------------------------------
 		if (empty($this->lConf['startDateStamp']))
-			$this->lConf['startDateStamp'] = strtotime('today'); //strftime("%Y-%m-%d 00:00:00"));
+			$this->lConf['startDateStamp'] = strtotime('today');
 
 		$this->lConf['endDateStamp'] =  strtotime('+ '.$this->lConf['daySelector'].' days', $this->lConf['startDateStamp']);
 
@@ -693,54 +694,36 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$interval['endList'] = $interval['endDate'];
 		}
 
-		$startDate = $interval['startDate'];
-		//$endDate =  strtotime('+ '.$this->lConf['daySelector'].' days', $startDate);
-		$endDate = $interval['endDate'];
-
 		if ($endDate > strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')) {
-			$this->availability = 2;
 			$this->form_errors['endDateTooFarInFuture'] = sprintf($this->pi_getLL('error_tooFarInFuture'), strftime("%a, %x", strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')))."<br />";
-			return 1;
-		}
-
-		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
-			$interval['startDate'] = $startDate;
-			$interval['endDate'] = $endDate;
-		}
-		if (!isset($interval['startList']) && !isset($interval['endList'])) {
-			$interval['startList'] = $startDate;
-			$interval['endList'] = $endDate;
 		}
 
 		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
-
 		foreach ($bookings['bookings'] as $key => $row) {
+			// start with something reasonable: the set checkMaxInterval
 			if (!isset($item[$row['uid']]['maxAvailable']))
 				$item[$row['uid']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
 			// booked period is in future of startDate
-			if ($row['startdate']>$startDate)
-				$item[$row['uid']]['available'] = (int)date("d",$row['startdate'] - $startDate) - 1; /* day diff */
-			else if ($row['enddate']>$startDate)
+			if ($row['startdate'] > $interval['startDate'])
+				$item[$row['uid']]['available'] = (int)date("d",$row['startdate'] - $interval['startDate']) - 1; /* day diff */
+			else if ($row['enddate'] > $interval['startDate'])
 				// booked period overlaps startDate
 				$item[$row['uid']]['available'] = 0;
 
-			// find maximum available period for item[UID]
+			// check if found "available" in this run is small than the previous maxAvailable
 			if ($item[$row['uid']]['available'] < $item[$row['uid']]['maxAvailable'])
 				$item[$row['uid']]['maxAvailable'] = $item[$row['uid']]['available'];
 		}
 
-		// 2. step through prices to find maximum availability
+ 		// 2. step through prices to find maximum availability
  		foreach ($this->lConf['productDetails'] as $uid => $product) {
-			if (!isset($item[$uid]['maxAvailable']))
-				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-
-			for ($d=$interval['startDate']; $d < $interval['endDate']; $d=strtotime('+1 day', $d)) {
+			for ($d=$interval['startDate']; $d < $interval['endList']; $d=strtotime('+1 day', $d)) {
 				if ($product['prices'][$d] == 'noPrice') {
-					if ($d > $startDate && ((int)date("d",$d - $startDate) - 1) < $item[$uid]['available'])
-						$item[$uid]['available'] = (int)date("d", $d - $startDate) - 1 ; /* day diff */
+					if ($d > $interval['startDate'] && ((int)date("d",$d - $interval['startDate']) - 1) < $item[$uid]['available'])
+						$item[$uid]['available'] = (int)date("d", $d - $interval['startDate']) - 1 ; /* day diff */
 					else
 						$item[$uid]['available'] = 0;
 				}
@@ -750,8 +733,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 				// reduce available days by minimumStay value
 				if ($product['prices'][$d]['minimumStay'] > $item[$uid]['minimumStay']) {
-					$item[$uid]['minimumStay'] = $this->getMinimumStay($product['prices'][$d]['minimumStay'], $startDate);
-//~ 					print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
+					$item[$uid]['minimumStay'] = $this->getMinimumStay($product['prices'][$d]['minimumStay'], $interval['startDate']);
+					//~ print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
 				}
 
 				// get highest daySteps...
@@ -759,12 +742,19 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$item[$uid]['daySteps'] = $product['prices'][$d]['daySteps'];
 				}
 			}
-			// find maximum available period for item[UID]
-			if ($item[$uid]['available'] < $item[$uid]['maxAvailable'])
-				$item[$uid]['maxAvailable'] = $item[$uid]['available'];
 
+			// find the minimum "maxAvailable" for the given product in the given interval
+			// min of:
+			//   - the (global) setting: $this->lConf['numCheckMaxInterval']
+			//   - the end of the maximal booking period (numCheckNextMonths) ($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400)
+			//   - the found "maxAvailable" after parsing existing bookings (step 1): $item[$uid]['maxAvailable']
+			//   - the found "available" up to the next "noPrice" (?): $item[$uid]['available']
+
+			if (strlen($item[$uid]['available'])>0) {
+				$item[$uid]['maxAvailable'] = (int)min($this->lConf['numCheckMaxInterval'], (1 + (strtotime('+ '.($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400), $item[$uid]['available'], $item[$uid]['maxAvailable']);
+			} else
+				$item[$uid]['maxAvailable'] = (int)min($this->lConf['numCheckMaxInterval'], (1 + (strtotime('+ '.($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400), $item[$uid]['maxAvailable']);
 		}
-
 
 		// 3. look for off-times and reduce maxAvailable for all items
 		$maxAvailableAll = $this->lConf['numCheckMaxInterval'];
@@ -799,8 +789,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			}
 
 		}
-//~ print_r("check_availability\n");
-//~ print_r($this->lConf['productDetails']);
 
 		return 0;
 	}

@@ -45,9 +45,6 @@ class tx_abbooking_form {
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 		$customer = $this->lConf['customerData'];
 
-//~ if ($showErrors > 0)
-//~ 	print_r($this->lConf['form']);
-
 		foreach ($this->lConf['form'] as $formname => $form) {
 			// skip settings which are no form fields
 			if (!is_array($form))
@@ -104,7 +101,6 @@ class tx_abbooking_form {
 
 					if ($formname == 'checkinDate' && $showHidden == 0) {
 						$out .= '<input class="'.$cssError.' datepicker" id="'.$formnameID.'" name="'.$formnameGET.'" type="'.$type.'" size="'.$form['size'].'" maxlength="'.(empty($form['maxsize']) ? $form['size'] : $form['maxsize'] ).'" value="'.date($this->lConf['dateFormat'], $this->lConf['startDateStamp']).'" '.$required.' />';
-						//~ $out .= tx_abbooking_div::getJSCalendarInput($formnameGET, $this->lConf['startDateStamp'], $form['error']);
 						$cssDatepicker = 'datepicker';
 					}
 					else
@@ -221,7 +217,7 @@ class tx_abbooking_form {
 									$seldaySelector[$this->lConf['daySelector']] = $selected;
 								else
 									$seldaySelector[2] = $selected;
-//~ print_r($product);
+
 								for ($i = $product['minimumStay']; $i <= $product['maxAvailable']; $i += $product['daySteps']) {
 										$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
 										$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.date($this->lConf['dateFormat'], $endDate).')</option>';
