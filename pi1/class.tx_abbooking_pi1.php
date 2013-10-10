@@ -109,7 +109,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// check first for submit button and second for View
 				if (isset ($this->piVars['submit_button_edit']) && $this->lConf['ABdo'] == 'bor3')
 					$this->lConf['ABdo'] = 'bor0';
-print_r($interval);
+
 				// update/check all rates
 				tx_abbooking_div::getAllRates($interval);
 				$this->check_availability($interval);
@@ -698,9 +698,11 @@ print_r($interval);
 			$this->form_errors['endDateTooFarInFuture'] = sprintf($this->pi_getLL('error_tooFarInFuture'), strftime("%a, %x", strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')))."<br />";
 		}
 
+
 		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
 		foreach ($bookings['bookings'] as $key => $row) {
+			
 			// start with something reasonable: the set checkMaxInterval
 			if (!isset($item[$row['uid']]['maxAvailable']))
 				$item[$row['uid']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
@@ -715,10 +717,15 @@ print_r($interval);
 			// check if found "available" in this run is small than the previous maxAvailable
 			if ($item[$row['uid']]['available'] < $item[$row['uid']]['maxAvailable'])
 				$item[$row['uid']]['maxAvailable'] = $item[$row['uid']]['available'];
+				
 		}
 
  		// 2. step through prices to find maximum availability
  		foreach ($this->lConf['productDetails'] as $uid => $product) {
+
+			// if maxAvailable is not yet set by any booking above, start again with checkMaxInterval
+			if (!isset($item[$uid]['maxAvailable']))
+				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
 			for ($d=$interval['startDate']; $d < $interval['endList']; $d=strtotime('+1 day', $d)) {
 				if ($product['prices'][$d] == 'noPrice') {
@@ -745,15 +752,16 @@ print_r($interval);
 
 			// find the minimum "maxAvailable" for the given product in the given interval
 			// min of:
-			//   - the (global) setting: $this->lConf['numCheckMaxInterval']
-			//   - the end of the maximal booking period (numCheckNextMonths) ($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400)
-			//   - the found "maxAvailable" after parsing existing bookings (step 1): $item[$uid]['maxAvailable']
-			//   - the found "available" up to the next "noPrice" (?): $item[$uid]['available']
-
-			if (strlen($item[$uid]['available'])>0) {
+			//  - the (global) setting: $this->lConf['numCheckMaxInterval']
+			//  - the end of the maximal booking period (numCheckNextMonths) ($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400)
+			//  - the found "maxAvailable" after parsing existing bookings (step 1): $item[$uid]['maxAvailable']
+			//  - the found "available" up to the next "noPrice" (?): $item[$uid]['available']
+			
+			if (strlen($item[$uid]['available']) > 0) {
 				$item[$uid]['maxAvailable'] = (int)min($this->lConf['numCheckMaxInterval'], (1 + (strtotime('+ '.($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400), $item[$uid]['available'], $item[$uid]['maxAvailable']);
 			} else
 				$item[$uid]['maxAvailable'] = (int)min($this->lConf['numCheckMaxInterval'], (1 + (strtotime('+ '.($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400), $item[$uid]['maxAvailable']);
+
 		}
 
 		// 3. look for off-times and reduce maxAvailable for all items
