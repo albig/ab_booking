@@ -727,7 +727,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if (!isset($item[$uid]['maxAvailable']))
 				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-			for ($d=$interval['startDate']; $d < $interval['endList']; $d=strtotime('+1 day', $d)) {
+			for ($d=$interval['startDate']; $d < $interval['endDate']; $d=strtotime('+1 day', $d)) {
 				if ($product['prices'][$d] == 'noPrice') {
 					if ($d > $interval['startDate'] && ((int)date("d",$d - $interval['startDate']) - 1) < $item[$uid]['available'])
 						$item[$uid]['available'] = (int)date("d", $d - $interval['startDate']) - 1 ; /* day diff */
@@ -739,9 +739,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					$item[$uid]['blockDaysAfterBooking'] = $product['prices'][$d]['blockDaysAfterBooking'];
 				}
 				// reduce available days by minimumStay value
-				if ($product['prices'][$d]['minimumStay'] > $item[$uid]['minimumStay']) {
+				if ($this->getMinimumStay($product['prices'][$d]['minimumStay'], $interval['startDate']) > $item[$uid]['minimumStay']) {
 					$item[$uid]['minimumStay'] = $this->getMinimumStay($product['prices'][$d]['minimumStay'], $interval['startDate']);
-					//~ print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
+//~ 					print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
 				}
 
 				// get highest daySteps...

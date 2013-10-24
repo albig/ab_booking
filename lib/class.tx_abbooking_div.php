@@ -687,6 +687,7 @@ class tx_abbooking_div {
 				}
 				else
 					$out .= '<li class="'.$cssClass.'">'.$printDay.'</li>';
+					
 				if (date(w, $d) == 0) {// close div after sunday
 					$out .= '</ul>';
 					$out .= '</div>';
@@ -700,6 +701,7 @@ class tx_abbooking_div {
 					$out .= '</div>';
 				}
 			}
+			
 			if ($this->lConf['showBookingRate'])
 				$out .= '<p>'.round((100*$bookingRate/date("t", strtotime( $year . "-" . $mon . "-01"))),0).' %</p>';
 			$out .= '</div>'; // <div class="calendarMonth">
@@ -710,7 +712,7 @@ class tx_abbooking_div {
 		}
 
 		$out .= '</div>';
-		$out .= '<div class="clear" style="clear: both;"></div>';
+		$out .= '<div class="clear"></div>';
 
 		return $out;
 	}
@@ -766,9 +768,53 @@ class tx_abbooking_div {
 		$printDayNames = 1;
 		$out = '<div class="availabilityCalendarLine">';
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
+//~ 			if (date(w, $d) == 1) // open div on monday
+//~ 				$out .= '<div class="calendarWeek">';
+//~ 			$out .= '<ul class="CalendarLine">';
+//~ 
+			unset($cssClass);
+//~ 			if ($d < $interval['startDate'] || $d > $interval['endDate'])
+//~ 				$cssClass = 'transp';
+//~ 
+			$cssClass .= $myBooked[$d];
+//~ 
+//~ 			 // print only in first line
+//~ 			if ($printDayNames == 1) {
+//~ 				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
+//~ 			}
+
+			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
+					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
+					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk'] == '1')
+				) {
+				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
+//~ 				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+//~ 
+//~ 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
+//~ 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
+//~ 
+//~ 				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
+				$doLink[$d] = $this->getMinimumStay($prices[$d]['minimumStay'], $d);
+			}
+			else {
+//~ 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
+				$doLink[$d] = 0;
+			}
+				
+//~ 			$out .= '</ul>';
+//~ 			
+//~ 			if (date(w, $d) == 0) {// close div after sunday
+//~ 				$out .= '</div>';
+//~ 				$printDayNames = 0;
+//~ 			}
+		}
+		
+		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
 			if (date(w, $d) == 1) // open div on monday
 				$out .= '<div class="calendarWeek">';
 			$out .= '<ul class="CalendarLine">';
+
 			unset($cssClass);
 			if ($d < $interval['startDate'] || $d > $interval['endDate'])
 				$cssClass = 'transp';
@@ -779,29 +825,35 @@ class tx_abbooking_div {
 			if ($printDayNames == 1) {
 				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
 			}
-
-			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
-					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
-					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
-					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk']=='1')
-				) {
+			
+			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
+				if ($doLink[$f] < 1)
+					break;
+			if ($doLink[$d] == 0 || (($f - $d) / 86400) < $doLink[$d])
+				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
+				
+			else {
 				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
 				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
 
-				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
+				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';					
+//~ 					$out .= '<li class="'.$cssClass.'">'.$doLink[$d].'</li>';
 			}
-			else
-				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
+			
 			$out .= '</ul>';
+			
 			if (date(w, $d) == 0) {// close div after sunday
 				$out .= '</div>';
 				$printDayNames = 0;
 			}
+			
 		}
+
 		$out .= '</div>';
+		$out .= '<div class="clear"></div>';
 		return $out;
 	}
 
