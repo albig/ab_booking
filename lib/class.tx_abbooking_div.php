@@ -561,7 +561,7 @@ class tx_abbooking_div {
 	 * @param	array		$interval: ...
 	 * @return	HTML-list		of calendar days
 	 */
-	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
+	function printAvailabilityCalendarDivOLD($uid, $interval, $months = 0, $cols = 1) {
 
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 
@@ -687,7 +687,7 @@ class tx_abbooking_div {
 				}
 				else
 					$out .= '<li class="'.$cssClass.'">'.$printDay.'</li>';
-					
+
 				if (date(w, $d) == 0) {// close div after sunday
 					$out .= '</ul>';
 					$out .= '</div>';
@@ -701,7 +701,7 @@ class tx_abbooking_div {
 					$out .= '</div>';
 				}
 			}
-			
+
 			if ($this->lConf['showBookingRate'])
 				$out .= '<p>'.round((100*$bookingRate/date("t", strtotime( $year . "-" . $mon . "-01"))),0).' %</p>';
 			$out .= '</div>'; // <div class="calendarMonth">
@@ -724,7 +724,7 @@ class tx_abbooking_div {
 	 * @param	array		$interval: ...
 	 * @return	HTML-list		of calendar days
 	 */
-	function printAvailabilityCalendarLine($uid, $interval = array()) {
+	function printAvailabilityCalendarLineOLD($uid, $interval = array()) {
 
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 
@@ -771,13 +771,13 @@ class tx_abbooking_div {
 //~ 			if (date(w, $d) == 1) // open div on monday
 //~ 				$out .= '<div class="calendarWeek">';
 //~ 			$out .= '<ul class="CalendarLine">';
-//~ 
+//~
 			unset($cssClass);
 //~ 			if ($d < $interval['startDate'] || $d > $interval['endDate'])
 //~ 				$cssClass = 'transp';
-//~ 
+//~
 			$cssClass .= $myBooked[$d];
-//~ 
+//~
 //~ 			 // print only in first line
 //~ 			if ($printDayNames == 1) {
 //~ 				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
@@ -790,10 +790,10 @@ class tx_abbooking_div {
 				) {
 				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
 //~ 				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
-//~ 
+//~
 //~ 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 //~ 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
-//~ 
+//~
 //~ 				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
 				$doLink[$d] = $this->getMinimumStay($prices[$d]['minimumStay'], $d);
 			}
@@ -801,15 +801,15 @@ class tx_abbooking_div {
 //~ 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
 				$doLink[$d] = 0;
 			}
-				
+
 //~ 			$out .= '</ul>';
-//~ 			
+//~
 //~ 			if (date(w, $d) == 0) {// close div after sunday
 //~ 				$out .= '</div>';
 //~ 				$printDayNames = 0;
 //~ 			}
 		}
-		
+
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
 			if (date(w, $d) == 1) // open div on monday
 				$out .= '<div class="calendarWeek">';
@@ -825,13 +825,13 @@ class tx_abbooking_div {
 			if ($printDayNames == 1) {
 				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
 			}
-			
+
 			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
 				if ($doLink[$f] < 1)
 					break;
 			if ($doLink[$d] == 0 || (($f - $d) / 86400) < $doLink[$d])
 				$out .= '<li class="'.$cssClass.'">'.strftime("%d", $d).'</li>';
-				
+
 			else {
 				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
 				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($prices[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
@@ -839,22 +839,306 @@ class tx_abbooking_div {
 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
 				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
 
-				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';					
+				$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
 //~ 					$out .= '<li class="'.$cssClass.'">'.$doLink[$d].'</li>';
 			}
-			
+
 			$out .= '</ul>';
-			
+
 			if (date(w, $d) == 0) {// close div after sunday
 				$out .= '</div>';
 				$printDayNames = 0;
 			}
-			
+
 		}
 
 		$out .= '</div>';
 		$out .= '<div class="clear"></div>';
 		return $out;
+	}
+
+	/**
+	 * Display the availability calendar as single line for a given interval
+	 *
+	 * @param	integer		$uid: ...
+	 * @param	array		$interval: ...
+	 * @return	HTML-list		of calendar days
+	 */
+	function printAvailabilityCalendarDiv($uid, $interval, $months = 0, $cols = 1) {
+
+		if ($months == 0)
+			$months = date('n', $interval['endList']) - date('n', $interval['startList']) +
+				(date('Y', $interval['endList']) - date('Y', $interval['startList']) +1)*12;
+
+		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
+			if ($this->lConf['startDateStamp'] > 0) {
+				$interval['startDate'] =  strtotime('first day of this month', $this->lConf['startDateStamp']);
+			}
+			else {
+				$interval['startDate'] = strtotime('first day of this month');
+			}
+			$interval['endDate'] = strtotime('+ '.$months.' months', $interval['startDate'])-86400;
+			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);
+		} else {
+			$interval['startDate'] =  strtotime('first day of this month', $interval['startDate']);
+			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);
+		}
+
+		$interval['startList'] = strtotime( 'last monday', $interval['startDate'] );
+		$interval['endList'] = strtotime( 'next sunday', $interval['endDate'] );
+
+		// interval will be changed by reference...
+		$outDoLink = tx_abbooking_div::prepareCalendarData($uid, $interval);
+
+		// disable caching of target booking page
+		$conf = array(
+		  // Link to booking page
+		  'parameter' => $this->lConf['gotoPID'],
+		  // We must add cHash because we use parameters
+		  'useCacheHash' => false,
+		);
+
+
+
+		if (empty($this->lConf['ProductID']) && empty($uid)) {
+			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
+		}
+
+		// date select form
+		if ($this->lConf['showDateNavigator']) {
+			$out .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
+					<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
+
+			if (!$this->isRobot())
+				$out .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+			$out .= '</form>
+				<br />
+			';
+		}
+
+		$colCount = 0;
+
+		$out .= '<div class="availabilityCalendar">';
+		for ($m = $interval['startDate']; $m <= strtotime('+ '.($months - 1).' months', $interval['startDate']); $m=strtotime('+1 month', $m)) {
+
+			$bookingRate = 0;
+			$colCount++;
+			$out .= '<div class="calendarMonth"><div class="calendarMonthName">'.strftime("%B %Y", $m).'</div>';
+			$printDayNames = 1;
+			if (date(w, $m) != 1) // if no monday go back to last monday
+				$interval['startList'] = strtotime( 'last monday', $m);
+			else
+				$interval['startList'] = $m;
+			$interval['endList'] = strtotime( 'last day of this month', $m);
+
+			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
+				if (date(w, $d) == 1) {// open div on monday
+
+					$out .= '<div class="calendarWeek"><ul class="CalendarLine">';
+
+					if ($printDayNames == 1) {
+						// fill noDays at the end of the month
+						for ($fillDay = $d; $fillDay <= strtotime('next sunday', $d); $fillDay=strtotime('+1 day', $fillDay)) {
+								$out .= '<li class="'.$myBooked[$fillDay].' DayNames">'.substr(strftime("%a", $fillDay), 0, 2).'</li>';
+						}
+						$out .= '</ul>';
+						$out .= '</div>';
+						$printDayNames = 0;
+						$out .= '<div class="calendarWeek"><ul class="CalendarLine">';
+					}
+				}
+				unset($cssClass);
+
+				if ($d < strtotime('first day of this month', $m) || $d > strtotime('last day of this month', $m)) {
+					$cssClass = 'noDay';
+					$printDay = strftime("%d", $d);
+				} else {
+					$cssClass = $outDoLink[$d]['css'];
+					$printDay = strftime("%d", $d);
+				}
+				if ($this->lConf['showBookingRate'] && strstr($cssClass, 'booked') && !strstr($cssClass, 'booked End'))
+					$bookingRate ++;
+
+				if ($outDoLink[$d]['link'] == 1 && !strstr($cssClass,'noDay')) {
+					// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
+					$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($outDoLink[$d]['minimumStay'], $d)).'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+
+					// create links with cHash...
+					$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
+					$url = $this->cObj->typoLink($printDay, $conf);
+
+					$out .= '<li class="'.$cssClass.'">'.$url.'</li>';
+				}
+				else
+					$out .= '<li class="'.$cssClass.'">'.$printDay.'</li>';
+
+				if (date(w, $d) == 0) {// close div after sunday
+					$out .= '</ul>';
+					$out .= '</div>';
+					//$printDayNames = 0;
+				} else	if ($d == strtotime('last day of this month', $m)) {
+					// fill noDays at the end of the month
+					for ($fillDay = $d; $fillDay < strtotime('next sunday', $d); $fillDay=strtotime('+1 day', $fillDay)) {
+							$out .= '<li class="noDay">&nbsp;</li>';
+					}
+					$out .= '</ul>';
+					$out .= '</div>';
+				}
+			}
+
+			if ($this->lConf['showBookingRate'])
+				$out .= '<p>'.round((100*$bookingRate/date("t", strtotime( $year . "-" . $mon . "-01"))),0).' %</p>';
+			$out .= '</div>'; // <div class="calendarMonth">
+			if ($colCount == $cols) {
+				$out .= '<div class="clear" style="clear: both;"></div>';
+				$colCount = 0;
+			}
+		}
+
+		$out .= '</div>';
+		$out .= '<div class="clear"></div>';
+
+		return $out;
+	}
+
+	/**
+	 * Display the availability calendar as single line for a given interval
+	 *
+	 * @param	integer		$uid: ...
+	 * @param	array		$interval: ...
+	 * @return	HTML-list		of calendar days
+	 */
+	function printAvailabilityCalendarLine($uid, $interval = array()) {
+
+		if (!isset($interval['startDate']) && !isset($interval['endDate'])) {
+			$today = strtotime(strftime("%Y-%m-%d"));
+			$interval['startDate'] = strtotime('-2 day', $today);
+			$interval['endDate'] = strtotime('+10 days', $today);
+		}
+		if (!isset($interval['startList']) && !isset($interval['endList'])) {
+			$interval['startList'] = $interval['startDate'];
+			$interval['endList'] = $interval['endDate'];
+		}
+		$interval['startList'] = strtotime('last monday', $interval['startList'] );
+		$interval['endShowTime'] = strtotime('next sunday', $interval['endList'] );
+		$interval['endList'] = strtotime('+10 days', $interval['endShowTime']);
+
+		// interval will be changed by reference...
+		$outDoLink = tx_abbooking_div::prepareCalendarData($uid, $interval);
+
+		// disable caching of target booking page
+		$conf = array(
+		  // Link to booking page
+		  'parameter' => $this->lConf['gotoPID'],
+		  // We must add cHash because we use parameters
+		  'useCacheHash' => false,
+		);
+
+		$printDayNames = 1;
+		$out = '<div class="availabilityCalendarLine">';
+		for ($d = $interval['startList']; $d <= $interval['endShowTime']; $d = strtotime('+1 day', $d)) {
+			if (date(w, $d) == 1) // open div on monday
+				$out .= '<div class="calendarWeek">';
+			$out .= '<ul class="CalendarLine">';
+
+			 // print only in first line
+			if ($printDayNames == 1) {
+				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
+			}
+
+			if ($outDoLink[$d]['link'] == 1 ) {
+				// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
+				$params_united = $d.'_'.max($this->lConf['daySelector'], $this->getMinimumStay($outDoLink[$d]['minimumStay'], $d)).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
+
+				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';;
+				$url = $this->cObj->typoLink(strftime("%d", $d), $conf);
+
+				$out .= '<li class="'.$outDoLink[$d]['css'].'">'.$url.'</li>';
+			}
+			else {
+				$out .= '<li class="'.$outDoLink[$d]['css'].'">'.strftime("%d", $d).'</li>';
+			}
+
+			$out .= '</ul>';
+//~ //~
+			if (date(w, $d) == 0) {// close div after sunday
+				$out .= '</div>';
+				$printDayNames = 0;
+			}
+		}
+
+		return $out;
+	}
+
+	/**
+	 * Display the availability calendar as single line for a given interval
+	 *
+	 * @param	integer		$uid: ...
+	 * @param	array		$interval: ...
+	 * @return	HTML-list		of calendar days
+	 */
+	function prepareCalendarData($uid, $interval) {
+
+		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
+
+		$this->pi_loadLL();
+
+		// disable booking links for robots
+		if ($this->isRobot())
+			$this->lConf['enableBookingLink'] = 0;
+
+		// only check prices if not yet available...
+		if (! empty($this->lConf['productDetails'][$uid]['prices'])) {
+			//~ print_r("printAvailabilityCalendarLine ++++ Prices already available \n");
+			$prices = $this->lConf['productDetails'][$uid]['prices'];
+		}
+		else
+			$prices = tx_abbooking_div::getPrices($uid, $interval);
+
+		$bookedPeriods = tx_abbooking_div::getBookings($uid, $interval);
+		$myBooked = tx_abbooking_div::cssClassBookedPeriods($bookedPeriods, $prices, $interval);
+
+		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
+			unset($cssClass);
+			$cssClass .= $myBooked[$d];
+
+			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
+					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
+					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk'] == '1')
+				) {
+
+				$doLink[$d] = $this->getMinimumStay($prices[$d]['minimumStay'], $d);
+			}
+			else {
+				$doLink[$d] = 0;
+			}
+
+		}
+
+		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
+
+			unset($cssClass);
+			if ($d < $interval['startDate'] || $d > $interval['endDate'])
+				$cssClass = 'transp';
+
+			$cssClass .= $myBooked[$d];
+
+			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
+				if ($doLink[$f] < 1)
+					break;
+
+			if ($doLink[$d] == 0 || (($f - $d) / 86400) < $doLink[$d])
+				$outDoLink[$d]['link'] = 0;
+			else {
+				$outDoLink[$d]['link'] = 1;
+				$outDoLink[$d]['minimumStay'] = $doLink[$d];
+			}
+			$outDoLink[$d]['css'] = $cssClass;
+
+		}
+
+		return $outDoLink;
 	}
 
 	/**
