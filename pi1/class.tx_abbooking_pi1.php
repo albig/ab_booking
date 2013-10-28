@@ -63,7 +63,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	var $prefixId      = 'tx_abbooking_pi1';		// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_abbooking_pi1.php';	// Path to this script relative to the extension dir.
 	var $extKey        = 'ab_booking';	// The extension key.
-	//~ var $pi_checkCHash = TRUE; // if this is a USER plugin
 
 	/**
 	 * The main method of the PlugIn
@@ -435,7 +434,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$this->lConf['showPriceDetails'] = $this->conf['showPriceDetails'];
 		if (count($this->conf['form.']) > 0)
 			$this->lConf['form'] = $this->conf['form.'];
-//~ print_r($this->lConf);
+
 		// ---------------------------------
 		// get Product Properties
 		// ---------------------------------
@@ -609,6 +608,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 */
 	public function getProductPropertiesFromDB($ProductUID) {
 
+//~ print_r("getProductPropertiesFromDB:" . $ProductUID . "\n");
+
 		$availableProductIDs = array();
 		$offTimeProductIDs = array();
 
@@ -641,6 +642,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
   				}
 				$product_properties_return[$uid] = $product;
 			}
+			
 		}
 
 		// given UIDs not in availableProductIDs must be OffTimeProductIDs
@@ -1062,12 +1064,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$discountRate['priceIsPerWeek'] = 0;
 		}
 
-//~ 		if ($rate['priceIsPerWeek'] == 1)
-//~ 			$discountRate['rateIncrement'] = 1;
-//~ 		else
-//~ 			$discountRate['rateIncrement'] = $dayStep;
-//~ print_r($discountRate);
-
 		return $discountRate;
 	}
 	/**
@@ -1129,24 +1125,11 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Calculate the Rates
 	 *
-	 * @param	[type]		$uid: ...
-	 * @param	[type]		$maxAvailable: ...
-	 * @return	string		with amount, currency...
-	 */
-	function calcRates($key, $period) {
-
-		return $this->calcRatesDBMode($key, $period);
-
-	}
-
-	/**
-	 * Calculate the Rates
-	 *
 	 * @param	integer		$prId: the product id
 	 * @param	integer		$period: booking period in full days
 	 * @return	string		with amount, currency...
 	 */
-	function calcRatesDBMode($prId, $period) {
+	function calcRates($prId, $period) {
 
 		$priceDetails = array();
 
@@ -1207,7 +1190,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				}
 
 				$usedPrices[$cur_title]['numPersons'] = $max_persons;
-
 
 				if ($operator == '*+') {
 					$rateValue['discountRate'] = ($max_persons + $adultX) * $rateValue['discountRate'];
@@ -1302,17 +1284,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$lDetails['value'] = $value['rateUsed'].' x '.number_format($value['rateValue'], 2, ',', '').' '.$currency.' = '.number_format($value['rateUsed']*$value['rateValue'],2,',','').' '.$currency;
 
 				$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
-//~ 				if (strpos($value['title'], $this->pi_getLL('adultX')) === FALSE) {
-//~ 					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons;
-//~ 				} else {
-//~ 					$lDetails['description'] = $value['rateUsed'].' '.$text_periods.', '.$value['title'].$text_persons_more;
-//~ 				}
 
 				$priceDetails[] = $lDetails;
 			}
 
 		// apply discount; discountValue is taken from startDate
 		$discountrate = $product['prices'][$this->lConf['startDateStamp']]['discount'];
+		
 		if (intval($discountrate)>0 && $period >= $product['prices'][$this->lConf['startDateStamp']]['discountPeriod']) {
 			$discountValue = round($total_amount * ($discountrate/100), 2);
 			$total_amount -= $discountValue;

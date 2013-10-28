@@ -27,7 +27,6 @@ CREATE TABLE tx_abbooking_booking (
 	title tinytext,
 	productid int(11) DEFAULT '0' NOT NULL,
 	editcode tinytext,
-	request tinyint(4) DEFAULT '0' NOT NULL,
 
 	PRIMARY KEY (uid),
 	KEY parent (pid)
