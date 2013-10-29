@@ -466,7 +466,7 @@ class tx_abbooking_form {
 				</form>';
 
 		}
-		$content.='</div>';
+		$content .= '</div>';
 		return $content;
 	}
 

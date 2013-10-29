@@ -747,6 +747,8 @@ class tx_abbooking_div {
 			}
 		}
 
+		$out .= '</div>';
+		$out .= '<div class="clear"></div>';
 		return $out;
 	}
 
