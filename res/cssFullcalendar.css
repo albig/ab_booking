@@ -1,0 +1,21 @@
+div.booking {
+	height: 20px;
+}
+
+div.category-1 {
+	background-color: white;
+	color: black;
+}
+
+div.category-2 {
+	background-color: yellow;
+	color: black;
+}
+
+div.category-3 {
+	background-color: red;
+}
+
+div.category-5 {
+	background-color: green;
+}

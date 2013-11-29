@@ -11,19 +11,19 @@
 	    </TCEforms>
 		<type>array</type>
 		<el>
-		<ProductID>
-			<TCEforms>
- 			<exclude>1</exclude>
-			<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.ProductID</label>
-			<config>
-				<type>select</type>
-				<maxitems>100</maxitems>
-				<size>5</size>
-				<minitems>0</minitems>
- 				<itemsProcFunc>tx_abbooking_remote->flexFormListProductIDs</itemsProcFunc>
-			</config>
-			</TCEforms>
-		</ProductID>
+			<ProductID>
+				<TCEforms>
+				<exclude>1</exclude>
+				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.ProductID</label>
+				<config>
+					<type>select</type>
+					<maxitems>100</maxitems>
+					<size>5</size>
+					<minitems>0</minitems>
+					<itemsProcFunc>tx_abbooking_remote->flexFormListProductIDs</itemsProcFunc>
+				</config>
+				</TCEforms>
+			</ProductID>
 			<numCheckNextMonths>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numCheckNextMonths</label>
@@ -57,40 +57,39 @@
 					</config>
 				</TCEforms>
 			</numCheckMaxInterval>
-		<PIDstorage>
-			<TCEforms>
-				<exclude>1</exclude>
-				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.PIDstorage</label>
-				<config>
-					<type>group</type>
-					<internal_type>db</internal_type>
-					<allowed>pages</allowed>
-					<size>1</size>
-					<maxitems>1</maxitems>
-					<minitems>0</minitems>
-					<show_thumbs>1</show_thumbs>
-				</config>
-			</TCEforms>
-		</PIDstorage>
-		<PIDbooking>
-			<TCEforms>
-				<exclude>1</exclude>
-				<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.PIDbooking</label>
-				<config>
-					<type>group</type>
-					<internal_type>db</internal_type>
-					<allowed>pages</allowed>
-					<size>1</size>
-					<maxitems>1</maxitems>
-					<minitems>0</minitems>
-					<show_thumbs>1</show_thumbs>
-				</config>
-			</TCEforms>
-		</PIDbooking>
-	</el>
+			<PIDstorage>
+				<TCEforms>
+					<exclude>1</exclude>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.PIDstorage</label>
+					<config>
+						<type>group</type>
+						<internal_type>db</internal_type>
+						<allowed>pages</allowed>
+						<size>1</size>
+						<maxitems>1</maxitems>
+						<minitems>0</minitems>
+						<show_thumbs>1</show_thumbs>
+					</config>
+				</TCEforms>
+			</PIDstorage>
+			<PIDbooking>
+				<TCEforms>
+					<exclude>1</exclude>
+					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.PIDbooking</label>
+					<config>
+						<type>group</type>
+						<internal_type>db</internal_type>
+						<allowed>pages</allowed>
+						<size>1</size>
+						<maxitems>1</maxitems>
+						<minitems>0</minitems>
+						<show_thumbs>1</show_thumbs>
+					</config>
+				</TCEforms>
+			</PIDbooking>
+		</el>
 	</ROOT>
 </sheetGeneralOptions>
-
 
 <sheetPluginOptions>
 	<ROOT>
@@ -153,6 +152,7 @@
 					</config>
 				</TCEforms>
 			</showDateNavigator>
+
 			<numMonths>
 				<TCEforms>
 					<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.numMonths</label>
@@ -381,7 +381,6 @@
 					</config>
 				</TCEforms>
 			</showOnlyChanges>
-
 		</el>
 	</ROOT>
 </sheetPluginOptions>
