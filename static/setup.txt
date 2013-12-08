@@ -223,23 +223,31 @@ plugin.tx_abbooking_pi1 {
 
 page.includeJSFooter.ab_booking_datepicker = {$plugin.tx_abbooking_pi1.file.jsDatepicker}
 
-page.jsFooterInline {
-	10 = TEXT
-	10.value(
-		$(document).ready(function() {
-			$.datepicker({ maxDate: +12M });
-			$.datepicker.setDefaults($.datepicker.regional['de']);
-		});
-	)
+page.jsInline {
+  10 = TEXT
+  10.value (
+      $(document).ready(function() {
+    )
+  20 = TEXT
+  20.value(
+      $('input').filter('.datepicker').datepicker( "option", "maxDate", "+12M" );
+  )
+  30 = TEXT
+  30.value(
+      $('input').filter('.datepicker').datepicker( "option", "buttonText", "Bitte wählen Sie das Anreisedatum aus dem Kalender." );
+      $.datepicker.setDefaults($.datepicker.regional['de']);
+  )
+    90 = TEXT
+    90.value (
+       });
+    )
 }
 [globalVar = GP:L = 1]
-page.jsFooterInline {
-	10 = TEXT
-	10.value(
-		$(document).ready(function() {
-			$.datepicker({ maxDate: +12M });
-			$.datepicker.setDefaults($.datepicker.regional['en-GB']);
-		});
-	)
+page.jsInline {
+    30 = TEXT
+    30.value(
+            $('input').filter('.datepicker').datepicker( "option", "buttonText", "Please choose the check-in date from the calendar." );
+            $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+    )
 }
 [global]

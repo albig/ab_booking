@@ -313,8 +313,8 @@ input.submit_final {
 
 input.submit {
 	padding: 5px;
+	margin: 5px;
 	float: right;
-	margin: 0px;
 	font-size: 140%;
 	background-color: #aadd88;
 }

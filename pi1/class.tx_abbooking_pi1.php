@@ -536,8 +536,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		else
 			$startdate = time();
 
-		//~ $content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]'.$this->lConf['uidpid'], $startdate, $ErrorVacancies);
-		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" value="'.date($this->lConf['dateFormat'], $startdate).'"/>';
+		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" size="12" maxsize="12" value="'.date($this->lConf['dateFormat'], $startdate).'" />';
 
 		$content .= '</div>';
 
