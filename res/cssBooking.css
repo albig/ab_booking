@@ -156,11 +156,11 @@
 	width: 100%;
 }
 .tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine {
-	float: left;
 	margin: 0;
 	padding-left: 0;
 }
 .tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li {
+	float: left;
 	width: 20px;
 	margin: 2px;
 	width: 17px;

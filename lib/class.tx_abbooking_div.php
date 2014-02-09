@@ -703,7 +703,6 @@ class tx_abbooking_div {
 		$interval['endShowTime'] = strtotime('next sunday', $interval['endList'] );
 		$interval['endList'] = strtotime('+10 days', $interval['endShowTime']);
 
-		// interval will be changed by reference...
 		$outDoLink = tx_abbooking_div::prepareCalendarData($uid, $interval);
 
 		// disable caching of target booking page
@@ -714,16 +713,27 @@ class tx_abbooking_div {
 		  'useCacheHash' => false,
 		);
 
-		$printDayNames = 1;
 		$out = '<div class="availabilityCalendarLine">';
-		for ($d = $interval['startList']; $d <= $interval['endShowTime']; $d = strtotime('+1 day', $d)) {
-			if (date(w, $d) == 1) // open div on monday
-				$out .= '<div class="calendarWeek">';
-			$out .= '<ul class="CalendarLine">';
 
-			 // print only in first line
-			if ($printDayNames == 1) {
-				$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
+		 // print day names from Mo to Sun in first line
+		for ($d = $interval['startList']; $d < strtotime('+7 days', $interval['startList']); $d = strtotime('+1 day', $d)) {
+			if (date(w, $d) == 1) {  // open div on monday
+				$out .= '<div class="calendarWeek">';
+				$out .= '<ul class="CalendarLine">';
+			}
+
+			$out .= '<li class="'.$cssClass.' DayNames">'.substr(strftime("%a", $d), 0, 2).'</li>';
+
+			if (date(w, $d) == 0) {// close div after sunday
+				$out .= '</ul>';
+				$out .= '</div>';
+			}
+		}
+
+		for ($d = $interval['startList']; $d <= $interval['endShowTime']; $d = strtotime('+1 day', $d)) {
+			if (date(w, $d) == 1) {  // open div on monday
+				$out .= '<div class="calendarWeek">';
+				$out .= '<ul class="CalendarLine">';
 			}
 
 			if ($outDoLink[$d]['link'] == 1 ) {
@@ -739,11 +749,9 @@ class tx_abbooking_div {
 				$out .= '<li class="'.$outDoLink[$d]['css'].'">'.strftime("%d", $d).'</li>';
 			}
 
-			$out .= '</ul>';
-//~ //~
 			if (date(w, $d) == 0) {// close div after sunday
+				$out .= '</ul>';
 				$out .= '</div>';
-				$printDayNames = 0;
 			}
 		}
 
@@ -753,7 +761,7 @@ class tx_abbooking_div {
 	}
 
 	/**
-	 * Display the availability calendar as single line for a given interval
+	 * Prepare the calendar data with css settings and link information
 	 *
 	 * @param	integer		$uid: ...
 	 * @param	array		$interval: ...
@@ -806,11 +814,12 @@ class tx_abbooking_div {
 
 			$cssClass .= $myBooked[$d];
 
+			// go from "d" some days ("minimum stay") in the future to check if all days are free
 			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
 				if ($doLink[$f] < 1)
 					break;
 
-			if ($doLink[$d] == 0 || (($f - $d) / 86400) < $doLink[$d])
+			if ($doLink[$d] == 0 || strtotime('-' . $doLink[$d] . ' days', $f) < $d)
 				$outDoLink[$d]['link'] = 0;
 			else {
 				$outDoLink[$d]['link'] = 1;
