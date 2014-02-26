@@ -2,9 +2,12 @@
 
 $(document).ready(function() {
 
+	var storagePid = 73;
+	var fegroup = 1;
+
 	/* special fancybox-setup for bookingajax-teasers */
 	var mybookings = {
-		url: "?eID=ab_booking&uids=1,2,3,5&storagePid=73&fegroup=1",
+		url: '?eID=ab_booking&uids=1,2,3,5&storagePid=' + storagePid + '&fegroup=' + fegroup,
 		className: 'booking'
 	}
 
@@ -72,16 +75,33 @@ $(document).ready(function() {
     },
 	dayClick: function(date, allDay, jsEvent, view) {
 
-        if (allDay) {
-            // Clicked on the entire day
-            if ($(jsEvent.target).is('div.fc-day-number')) {
+		// in month view...
+        if (allDay && $(jsEvent.target).is('div.fc-day-number')) {
                 // Clicked on the day number
 
                 $('#calendar')
                     .fullCalendar('changeView', 'agendaDay')
                     .fullCalendar('gotoDate',
                         date.getFullYear(), date.getMonth(), date.getDate());
-            }
+        } else {
+
+			//~ alert('View: ' + view.name);
+			//~ alert('Day: ' + date.getDate());
+			//~ alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+
+			$('#formTemplate input[type="submit"]').before(' \
+			<input type="hidden" name="storagePid" value="' + storagePid + '" /> \
+			<input type="hidden" name="fegroup" value="' + fegroup + '" /> \
+			');
+
+			$.fancybox({
+				'href': '#formTemplate',
+				'width': 400,
+				overlayOpacity: 0.6,
+				autoDimensions: false,
+				autoScale: false,
+			});
+			return false;
         }
     },
     eventClick: function(event, jsEvent, view) {
