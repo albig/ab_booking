@@ -949,9 +949,9 @@ class tx_abbooking_div {
 							$url = $this->cObj->typoLink(strftime('%a, %x', $interval['startDate']), $conf);
 						}
 						else
-							$link = strftime('%a, %x', $j);
+							$url = strftime('%a, %x', $j);
 
-						$contentError[] = $this->pi_getLL('error_next_checkIn_on').' '.$link;
+						$contentError[] = $this->pi_getLL('error_next_checkIn_on').' '.$url;
 						break;
 					}
 				}
