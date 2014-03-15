@@ -544,7 +544,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// field days select
 		// -------------------------------------
 		$content .= '<div class="selector">';
-		$content .= '<label for="fielddaySelector'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
+		$content .= '<label for="fielddaySelector-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
 				<select class="'.$ErrorVacanciesLimited.'" name="'.$this->prefixId.'[daySelector]" id="fielddaySelector-'.$this->lConf['uidpid'].'" size="1">';
 
 		// set global day steps
