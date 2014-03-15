@@ -530,13 +530,13 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// field startDate with - possible datepicker
 		// -------------------------------------
 		$content .= '<div class="startdate">';
-		$content .= '<label for="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
+		$content .= '<label for="checkinDate-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
 		if (isset($this->lConf['startDateStamp']))
 			$startdate = $this->lConf['startDateStamp'];
 		else
 			$startdate = time();
 
-		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" size="12" maxsize="12" value="'.date($this->lConf['dateFormat'], $startdate).'" />';
+		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" size="12" maxsize="12" value="'.date($this->lConf['dateFormat'], $startdate).'" />';
 
 		$content .= '</div>';
 
@@ -564,8 +564,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// -------------------------------------
 		if ($this->lConf['showPersonsSelector'] == 1 && $overallCapacity > 0) {
 			$content .= '<div class="selector">';
-			$content .= '<label for="fieldadultSelector'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
-					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector'.$this->lConf['uidpid'].'" size="1">';
+			$content .= '<label for="fieldadultSelector-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
+					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector-'.$this->lConf['uidpid'].'" size="1">';
 			// you may set in flexform the maximum amount of persons to show in the selector
 			if (intval($this->lConf['numCheckMaxPersons'])>0)
 				$selectorMax = min($this->lConf['numCheckMaxPersons'],  $overallCapacity);
