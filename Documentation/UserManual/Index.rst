@@ -7,12 +7,12 @@
 
 
 Users manual
-------------
+============
 
 This manual describes the installation of ab_booking using some use cases.
 
 Use Cases
-^^^^^^^^^
+---------
 
 # **Holiday Flat** This example will show the configuration for a house
 with 3 different flats. The flats are rent only from March to December
@@ -29,21 +29,15 @@ each. The minimum stay depends on the time before the arrival. For only
 night an supplement is charged. A visitor tax (per person) is added and
 breakfast can be choosen as option.
 
+Setup
+-----
 
+.. toctree::
+        :maxdepth: 5
+        :titlesonly:
+        :glob:
 
-Target group: **Users**
+        SetupTree/Index
+        SetupFirstData/Index
+        SetupWidgets/Index
 
-.. figure:: ../Images/screenshot_ab_booking_backend_flexform.jpg
-	:width: 500px
-	:alt: Backend Plugin Configuration
-
-	Backend Plugin Configuration
-
-
-
-
-
-FAQ
-^^^
-
-Possible subsection: FAQ

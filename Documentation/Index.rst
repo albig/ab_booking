@@ -24,13 +24,14 @@ ab_booking
 		en
 
 	:Description:
-		enter description.
+		Simple booking extensions for holiday flats and small bed and breakfast 
+		with availability check and vacancy calendar.	
 
 	:Keywords:
 		booking, flat, root, hotel
 
 	:Copyright:
-		2013
+		2008-2014
 
 	:Author:
 		Alexander Bigga

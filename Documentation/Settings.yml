@@ -4,14 +4,14 @@
 
 ---
 conf.py:
-  copyright: 2013
+  copyright: 2008-2014
   project: ab_booking
-  version: 1.0
-  release: 0.6.8
+  version: 0.7
+  release: 0.6.14
   latex_documents:
   - - Index
     - ab_booking.tex
-    - ab_booking
+    - ab\_booking
     - Alexander Bigga
     - manual
   latex_elements:
