@@ -276,21 +276,25 @@
 /*
  * general form settings
  */
-input {
+.tx-abbooking-pi1 label {
+	font-weight: bold;
+}
+
+.tx-abbooking-pi1 input {
 	border: 1px solid #aa0000;
 }
 
-input.error {
+.tx-abbooking-pi1 input.error {
 	border: 3px solid #aa0000;
 	background-color: #fffa79;
 }
 
-input.readonly {
+.tx-abbooking-pi1 input.readonly {
  	border: 0px solid #aa0000;
 	background-color: #ffffff;
 }
 
-input.edit {
+.tx-abbooking-pi1 input.edit {
 	padding: 5px;
 	float: left;
 	border: 1px solid #aa0000;
@@ -298,12 +302,12 @@ input.edit {
 	font-size: 100%;
 }
 
-div.buttons {
+.tx-abbooking-pi1 div.buttons {
 	position: relative;
 	top: 0px;
 }
 
-input.submit_final {
+.tx-abbooking-pi1 input.submit_final {
 	padding: 5px;
 	float: right;
 	margin: 0px;
@@ -311,7 +315,7 @@ input.submit_final {
 	background-color: #aadd88;
 }
 
-input.submit {
+.tx-abbooking-pi1 input.submit {
 	padding: 5px;
 	margin: 5px;
 	float: right;
@@ -319,7 +323,7 @@ input.submit {
 	background-color: #aadd88;
 }
 
-input.submit_dateSelect {
+.tx-abbooking-pi1 input.submit_dateSelect {
 	padding: 5px;
 	margin: 0px;
 	background-color: #aadd88;
@@ -475,11 +479,11 @@ input.submit_dateSelect {
 	width: 7em;
 }
 
-td.noPrices:hover {
+.tx-abbooking-pi1 td.noPrices:hover {
 	background-color: #ddd;
 }
 
-textarea[name="tx_abbooking_pi1[mitteilung]"] {
+.tx-abbooking-pi1 textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	border: 1px solid #aa0000;
 	margin: 1px;
 	width: 100%;
@@ -586,7 +590,7 @@ textarea[name="tx_abbooking_pi1[mitteilung]"] {
 	margin-bottom: 1em;
 }
 
-.tooltipForm {
+.tx-abbooking-pi1 .tooltipForm {
 	display:none;
  	background:transparent url(white_big_wc.png);
 	font-size: 90%;

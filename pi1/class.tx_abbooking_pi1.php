@@ -530,7 +530,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// field startDate with - possible datepicker
 		// -------------------------------------
 		$content .= '<div class="startdate">';
-		$content .= '<label for="checkinDate-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</b></label><br/>';
+		$content .= '<label for="checkinDate-'.$this->lConf['uidpid'].'">'.htmlspecialchars($this->pi_getLL('feld_anreise')).'</label><br/>';
 		if (isset($this->lConf['startDateStamp']))
 			$startdate = $this->lConf['startDateStamp'];
 		else
@@ -544,7 +544,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// field days select
 		// -------------------------------------
 		$content .= '<div class="selector">';
-		$content .= '<label for="fielddaySelector-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</b></label><br/>
+		$content .= '<label for="fielddaySelector-'.$this->lConf['uidpid'].'">'.htmlspecialchars($this->pi_getLL('feld_naechte')).'</label><br/>
 				<select class="'.$ErrorVacanciesLimited.'" name="'.$this->prefixId.'[daySelector]" id="fielddaySelector-'.$this->lConf['uidpid'].'" size="1">';
 
 		// set global day steps
@@ -564,7 +564,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// -------------------------------------
 		if ($this->lConf['showPersonsSelector'] == 1 && $overallCapacity > 0) {
 			$content .= '<div class="selector">';
-			$content .= '<label for="fieldadultSelector-'.$this->lConf['uidpid'].'"><b>'.htmlspecialchars($this->pi_getLL('feld_personen')).'</b></label><br/>
+			$content .= '<label for="fieldadultSelector-'.$this->lConf['uidpid'].'">'.htmlspecialchars($this->pi_getLL('feld_personen')).'</label><br/>
 					<select name="'.$this->prefixId.'[adultSelector]" id="fieldadultSelector-'.$this->lConf['uidpid'].'" size="1">';
 			// you may set in flexform the maximum amount of persons to show in the selector
 			if (intval($this->lConf['numCheckMaxPersons'])>0)
