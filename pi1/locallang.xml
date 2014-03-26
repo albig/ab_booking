@@ -235,7 +235,7 @@
 			<label index="send_failure">Bei der Absendung Ihrer Buchung ist ein Fehler aufgetreten. Bitte rufen Sie uns an oder schicken Sie uns eine Email!</label>
 			<label index="email_new_booking">Reserveringsverzoek vanaf</label>
 			<label index="email_your_booking">Uw reserveringsverzoek</label>
-</languageKey>
+		</languageKey>
 
 		<languageKey index="fr" type="array">
 			<label index="vacant day">libre</label>

@@ -218,6 +218,53 @@ plugin.tx_abbooking_pi1 {
 			useTooltip = 1
 		  }
 		}
+
+		contactMe {
+			  required = 0
+			  type = radio
+			  validation =
+			  title.de = Bitte kontaktieren Sie mich per
+			  title.en = Please contact me by
+			  radio {
+				letter {
+				  title.de = Brief
+				  title.en = Letter
+				}
+				telephone {
+				  title.de = Telefon
+				  title.en = Telepone
+				}
+				email {
+				  selected = 1
+				  title.de = E-Mail
+				  title.en = Email
+				}
+			  }
+		}
+
+		hotelRools {
+			  required = 1
+			  type = checkbox
+			  clearAfterThis = 1
+			  title {
+				de = Buchungsbedingungen
+				en = Conditions
+			  }
+
+			  checkbox {
+				agb {
+				  checked = 0
+				  title {
+					de = Ich habe die Allgemeinen Geschäftsbedingungen gelesen.
+					en = I read the general conditions.
+				  }
+				  info {
+					de = Sie müssen die AGBs akzeptieren!
+					en = You must accept the general conditions!
+				  }
+				}
+			  }
+			}
 	} # form end
 }
 

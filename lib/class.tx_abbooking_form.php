@@ -112,13 +112,14 @@ class tx_abbooking_form {
 						$out .= '<div class="clear"></div>';
 
 					break;
+
 				case 'radio':
-					$out .= '<div class="'.$cssClass.'">';
+					$out .= '<fieldset class="'.$cssClass.'">';
 
 					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
-						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
+						$out .= '<legend class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</legend>';
 					else {
-						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
+						$out .= '<legend class="title">'.$this->getTSTitle($form['title.']).'</legend>';
 						if (count($form['info.']) > 0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
@@ -141,29 +142,57 @@ class tx_abbooking_form {
 								if ($radio['selected'] == 1)
 									$selected = 'checked="checked"';
 							}
-							$out .= '<div class="singleradio"><input type="radio" name="'.$formnameGET.'" value="'.$radioname.'" '.$selected.' />'.$this->getTSTitle($radio['title.']).'</div>';
+							$out .= '<input type="radio" name="'.$formnameGET.'" value="'.$radioname.'" '.$selected.' />'.$this->getTSTitle($radio['title.']);
 						}
 						$out .= '<div class="clearsingleradio"></div>';
 					}
 
-					$out .= '</div>';
+					$out .= '</fieldset>';
 
 					if ($form['clearAfterThis'] == '1')
 						$out .= '<div class="clear"></div>';
 
 					break;
 				case 'checkbox':
-					$out .= '<div class="'.$cssClass.'">';
+					$out .= '<fieldset class="'.$cssClass.'">';
 
-					if (count($form['info.']) > 0 && $form['info.']['useTooltip'] == '1')
+					if (count($form['info.']) > 0 && $form['info.']['useTooltip'] == '1') {
 						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
+					}
 					else {
 						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
 						if (count($form['info.'])>0)
 							$out .= '<p class="info">'.$this->getTSTitle($form['info.']).'</p>';
 					}
 
-					$out .= '</div>';
+					if ($showHidden == 1) {
+						foreach ($form['checkbox.'] as $radioname => $radio) {
+								if ($radioname == $customer[$formname])
+									break;
+						}
+						$out .= '<p class="yourSettings">'.$this->getTSTitle($radio['title.']).'</p>';
+						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
+					}
+					else {
+						foreach ($form['checkbox.'] as $radioname => $radio) {
+							$selected = '';
+							if (! empty($customer[$formname])) {
+								if ($radioname == $customer[$formname])
+									$selected = 'checked="checked"';
+							} else {
+								if ($radio['checked'] == 1)
+									$selected = 'checked="checked"';
+							}
+							if (count($radio['info.']) > 0) {
+								$title = 'title="'.$this->getTSTitle($radio['info.']).'"';
+							}
+
+							$out .= '<input type="checkbox" name="'.$formnameGET.'" value="'.$radioname.'" '.$title.' '.$selected.' '.$required.' />'.$this->getTSTitle($radio['title.']);
+						}
+						$out .= '<div class="clearsinglecheckbox"></div>';
+					}
+
+					$out .= '</fieldset>';
 
 					if ($form['clearAfterThis'] == '1')
 						$out .= '<div class="clear"></div>';
