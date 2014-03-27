@@ -7,7 +7,7 @@
 
 
 Administrator Manual
---------------------
+====================
 
 Describes how to manage the extension from an administrator’s point of
 view. That relates to Page/User TSconfig, permissions, configuration
@@ -22,6 +22,9 @@ Target group: **Administrators**
 Installation
 """"""""""""
 
+Installation
+^^^^^^^^^^^^
+
 How should the extension be set up? E.g. is there a static template to include?
 
 .. figure:: ../Images/AdministratorManual/ExtensionManager.png
@@ -33,7 +36,14 @@ How should the extension be set up? E.g. is there a static template to include?
 	List of extensions within the Extension Manager also shortend as "EM" (legend of the image)
 
 
-FAQ
-^^^
 
-Possible subsection: FAQ
+.. toctree::
+        :maxdepth: 5
+        :titlesonly:
+        :glob:
+
+        UpdateScript/Index
+        TyposcriptSetup/Index
+        FormConfiguration/Index
+
+

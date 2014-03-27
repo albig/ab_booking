@@ -16,7 +16,7 @@ ab_booking
 
 	:Classification:
 		ab_booking
-		
+
 	:Version:
 		|release|
 
@@ -24,8 +24,8 @@ ab_booking
 		en
 
 	:Description:
-		Simple booking extensions for holiday flats and small bed and breakfast 
-		with availability check and vacancy calendar.	
+		Simple booking extensions for holiday flats and small bed and breakfast
+		with availability check and vacancy calendar.
 
 	:Keywords:
 		booking, flat, root, hotel
