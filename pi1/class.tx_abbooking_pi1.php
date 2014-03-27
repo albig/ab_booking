@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 - 2013 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2014 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,32 +22,6 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *   63: class tx_abbooking_pi1 extends tslib_pibase
- *   75:     function main($content, $conf)
- *  232:     function init()
- *  384:     public function formBookingUserData($conf, $product, $stage)
- *  649:     public function formCheckAvailability()
- *  748:     public function getProductPropertiesFromDB($ProductUID)
- *  805:     function check_availability($storagePid)
- *  914:     function formVerifyUserInput()
- *  998:     function log_request($logFile)
- * 1024:     function send_confirmation_email($key, &$send_errors)
- * 1153:     function insert_booking()
- * 1204:     function getMinimumStay($minimumStay, $startDate)
- * 1244:     function getDiscountRate($rate, $period)
- * 1285:     function calcRates($key, $period)
- * 1477:     function printCalculatedRates($key, $period, $printHTML = 1, $printForm = 1)
- * 1562:     function isRobot()
- *
- * TOTAL FUNCTIONS: 15
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
 
 /**
  * Plugin 'Booking Calendar' for the 'ab_booking' extension.
@@ -60,9 +34,10 @@ require_once(t3lib_extMgm::extPath('ab_booking').'lib/class.tx_abbooking_div.php
 require_once(t3lib_extMgm::extPath('ab_booking').'lib/class.tx_abbooking_form.php'); // load form
 
 class tx_abbooking_pi1 extends tslib_pibase {
-	var $prefixId      = 'tx_abbooking_pi1';		// Same as class name
+
+	var $prefixId      = 'tx_abbooking_pi1';	// Same as class name
 	var $scriptRelPath = 'pi1/class.tx_abbooking_pi1.php';	// Path to this script relative to the extension dir.
-	var $extKey        = 'ab_booking';	// The extension key.
+	var $extKey        = 'ab_booking';			// The extension key.
 
 	/**
 	 * The main method of the PlugIn
@@ -80,7 +55,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$this->cssBooking = str_replace(PATH_site,'',t3lib_div::getFileAbsFileName($this->conf['file.']['cssBooking']));
 		$GLOBALS['TSFE']->additionalHeaderData['abbooking_css'] = '<link href="'.$this->cssBooking.'" rel="stylesheet" type="text/css" />'."\n";
-//~ print_r($this->piVars);
+
 		// get all initial settings
 		$this->init();
 
@@ -220,15 +195,12 @@ class tx_abbooking_pi1 extends tslib_pibase {
 						break;
 					case '2':
 						$out .= '<div class="offer">';
-						$out .= 'Placeholder Availability List';
+						$out .= $this->pi_getLL('error_availability_list');
 						$out .= '</div>';
 						break;
 					case '4':
 						$out .= tx_abbooking_div::printCheckinOverview($this->lConf['ProductID']);
 						break;
-//~ 					case '5': // booking rate overview
-//~ 						$out .= tx_abbooking_div::printBookingRateOverview($this->lConf['ProductID']);
-//~ 						break;
 					case '6': // list of future bookings
 						$out .= tx_abbooking_div::printFutureBookings($this->lConf['ProductID']);
 						break;
@@ -305,8 +277,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		}
 
 		// set dateFormat - prefered from TS otherwise from language defaults
-		if (is_array($this->conf['dateFormat.'])) {
-			$this->lConf['dateFormat'] = $this->getTSTitle($this->conf['dateFormat.']);
+		if (isset($this->conf['dateFormat'])) {
+			$this->lConf['dateFormat'] = $this->conf['dateFormat'];
 		} else {
 				if ($GLOBALS['TSFE']->config['config']['language'] == 'de')
 					$this->lConf['dateFormat'] = 'd.m.Y';
@@ -315,10 +287,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				else
 					$this->lConf['dateFormat'] = 'Y-m-d';
 		}
-		if (!empty($this->conf['dateFormatConfig']))
-			$this->lConf['dateFormatConfig'] = $this->conf['dateFormatConfig'];
-		else
-			$this->lConf['dateFormatConfig'] = $this->lConf['dateFormat'];
 
 		// overwrite some settings if post-vars are set:
 		if (isset($this->piVars['checkinDate'])) {
@@ -640,7 +608,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
   				}
 				$product_properties_return[$uid] = $product;
 			}
-			
+
 		}
 
 		// given UIDs not in availableProductIDs must be OffTimeProductIDs
@@ -702,7 +670,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
 		foreach ($bookings['bookings'] as $key => $row) {
-			
+
 			// start with something reasonable: the set checkMaxInterval
 			if (!isset($item[$row['uid']]['maxAvailable']))
 				$item[$row['uid']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
@@ -717,7 +685,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			// check if found "available" in this run is small than the previous maxAvailable
 			if ($item[$row['uid']]['available'] < $item[$row['uid']]['maxAvailable'])
 				$item[$row['uid']]['maxAvailable'] = $item[$row['uid']]['available'];
-				
+
 		}
 
  		// 2. step through prices to find maximum availability
@@ -756,7 +724,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			//  - the end of the maximal booking period (numCheckNextMonths) ($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400)
 			//  - the found "maxAvailable" after parsing existing bookings (step 1): $item[$uid]['maxAvailable']
 			//  - the found "available" up to the next "noPrice" (?): $item[$uid]['available']
-			
+
 			if (strlen($item[$uid]['available']) > 0) {
 				$item[$uid]['maxAvailable'] = (int)min($this->lConf['numCheckMaxInterval'], (1 + (strtotime('+ '.($this->lConf['numCheckNextMonths']).' months', strtotime('today')) - $interval['startDate']) / 86400), $item[$uid]['available'], $item[$uid]['maxAvailable']);
 			} else
@@ -1288,7 +1256,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// apply discount; discountValue is taken from startDate
 		$discountrate = $product['prices'][$this->lConf['startDateStamp']]['discount'];
-		
+
 		if (intval($discountrate)>0 && $period >= $product['prices'][$this->lConf['startDateStamp']]['discountPeriod']) {
 			$discountValue = round($total_amount * ($discountrate/100), 2);
 			$total_amount -= $discountValue;

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2014 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -21,20 +21,7 @@
 *
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
-/**
- * [CLASS/FUNCTION INDEX of SCRIPT]
- *
- *
- *
- *   38: class tx_abbooking_remote
- *   49:     function getAllProducts($pidList)
- *   77:     function flexFormListProductIDs($config)
- *  117:     function flexFormListRemoteProductIDs($config)
- *
- * TOTAL FUNCTIONS: 3
- * (This index is automatically created/updated by the extension "extdeveval")
- *
- */
+
 class tx_abbooking_remote  {
 	var $prefixId      = 'tx_abbooking_remote';		// Same as class name
 	var $scriptRelPath = 'lib/class.tx_abbooking_remote.php';	// Path to this script relative to the extension dir.
@@ -65,13 +52,14 @@ class tx_abbooking_remote  {
 
 	/**
 	 * list local product IDs in flexform
+	 *
 	 * This function is called twice. Once for the already selected items on
 	 * the left and once for the items to be selected on the right.
 	 * Don't know why, but TYPO3 changes the content of the flexform data
 	 * between these two calls. That's why it's difficult to get the storage
 	 * PID out of it.
 	 *
-	 * @param	array		$config: array with parameters
+	 * @param	array	$config: array with parameters
 	 * @return	the		modified config array
 	 */
 	function flexFormListProductIDs($config) {

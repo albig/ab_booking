@@ -11,7 +11,21 @@ plugin.tx_abbooking_pi1 {
 	showPriceDetails = 1
 	# send confirmation mail to customer
 	sendCustomerConfirmation = 1
+
+	# date format: this may be set like in the PHP date() function
+	# --> only used in date input fields
+	# --> other date output is made with strftime() which uses locales --> check your config.locales setting
+	# --> see datepicker regional setting below if this doesn't match, nothing will be shown
+	#
+	# default for German config.language = de --> d.m.Y
+	# default for English config.language = en --> d/m/Y
+	# else --> Y-m-d
+	#
+	#dateFormat = d.m.Y
+
     file.cssBooking = {$plugin.tx_abbooking_pi1.file.cssBooking}
+
+    # overwrite some language labels
 	_LOCAL_LANG {
 		de {
 			discount = Rabatt
@@ -268,33 +282,52 @@ plugin.tx_abbooking_pi1 {
 	} # form end
 }
 
-page.includeJSFooter.ab_booking_datepicker = {$plugin.tx_abbooking_pi1.file.jsDatepicker}
+# include t3jquery
+includeLibs.t3jquery = EXT:t3jquery/class.tx_t3jquery.php
+page.9 = USER
+page.9.userFunc = tx_t3jquery->addJqJS
 
-page.jsInline {
-  10 = TEXT
-  10.value (
+# include more datepicker settings depending on language
+page.jsFooterInline {
+	# split into several elements to overwrite easier in different languages
+	10 = TEXT
+	10.value (
       $(document).ready(function() {
     )
-  20 = TEXT
-  20.value(
-      $('input').filter('.datepicker').datepicker( "option", "maxDate", "+12M" );
-  )
-  30 = TEXT
-  30.value(
-      $('input').filter('.datepicker').datepicker( "option", "buttonText", "Bitte wählen Sie das Anreisedatum aus dem Kalender." );
+    # for datepicker options see http://api.jqueryui.com/datepicker/
+	20 = TEXT
+	20.value(
+      $('input.datepicker').datepicker({
+		changeMonth: false,
+		changeYear: false,
+		minDate: "0d",
+		showWeek: true,
+		maxDate: "+12M",
+		showOn: 'both',
+		buttonImage: '/typo3conf/ext/ab_booking/ext_icon.gif',
+		buttonImageOnly: true,
+		numberOfMonths: [ 1, 2 ],
+		buttonText: '---',
+	});
+	)
+	# localizable part
+	30 = TEXT
+	30.value(
       $.datepicker.setDefaults($.datepicker.regional['de']);
-  )
+      $('input.datepicker').datepicker( "option", "buttonText", "Bitte wählen Sie das Anreisedatum aus dem Kalender." );
+	)
     90 = TEXT
     90.value (
        });
     )
 }
+
 [globalVar = GP:L = 1]
 page.jsInline {
     30 = TEXT
     30.value(
-            $('input').filter('.datepicker').datepicker( "option", "buttonText", "Please choose the check-in date from the calendar." );
-            $.datepicker.setDefaults($.datepicker.regional['en-GB']);
+		$('input.datepicker').datepicker( "option", "buttonText", "Please choose the check-in date from the calendar." );
+		$.datepicker.setDefaults($.datepicker.regional['en-GB']);
     )
 }
 [global]

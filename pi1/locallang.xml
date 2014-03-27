@@ -23,15 +23,13 @@
 			<label index="feld_abreise">Depature</label>
 			<label index="feld_naechte">Number of Nights</label>
 			<label index="feld_personen">Number of Persons</label>
+			<label index="feld_mitteilung">Message</label>
 			<label index="titel_anfrage">Booking</label>
 			<label index="submit_button_label">Send</label>
 			<label index="submit_button_check">Check</label>
 
-			<label index="feld_mitteilung">Message</label>
-
 			<label index="title_request">Booking Request</label>
 			<label index="title_availability">Availability</label>
-
 
 			<label index="error_noEmailConfigured">No Email Address has been configured!</label>
 			<label index="error_noProductSelected">No product has been selected!</label>
@@ -52,7 +50,7 @@
 			<label index="error_tooFarInFuture">Your request is to far in the future! At the moment we only accept bookings up to %s.</label>
 			<label index="error_numNightsNotValid">Number of Nights is not valid!</label>
 			<label index="error_minimumStay">There is a minimum stay of %s </label>
-
+			<label index="error_availability_list">The booking page must be called from the calendar or the availability check. It should be hidden in navigation.</label>
 
 			<label index="product_title">Description</label>
 			<label index="total_amount">Total (incl. VAT)</label>
@@ -132,7 +130,7 @@
 			<label index="error_tooFarInFuture">Ihre Anfrage liegt zu weit in der Zukunft! Wir akzeptieren momentan nur Buchungen bis %s.</label>
 			<label index="error_numNightsNotValid">Anzahl der Übernachtungen ist nicht gültig!</label>
 			<label index="error_minimumStay">Die Mindestaufenthaltsdauer beträgt %s.</label>
-
+			<label index="error_availability_list">Die Buchungsseite muss über den Kalender oder die Verfügbarkeitsabfrage aufgerufen werden. Die Seite sollte im Menü verborgen werden.</label>
 
 			<label index="product_title">Bezeichnung</label>
 			<label index="total_amount">Gesamtpreis (inkl. MwSt.)</label>

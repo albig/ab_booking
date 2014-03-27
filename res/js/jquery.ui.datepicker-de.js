@@ -3,8 +3,8 @@
 jQuery(function($){
 	$.datepicker.regional['de'] = {
 		closeText: 'Schließen',
-		prevText: '&#x3C;Zurück',
-		nextText: 'Vor&#x3E;',
+		prevText: 'Zurück',
+		nextText: 'Vor',
 		currentText: 'Heute',
 		monthNames: ['Januar','Februar','März','April','Mai','Juni',
 		'Juli','August','September','Oktober','November','Dezember'],

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009-2013 Alexander Bigga <linux@bigga.de>
+*  (c) 2009-2014 Alexander Bigga <linux@bigga.de>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -30,6 +30,7 @@
  * @subpackage	tx_abbooking
  */
 class tx_abbooking_div {
+
 
 	function getRecordRaw($table, $pid, $uid, $where_extra = '', $ignore_array = array(), $select = '*') {
 
@@ -238,37 +239,6 @@ class tx_abbooking_div {
  		if (($checkInWeekdays == "") || ($checkInWeekdays == '*') ||
 			in_array(date(w, $day), explode(',', $checkInWeekdays)   ))
 			return TRUE;
-		else
-			return FALSE;
-	}
-
-	/**
-	 * Check if Season is valild for a given date
-	 *
-	 * @param	string		$uid
-	 * @param	array		$interval: ...
-	 * @return	array		with booking periods
-	 */
-	function checkSeasonValidation($season, $interval) {
-
-		// there are no details about this season -> skip
-		if (! is_array($season))
-			return FALSE;
-
-		// set date timestamp to 00:00:00
-		$season['startDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormatConfig'],$season['startDate']), 0, 0), 'U');
-		$season['endDateStamp'] = date_format(date_time_set(date_create_from_format($this->lConf['dateFormatConfig'],$season['endDate']), 0, 0), 'U');
-
-			// there are four cases of time intervals:
-			// 1: start set, stop set                 |-------------|
-			// 2: start set, stop open                |---------------->
-			// 3: start open, stop set             <----------------|
-			// 4: start open, stop open (default rate) <------------->
-
-		if (($season['startDateStamp'] <= $interval['endList'] || $season['startDateStamp'] == 0) &&
-			($season['endDateStamp'] >= $interval['startList'] || $season['endDateStamp'] == 0)) {
-			return $season;
-		}
 		else
 			return FALSE;
 	}
