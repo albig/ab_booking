@@ -7,7 +7,7 @@ plugin.tx_abbooking_pi1 = USER
 [globalVar = GP:tx_abbooking_pi1|abnocache = 1]
 plugin.tx_abbooking_pi1 = USER_INT
 page.9 >
-page.9 = USER_INT
+page.9 = USER_INT
 page.9.userFunc = tx_t3jquery->addJqJS
 [global]
 
