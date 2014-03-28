@@ -779,10 +779,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 */
 	function log_request($logFile) {
 
-		// don't log robots...
-		if ($this->isRobot())
-			return;
-
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$longisp = @gethostbyaddr($ip);
 
@@ -1417,28 +1413,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		};
 
 		return implode(',', $pluginPageIds);
-	}
-
-	/**
-	 * Check for Robots
-	 *
-	 * @return	0		if visitor is no robot, else 1
-	 */
-	function isRobot() {
-		$trackUserAgent = $_SERVER['HTTP_USER_AGENT'];
-
-		if (stristr($trackUserAgent, 'archiver' )) return 1;
-		else if (stristr($trackUserAgent, 'exabot' )) return 1;
-		else if (stristr($trackUserAgent, 'firefly' )) return 1;
-		else if (stristr($trackUserAgent, 'msnbot' )) return 1;
-		else if (stristr($trackUserAgent, 'scooter' )) return 1;
-		else if (stristr($trackUserAgent, 'googlebot' )) return 1;
-		else if (stristr($trackUserAgent, 'bigfinder' )) return 1;
-		else if (stristr($trackUserAgent, 'yandex' )) return 1;
-		else if (stristr($trackUserAgent, 'slurp' )) return 1;
-		else if (stristr($trackUserAgent, 'gonzo' )) return 1;
-
-		else return 0;
 	}
 
 }

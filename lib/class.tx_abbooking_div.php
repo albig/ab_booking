@@ -357,19 +357,10 @@ class tx_abbooking_div {
 			$startdate = time();
 
 		$content .= '<input class="'.$ErrorVacancies.' datepicker" id="'.$this->prefixId.'-checkinDate-'.$this->lConf['uidpid'].'" name="'.$this->prefixId.'[checkinDate]" type="text" value="'.date($this->lConf['dateFormat'],  $interval['startDate']).'"/>';
-
 		$content .= '</div>';
 
-
-		//~ $content .= '<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
-
-		//~ $content .= tx_abbooking_div::getJSCalendarInput($this->prefixId.'[checkinDate]', $interval['startDate'], $ErrorVacancies);
-
-		if (!$this->isRobot())
-			$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
-		$content .= '</form>
-			<br />
-		';
+		$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+		$content .= '</form>';
 
 		$out = $content;
 
@@ -487,8 +478,7 @@ class tx_abbooking_div {
 		$content .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 				<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
 
-		if (!$this->isRobot())
-			$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+		$content .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 		$content .= '</form>
 			<br />
 		';
@@ -527,7 +517,7 @@ class tx_abbooking_div {
 			else {
 				$interval['startDate'] = strtotime('first day of this month');
 			}
-			$interval['endDate'] = strtotime('+ '.$months.' months', $interval['startDate'])-86400;
+			$interval['endDate'] = strtotime('+ '.$months.' months', $interval['startDate']) - 86400;
 			$interval['endDate'] = strtotime('last day of this month', $interval['endDate']);
 		} else {
 			$interval['startDate'] =  strtotime('first day of this month', $interval['startDate']);
@@ -548,8 +538,6 @@ class tx_abbooking_div {
 		  'useCacheHash' => false,
 		);
 
-
-
 		if (empty($this->lConf['ProductID']) && empty($uid)) {
 			$out = '<h2 class="setupErrors"><b>'.$this->pi_getLL('error_noProductSelected').'</b></h2>';
 		}
@@ -559,8 +547,7 @@ class tx_abbooking_div {
 			$out .='<form action="'.$this->pi_getPageLink($GLOBALS['TSFE']->id).'" method="POST">
 					<label for="'.$this->prefixId.'[checkinDate]'.'_cb">&nbsp;</label><br/>';
 
-			if (!$this->isRobot())
-				$out .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
+			$out .= '<input class="submit_dateSelect" type="submit" name="'.$this->prefixId.'[submit_button_CheckinOverview]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 			$out .= '</form>
 				<br />
 			';
@@ -575,10 +562,12 @@ class tx_abbooking_div {
 			$colCount++;
 			$out .= '<div class="calendarMonth"><div class="calendarMonthName">'.strftime("%B %Y", $m).'</div>';
 			$printDayNames = 1;
+
 			if (date(w, $m) != 1) // if no monday go back to last monday
 				$interval['startList'] = strtotime( 'last monday', $m);
 			else
 				$interval['startList'] = $m;
+
 			$interval['endList'] = strtotime( 'last day of this month', $m);
 
 			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
@@ -609,7 +598,7 @@ class tx_abbooking_div {
 				if ($this->lConf['showBookingRate'] && strstr($cssClass, 'booked') && !strstr($cssClass, 'booked End'))
 					$bookingRate ++;
 
-				if ($outDoLink[$d]['link'] == 1 && !strstr($cssClass,'noDay')) {
+				if ($outDoLink[$d]['link'] == 1 && !strstr($cssClass, 'noDay')) {
 					// set default daySelector = 2 OR minimumStay for given day, adultSelector = 2
 					$params_united = $d.'_'.max($this->lConf['daySelector'], $outDoLink[$d]['minimumStay']).'_'.$this->lConf['adultSelector'].'_'.$uid.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor0';
 
@@ -638,6 +627,7 @@ class tx_abbooking_div {
 
 			if ($this->lConf['showBookingRate'])
 				$out .= '<p>'.round((100*$bookingRate/date("t", strtotime( $year . "-" . $mon . "-01"))),0).' %</p>';
+
 			$out .= '</div>'; // <div class="calendarMonth">
 			if ($colCount == $cols) {
 				$out .= '<div class="clear" style="clear: both;"></div>';
@@ -742,10 +732,6 @@ class tx_abbooking_div {
 		$product = $this->lConf['productDetails'][$this->lConf['AvailableProductIDs'][0]];
 
 		$this->pi_loadLL();
-
-		// disable booking links for robots
-		if ($this->isRobot())
-			$this->lConf['enableBookingLink'] = 0;
 
 		// only check prices if not yet available...
 		if (! empty($this->lConf['productDetails'][$uid]['prices'])) {

@@ -485,6 +485,7 @@ $TCA['tx_abbooking_price'] = array (
 				'size' => '20',	## WOP:[tables][3][fields][1][conf_size]
 				'max' => '60',	## WOP:[tables][3][fields][1][conf_max]
 				'eval' => 'nospace',	## WOP:[tables][3][fields][2][conf_eval] / [tables][3][fields][2][conf_stripspace]
+				'default' => '1',
 			)
 		),
 		'blockDaysAfterBooking' => array (		## WOP:[tables][3][fields][1][fieldname]
