@@ -119,7 +119,7 @@ class ext_update {
 
 				foreach ($xmlArray['data'][$oldFieldPointer[0]] as $language => $fields) {
 					if ($fields[$oldFieldPointer[1]]) {
-		
+
 						// wtf: why do I need to do a foreach here? why can't I access the key directly?
 						foreach ($fields[$oldFieldPointer[1]] as $vdev => $vv) {
 							switch ($vv) {
@@ -143,20 +143,16 @@ class ext_update {
 									$xmlArray['data'][$newFieldPointer[0]][$language][$newFieldPointer[1]] = $fields[$oldFieldPointer[1]];
 							}
 						}
-						
-						
-//~ 						$message = print_r($fields[$oldFieldPointer[1]], 1);
-//~ 						$status = t3lib_FlashMessage::NOTICE;
-//~ 						$this->messageArray[] = array($status, $title, $message);
 
-						unset($xmlArray['data'][$oldFieldPointer[0]][$language][$oldFieldPointer[1]]);
+						//~ unset($xmlArray['data'][$oldFieldPointer[0]][$language][$oldFieldPointer[1]]);
+						$xmlArray['data'][$oldFieldPointer[0]][$language][$oldFieldPointer[1]] = '';
 
 						$updated = TRUE;
 					}
 				}
 
 				if ($updated === TRUE) {
-					
+
 					$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', 'uid=' . $row['uid'], array(
 						'pi_flexform' => $flexformTools->flexArray2Xml($xmlArray)
 					));
@@ -164,12 +160,12 @@ class ext_update {
 //~ 			$recRow = t3lib_BEfunc::getRecordRaw('tt_content','uid=' . $row['uid']);
 //~ 			// clean flexform and save to XML-Structure ready to save to database
 //~ 			$xml = $flexformTools->cleanFlexFormXML('tt_content', 'pi_flexform', $recRow);
-//~ 
+//~
 //~ 			$fields = array('pi_flexform' => $xml);
 //~ 			$where = 'uid = '. $row['uid'] .' ';
 //~ 			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', $where, $fields);
-//~ 
-//~ 
+//~
+//~
 
 
 					$message = 'OK!';
