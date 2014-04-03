@@ -748,7 +748,7 @@ class tx_abbooking_div {
 			unset($cssClass);
 			$cssClass .= $myBooked[$d];
 
-			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d"))
+			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d 00:00:00"))
 					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
 					&& (strstr($cssClass, 'vacant') || strstr($cssClass, 'End')) // only vacant
 					&& (! strstr($cssClass, 'noPrices'))  && ($prices[$d]['checkInOk'] == '1')
@@ -772,7 +772,7 @@ class tx_abbooking_div {
 
 			// go from "d" some days ("minimum stay") in the future to check if all days are free
 			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
-				if ($doLink[$f] < 1)
+				if ($doLink[$f] < $doLink[$d] && $doLink[$f] != 0)
 					break;
 
 			if ($doLink[$d] == 0 || strtotime('-' . $doLink[$d] . ' days', $f) < $d)
