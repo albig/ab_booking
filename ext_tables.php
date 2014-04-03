@@ -130,6 +130,7 @@ t3lib_extMgm::addPlugin(array(
 	t3lib_extMgm::extRelPath($_EXTKEY) . 'ext_icon.gif'
 ),'list_type');
 
+
 //---------------------------------
 // flexform
 //---------------------------------
