@@ -390,7 +390,6 @@ class tx_abbooking_form {
 			$content .= tx_abbooking_div::printAvailabilityCalendarLine($this->lConf['ProductID'], $interval);
 
 
-
 		$selected = 'selected="selected"';
 		if (isset($this->lConf['adultSelector']))
 			if ($this->lConf['adultSelector'] > $product['capacitymax'])

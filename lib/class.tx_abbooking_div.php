@@ -201,10 +201,10 @@ class tx_abbooking_div {
 			};
 
 			// get the valid prices per day
-			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
-				for ($i=0; $i < $p; $i++) {
+			for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
+				for ($i = 0; $i < $p; $i++) {
 					if (($pricesAvailable[$i]['starttime'] <= $d || $pricesAvailable[$i]['starttime'] == 0)
-						&& ($pricesAvailable[$i]['endtime'] > $d || $pricesAvailable[$i]['endtime'] == 0)
+						&& (strtotime('+1 day', $pricesAvailable[$i]['endtime']) > $d || $pricesAvailable[$i]['endtime'] == 0)
 						&& (tx_abbooking_div::checkCheckinWeekDays($d, $pricesAvailable[$i]['validWeekdays']))
 						)
 						break;
@@ -568,7 +568,7 @@ class tx_abbooking_div {
 			else
 				$interval['startList'] = $m;
 
-			$interval['endList'] = strtotime( 'last day of this month', $m);
+			$interval['endList'] = strtotime('last day of this month', $m);
 
 			for ($d = $interval['startList']; $d <= $interval['endList']; $d=strtotime('+1 day', $d)) {
 				if (date(w, $d) == 1) {// open div on monday
@@ -747,6 +747,8 @@ class tx_abbooking_div {
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
 			unset($cssClass);
 			$cssClass .= $myBooked[$d];
+			
+					
 
 			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d 00:00:00"))
 					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
@@ -772,10 +774,11 @@ class tx_abbooking_div {
 
 			// go from "d" some days ("minimum stay") in the future to check if all days are free
 			for ($f = $d; $f < strtotime('+'.$doLink[$d].' day', $d); $f = strtotime('+1 day', $f))
-				if ($doLink[$f] < $doLink[$d] && $doLink[$f] != 0)
+//~ 				if ($doLink[$f] < $doLink[$d] && $doLink[$f] > 0)
+				if ($doLink[$f] < 1 && $doLink[$f] > 0)
 					break;
 
-			if ($doLink[$d] == 0 || strtotime('-' . $doLink[$d] . ' days', $f) < $d)
+			if (($doLink[$d] == 0)  || strtotime('-' . $doLink[$d] . ' days', $f) < $d)
 				$outDoLink[$d]['link'] = 0;
 			else {
 				$outDoLink[$d]['link'] = 1;

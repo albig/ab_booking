@@ -673,15 +673,21 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
+
+//~ 		foreach ($interval as $id => $val) {
+//~ 				print_r($id . ': '. strftime('%x', $val));
+//~ 		}
+
 		foreach ($bookings['bookings'] as $key => $row) {
 
 			// start with something reasonable: the set checkMaxInterval
 			if (!isset($item[$row['uid']]['maxAvailable']))
 				$item[$row['uid']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
+			if ($row['startdate'] > $interval['startDate'])
 			// booked period is in future of startDate
 			if ($row['startdate'] > $interval['startDate'])
-				$item[$row['uid']]['available'] = (int)date("d",$row['startdate'] - $interval['startDate']) - 1; /* day diff */
+				$item[$row['uid']]['available'] = (int) date("z", $row['startdate'] - $interval['startDate']) - 1; /* day diff */
 			else if ($row['enddate'] > $interval['startDate'])
 				// booked period overlaps startDate
 				$item[$row['uid']]['available'] = 0;
@@ -713,7 +719,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				// reduce available days by minimumStay value
 				if ($this->getMinimumStay($product['prices'][$d]['minimumStay'], $interval['startDate']) > $item[$uid]['minimumStay']) {
 					$item[$uid]['minimumStay'] = $this->getMinimumStay($product['prices'][$d]['minimumStay'], $interval['startDate']);
-//~ 					print_r($uid .':' .strftime('%x', $d).':'.$item[$uid]['minimumStay']."\n");
 				}
 
 				// get highest daySteps...
@@ -1112,8 +1117,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
 		// if you don't have prices per person, please use adult2 for the entire object
 		for ($i=1; $i<=$product['capacitymax']; $i++) {
-//~ print_r("i: ".$i.", adultSelector: ".$this->lConf['adultSelector'].", capacitymax: ".$product['capacitymax']."\n");
-//~ print_r("i: ".$i.", startDateStamp: ".$this->lConf['startDateStamp'].", price adult: ".$product['prices'][$this->lConf['startDateStamp']]['adult'.$i].", max_persons: ".$max_persons."\n");
+
 			if ($product['prices'][$interval['startDate']]['adult'.$i] >= $max_amount) {
 				$max_amount = $product['prices'][$interval['startDate']]['adult'.$i];
 				$max_persons = $i;
