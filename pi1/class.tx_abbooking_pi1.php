@@ -674,10 +674,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// 1. step through bookings to find maximum availability
 		$bookings = tx_abbooking_div::getBookings($this->lConf['ProductID'], $interval);
 
-//~ 		foreach ($interval as $id => $val) {
-//~ 				print_r($id . ': '. strftime('%x', $val));
-//~ 		}
-
 		foreach ($bookings['bookings'] as $key => $row) {
 
 			// start with something reasonable: the set checkMaxInterval
@@ -687,7 +683,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if ($row['startdate'] > $interval['startDate'])
 			// booked period is in future of startDate
 			if ($row['startdate'] > $interval['startDate'])
-				$item[$row['uid']]['available'] = (int) date("z", $row['startdate'] - $interval['startDate']) - 1; /* day diff */
+				$item[$row['uid']]['available'] = (int) date("z", $row['startdate'] - $interval['startDate']); /* day diff */
 			else if ($row['enddate'] > $interval['startDate'])
 				// booked period overlaps startDate
 				$item[$row['uid']]['available'] = 0;
@@ -705,10 +701,10 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if (!isset($item[$uid]['maxAvailable']))
 				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-			for ($d=$interval['startDate']; $d < $interval['endDate']; $d=strtotime('+1 day', $d)) {
+			for ($d=$interval['startDate']; $d < $interval['endDate']; $d = strtotime('+1 day', $d)) {
 				if ($product['prices'][$d] == 'noPrice') {
-					if ($d > $interval['startDate'] && ((int)date("d",$d - $interval['startDate']) - 1) < $item[$uid]['available'])
-						$item[$uid]['available'] = (int)date("d", $d - $interval['startDate']) - 1 ; /* day diff */
+					if ($d > $interval['startDate'] && ((int)date("z", $d - $interval['startDate'])) < $item[$uid]['available'])
+						$item[$uid]['available'] = (int)date("z", $d - $interval['startDate']); /* day diff */
 					else
 						$item[$uid]['available'] = 0;
 				}

@@ -16,7 +16,7 @@ $EM_CONF[$_EXTKEY] = array(
 Another view is an availability check.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '0.6.15',
+	'version' => '0.6.16',
 	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
