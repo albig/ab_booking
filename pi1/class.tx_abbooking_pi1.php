@@ -680,7 +680,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if (!isset($item[$row['uid']]['maxAvailable']))
 				$item[$row['uid']]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-			if ($row['startdate'] > $interval['startDate'])
 			// booked period is in future of startDate
 			if ($row['startdate'] > $interval['startDate'])
 				$item[$row['uid']]['available'] = (int) date("z", $row['startdate'] - $interval['startDate']); /* day diff */
