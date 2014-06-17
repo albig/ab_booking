@@ -440,6 +440,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 					else
 						$customerData[$value] = '1';
 				}
+			$GLOBALS["TSFE"]->fe_user->setKey("ses","customData", array());
 			$GLOBALS["TSFE"]->fe_user->setKey("ses","customData", $customerData);
 		} else {
 			$customerData = $GLOBALS["TSFE"]->fe_user->getKey("ses","customData");

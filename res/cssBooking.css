@@ -1,5 +1,5 @@
 /*
- * (c) 2008-2012 Alexander Bigga <linux@bigga.de>
+ * (c) 2008-2014 Alexander Bigga <linux@bigga.de>
  */
 
 /*
@@ -387,6 +387,10 @@
 /*
  * Request Form
  */
+#footer { display: none; }
+.tx-abbooking-pi1 form fieldset {
+	border: 1px dashed #ddd;
+}
 
 .tx-abbooking-pi1 div.requestForm {
 	float: left;
@@ -413,15 +417,19 @@
 
 .tx-abbooking-pi1 form.requestForm .firstname,
 .tx-abbooking-pi1 form.requestForm .lastname,
-.tx-abbooking-pi1  form.requestForm .zip,
+.tx-abbooking-pi1 form.requestForm .zip,
 .tx-abbooking-pi1 form.requestForm .city,
 .tx-abbooking-pi1 form.requestForm .email,
 .tx-abbooking-pi1 form.requestForm .checkinDate,
-.tx-abbooking-pi1 form.requestForm .singleradio,
-.tx-abbooking-pi1 form.requestForm .clearsingleradio
-{
+.tx-abbooking-pi1 form.requestForm .daySelector,
+.tx-abbooking-pi1 form.requestForm .singleradio {
 	float: left;
 }
+.tx-abbooking-pi1 form.requestForm .clearsingleradio,
+.tx-abbooking-pi1 form.requestForm .clearsinglecheckbox {
+	clear: both;
+}
+
 .tx-abbooking-pi1 form.requestForm .firstname,
 .tx-abbooking-pi1 form.requestForm .zip,
 .tx-abbooking-pi1 form.requestForm .checkinDate

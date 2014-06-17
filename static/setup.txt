@@ -264,18 +264,18 @@ plugin.tx_abbooking_pi1 {
 			  }
 		}
 
-		hotelRools {
-			  required = 1
+		hotelRules {
+			  required = 0
 			  type = checkbox
 			  clearAfterThis = 1
 			  title {
 				de = Buchungsbedingungen
 				en = Conditions
 			  }
-
 			  checkbox {
 				agb {
 				  checked = 0
+				  required = 1
 				  title {
 					de = Ich habe die Allgemeinen Geschäftsbedingungen gelesen.
 					en = I read the general conditions.
@@ -283,6 +283,18 @@ plugin.tx_abbooking_pi1 {
 				  info {
 					de = Sie müssen die AGBs akzeptieren!
 					en = You must accept the general conditions!
+				  }
+				}
+				newsletter {
+				  checked = 0
+				  required = 0
+				  title {
+					de = Bitte schicken Sie mir Ihren Newsletter.
+					en = Please send me your newsletter.
+				  }
+				  info {
+					de = ...
+					en = ...
 				  }
 				}
 			  }
