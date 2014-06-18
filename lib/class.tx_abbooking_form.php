@@ -216,7 +216,7 @@ class tx_abbooking_form {
 					}
 
 					if ($showHidden == 1) {
-						if (($formname == 'adultSelector' && $this->lConf['showPersonsSelector'])
+						if (($formname == 'adultSelector')
 							|| $formname != 'adultSelector')
 								$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
 						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';

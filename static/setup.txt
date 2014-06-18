@@ -298,7 +298,7 @@ plugin.tx_abbooking_pi1 {
 				  }
 				}
 			  }
-			}
+		}
 	} # form end
 }
 

@@ -272,7 +272,7 @@
 					<showPersonsSelector>
 						<TCEforms>
 							<label>LLL:EXT:ab_booking/locallang_tca.xml:ab_booking.pi_flexform.showPersonsSelector</label>
-							<displayCond>FIELD:pluginSelection:IN:1,2</displayCond>
+							<displayCond>FIELD:pluginSelection:IN:1</displayCond>
 							<config>
 								<type>check</type>
 								<default>1</default>
