@@ -207,7 +207,7 @@ class tx_abbooking_form {
 				case 'selector':
 					$out .= '<div class="'.$cssClass.'">';
 
-					if (count($form['info.'])>0 && $form['info.']['useTooltip'] == '1')
+					if (count($form['info.']) > 0 && $form['info.']['useTooltip'] == '1')
 						$out .= '<label class="title" title="'.$this->getTSTitle($form['info.']).'">'.$this->getTSTitle($form['title.']).'</label>';
 					else {
 						$out .= '<label class="title">'.$this->getTSTitle($form['title.']).'</label>';
@@ -216,10 +216,15 @@ class tx_abbooking_form {
 					}
 
 					if ($showHidden == 1) {
-						if (($formname == 'adultSelector')
-							|| $formname != 'adultSelector')
+						switch ($formname) {
+							case 'adultSelector':
 								$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
+								break;
+							default:
+								$out .= '<p class="yourSettings">'.$this->getTSTitle($form['option.'][$customer[$formname]]['title.']).'</p>';
+						}
 						$out .= '<input type="hidden" name="'.$formnameGET.'" value="'.$customer[$formname].'">';
+
 					} else {
 						$selected='selected="selected"';
 						$out .= '<select name="'.$formnameGET.'" size="1">';
@@ -239,12 +244,11 @@ class tx_abbooking_form {
 								for ($i = $product['capacitymin']; $i<=$product['capacitymax']; $i++) {
 									$out.='<option '.$seladultSelector[$i].' value='.$i.'>'.$i.' </option>';
 								}
-
-							break;
+								break;
 							case 'childSelector':
-							break;
+								break;
 							case 'teenSelector':
-							break;
+								break;
 							case 'daySelector':
 								if (isset($this->lConf['daySelector']))
 									$seldaySelector[$this->lConf['daySelector']] = $selected;
@@ -255,8 +259,13 @@ class tx_abbooking_form {
 										$endDate = strtotime('+'.$i.' day', $this->lConf['startDateStamp']);
 										$out.='<option '.$seldaySelector[$i].' value='.$i.'>'.$i.' ('.date($this->lConf['dateFormat'], $endDate).')</option>';
 								}
+								break;
+							default:
+								foreach ($form['option.'] as $optionname => $option) {
 
-							break;
+									$out.='<option value='.$optionname.'>'.trim($this->getTSTitle($option['title.'])).' </option>';
+								}
+								break;
 						}
 
 						$out .= '</select>';
