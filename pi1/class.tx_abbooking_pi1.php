@@ -816,17 +816,37 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		// use TS form settings
  		if (is_array($this->lConf['form']) && count($this->lConf['form'])>1) {
 			$text_mail .= $this->pi_getLL('product_title').": ".$product['title']."\n";
+
 			foreach ($this->lConf['form'] as $formname => $form) {
 				$formname = str_replace('.', '', $formname);
 				// skip settings which are no form fields
 				if (!is_array($form) || empty($customer[$formname]))
 					continue;
+
 				// special case: radio (and later checkbox):
 				if (is_array($form['radio.'])) {
+
 					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $this->getTSTitle($form['radio.'][$customer[$formname]]['title.'])."\n";
+
+				} else if (is_array($form['checkbox.'])) {
+
+					$text_mail .= $this->getTSTitle($form['title.']). ': ' . "\n";
+					foreach ($form['checkbox.'] as $checkboxname => $checkbox) {
+						if (in_array($checkboxname, $customer[$formname]))
+							$text_mail .= ' + ' . $this->getTSTitle($checkbox['title.']) . "\n";
+					}
+
+				} else if (is_array($form['option.'])) {
+
+					foreach ($form['option.'] as $checkboxname => $checkbox) {
+						if ($checkboxname == $customer[$formname])
+							$text_mail .= $this->getTSTitle($form['title.']). ': ' . $this->getTSTitle($checkbox['title.']) . "\n";
+					}
+
 				}
 				else
 					$text_mail .= $this->getTSTitle($form['title.']). ': ' . $customer[$formname]."\n";
+
 			}
 		} else {
 			$send_success = 0;
