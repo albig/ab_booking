@@ -6,9 +6,6 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="vacant day">vacant</label>
-			<label index="booked day">booked</label>
-
 			<label index="booking calendar">booking calendar</label>
 
 			<label index="back">Back</label>
@@ -20,7 +17,6 @@
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Phone</label>
 			<label index="feld_anreise">Arrival</label>
-			<label index="feld_abreise">Depature</label>
 			<label index="feld_naechte">Number of Nights</label>
 			<label index="feld_personen">Number of Persons</label>
 			<label index="feld_mitteilung">Message</label>
@@ -87,8 +83,6 @@
 		</languageKey>
 
 		<languageKey index="de" type="array">
-			<label index="vacant day">frei</label>
-			<label index="booked day">gebucht</label>
 			<label index="overbooked">Tag überbucht</label>
 			<label index="booking calendar">Buchungskalender</label>
 
@@ -101,7 +95,6 @@
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Telefon</label>
 			<label index="feld_anreise">Anreise Datum</label>
-			<label index="feld_abreise">Abreise Datum</label>
 			<label index="feld_naechte">Anzahl der Übernachtungen</label>
 			<label index="feld_personen">Anzahl der Personen</label>
 			<label index="feld_mitteilung">Mitteilung</label>
@@ -167,8 +160,6 @@
 
 		</languageKey>
 		<languageKey index="nl" type="array">
-			<label index="vacant day">Vrij</label>
-			<label index="booked day">Bezet</label>
 			<label index="overbooked">Overboekt</label>
 			<label index="booking calendar">Boekingskalender</label>
 
@@ -181,7 +172,6 @@
 			<label index="feld_email">Email</label>
 			<label index="feld_telefon">Telefoon</label>
 			<label index="feld_anreise">Van</label>
-			<label index="feld_abreise">Tot</label>
 			<label index="feld_naechte">Aantal dagen</label>
 			<label index="feld_personen">Aantal Personen</label>
 			<label index="feld_mitteilung">Opmerking</label>
@@ -236,8 +226,6 @@
 		</languageKey>
 
 		<languageKey index="fr" type="array">
-			<label index="vacant day">libre</label>
-			<label index="booked day">réservé</label>
 			<label index="overbooked">Surpeuplé</label>
 			<label index="booking calendar">Calendrier des réservations</label>
 
@@ -250,7 +238,6 @@
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Téléphone</label>
 			<label index="feld_anreise">Date d`arrivée</label>
-			<label index="feld_abreise">Date de départ</label>
 			<label index="feld_naechte">Nombre d`hébergement</label>
 			<label index="feld_personen">Nombre d`adultes</label>
 			<label index="feld_mitteilung">Notification</label>
@@ -316,8 +303,6 @@
 		</languageKey>
 
 		<languageKey index="it" type="array">
-			<label index="vacant day">libera</label>
-			<label index="booked day">riservato</label>
 			<label index="overbooked">Sovrappopolato</label>
 			<label index="booking calendar">Calendario di prenotazioni</label>
 
@@ -330,7 +315,6 @@
 			<label index="feld_email">Email</label>
 			<label index="feld_telephone">Telefono</label>
 			<label index="feld_anreise">Data di arrivo</label>
-			<label index="feld_abreise">Data di partenza</label>
 			<label index="feld_naechte">Quantità di pernottamento</label>
 			<label index="feld_personen">Quantità d`adulti</label>
 			<label index="feld_mitteilung">Notificazione</label>

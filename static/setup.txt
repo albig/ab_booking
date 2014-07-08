@@ -242,26 +242,34 @@ plugin.tx_abbooking_pi1 {
 		}
 
 		contactMe {
-			  required = 0
-			  type = radio
-			  validation =
-			  title.de = Bitte kontaktieren Sie mich per
-			  title.en = Please contact me by
-			  radio {
+			required = 0
+			type = radio
+			validation =
+			title {
+				de = Bitte kontaktieren Sie mich per
+				en = Please contact me by
+			}
+			radio {
 				letter {
-				  title.de = Brief
-				  title.en = Letter
+					title {
+						de = Brief
+						en = Letter
+					}
 				}
 				telephone {
-				  title.de = Telefon
-				  title.en = Telepone
+					title {
+						de = Telefon
+						en = Telepone
+					}
 				}
 				email {
 				  selected = 1
-				  title.de = E-Mail
-				  title.en = Email
+					title {
+						de = E-Mail
+						en = Email
+					}
 				}
-			  }
+			}
 		}
 
 		hotelRules {

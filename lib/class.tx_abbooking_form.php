@@ -218,6 +218,7 @@ class tx_abbooking_form {
 					if ($showHidden == 1) {
 						switch ($formname) {
 							case 'adultSelector':
+							case 'daySelector':
 								$out .= '<p class="yourSettings">'.$customer[$formname].'</p>';
 								break;
 							default:
