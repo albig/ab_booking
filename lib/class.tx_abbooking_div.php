@@ -747,8 +747,6 @@ class tx_abbooking_div {
 		for ($d = $interval['startList']; $d <= $interval['endList']; $d = strtotime('+1 day', $d)) {
 			unset($cssClass);
 			$cssClass .= $myBooked[$d];
-			
-					
 
 			if ($this->lConf['enableBookingLink'] && $d >= strtotime(strftime("%Y-%m-%d 00:00:00"))
 					&& $d < strtotime('+ '.($this->lConf['numCheckNextMonths']).' months')
@@ -853,13 +851,17 @@ class tx_abbooking_div {
 		$offers['numOffers'] = 0;
 		$i = 0;
 
-		$productIds=explode(',', $this->lConf['ProductID']);
+		$productIds = explode(',', $this->lConf['ProductID']);
 
 		foreach ( $productIds as $key => $uid ) {
-			if (($this->lConf['productDetails'][$uid]['capacitymin']+$this->lConf['productDetails'][$uid]['capacitymax']) > 0)
+
+			if (($this->lConf['productDetails'][$uid]['capacitymin']+$this->lConf['productDetails'][$uid]['capacitymax']) > 0) {
 				$product = $this->lConf['productDetails'][$uid];
-			else
-				continue; // skip because empty or OffTimeProductID
+			}
+			else {
+				// skip because empty or OffTimeProductID
+				continue;
+			}
 
 			$i++;
 			$offers[$i] = '';
@@ -894,7 +896,7 @@ class tx_abbooking_div {
 			}
 
 			// check if checkIn is ok for startDate
-			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] == '0') {
+			if ($product['prices'][$this->lConf['startDateStamp']]['checkInOk'] === '0') {
 				$contentError[] = $this->pi_getLL('error_no_checkIn_on').' '.strftime('%a, %x', $this->lConf['startDateStamp']);
 				$enableBookingLink = 0;
 				for ($j=$this->lConf['startDateStamp']; $j < strtotime('+14 day', $this->lConf['startDateStamp']); $j=strtotime('+1 day', $j)) {
@@ -921,7 +923,6 @@ class tx_abbooking_div {
 			if (empty($interval['startDate']))
 				$interval['startDate'] = $this->lConf['startDateStamp'];
 			$interval['endDate'] = strtotime('+'.$bookNights.' day', $this->lConf['startDateStamp']);
-
 
 			$params_united = $interval['startDate'].'_'.$bookNights.'_'.$this->lConf['adultSelector'].'_'.$product['uid'].$offTimeProducts.'_'.$this->lConf['uidpid'].'_'.$this->lConf['PIDbooking'].'_bor1';
 

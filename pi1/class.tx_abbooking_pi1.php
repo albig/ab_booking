@@ -701,7 +701,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if (!isset($item[$uid]['maxAvailable']))
 				$item[$uid]['maxAvailable'] = $this->lConf['numCheckMaxInterval'];
 
-			for ($d=$interval['startDate']; $d < $interval['endDate']; $d = strtotime('+1 day', $d)) {
+			for ($d = $interval['startDate']; $d < $interval['endDate']; $d = strtotime('+1 day', $d)) {
+
 				if ($product['prices'][$d] == 'noPrice') {
 					if ($d > $interval['startDate'] && ((int)date("z", $d - $interval['startDate'])) < $item[$uid]['available'])
 						$item[$uid]['available'] = (int)date("z", $d - $interval['startDate']); /* day diff */
@@ -765,7 +766,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			if ($maxAvailableAll < $this->lConf['productDetails'][$productID]['maxAvailable'])
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = $maxAvailableAll;
 
-			if ($item[$uid]['minimumStay'] > $this->lConf['productDetails'][$productID]['maxAvailable']) {
+			if ($this->lConf['productDetails'][$productID]['minimumStay'] > $this->lConf['productDetails'][$productID]['maxAvailable']) {
 				$this->lConf['productDetails'][$productID]['maxAvailable'] = 0;
 			}
 
@@ -990,9 +991,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Calculate the Minimum Stay Period
 	 *
-	 * @param	[type]		$rate: rate and discount settings
-	 * @param	[type]		$period: booking period
-	 * @return	double		amount
+	 * @param	string	$minimumStay: minimum stay string
+	 * @param	int		$startDate: start date timestamp
+	 * @return	double	amount
 	 */
 	function getMinimumStay($minimumStay, $startDate) {
 
@@ -1006,9 +1007,9 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		foreach ($valueDetails as $id => $value) {
 			// W:2:2
 			$dpd = explode(':', $value);
-			if ($dpd[0] == 'W' && is_numeric($dpd[1]))
+			if ($dpd[0] === 'W' && is_numeric($dpd[1]))
 				$valueArray[$dpd[1] * 7] = $dpd[2];
-			else if ($dpd[0] == 'D' && is_numeric($dpd[1]))
+			else if ($dpd[0] === 'D' && is_numeric($dpd[1]))
 				$valueArray[$dpd[1]] = $dpd[2];
 		}
 
@@ -1053,6 +1054,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		return $discountRate;
 	}
+
 	/**
 	 * Calculate the Rate per Day using the discount settings and the booking period
 	 *
@@ -1104,7 +1106,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 			$discountRate['incrementUse'] = $dayStep;
 			$discountRate['priceIsPerWeek'] = 0;
 		}
-
 
 		return $discountRate;
 	}
