@@ -29,9 +29,6 @@
  * @subpackage tx_abbooking
  */
 class ext_update {
-	const STATUS_WARNING = -1;
-	const STATUS_ERROR = 0;
-	const STATUS_OK = 1;
 
 	protected $messageArray = array();
 
@@ -62,8 +59,6 @@ class ext_update {
 	 * @return void
 	 */
 	protected function processUpdates() {
-
-
 
 		$this->renameFlexformField('ab_booking_pi1', array('sheetGeneralOptions', 'what_to_display'), array('sheetPluginOptions', 'pluginSelection'));
 
@@ -156,17 +151,6 @@ class ext_update {
 					$GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', 'uid=' . $row['uid'], array(
 						'pi_flexform' => $flexformTools->flexArray2Xml($xmlArray)
 					));
-
-//~ 			$recRow = t3lib_BEfunc::getRecordRaw('tt_content','uid=' . $row['uid']);
-//~ 			// clean flexform and save to XML-Structure ready to save to database
-//~ 			$xml = $flexformTools->cleanFlexFormXML('tt_content', 'pi_flexform', $recRow);
-//~
-//~ 			$fields = array('pi_flexform' => $xml);
-//~ 			$where = 'uid = '. $row['uid'] .' ';
-//~ 			$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tt_content', $where, $fields);
-//~
-//~
-
 
 					$message = 'OK!';
 					$status = t3lib_FlashMessage::OK;

@@ -627,8 +627,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * get title text with current language setting
 	 *
-	 * @param	[type]		$ProductUID: ...
-	 * @return	[type]		array of properties..
+	 * @param	array	$title: ...
+	 * @return	string	array of properties..
 	 */
 	public function getTSTitle($title) {
 
@@ -651,8 +651,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	 *
 	 * all information is filled in global $this->lConf['productDetails'] array
 	 *
-	 * @param	none
-	 * @return	0		on success, 1 on error
+	 * @param	array	$interval
+	 * @return	0	on success, 1 on error
 	 */
 	function check_availability($interval) {
 		$item = array();
@@ -779,8 +779,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	/**
 	 * Logs
 	 *
-	 * @param	[type]		$logFile: ...
-	 * @return	number		of successfully sent emails
+	 * @param	string	$logFile: filename with full path
+	 * @return	void
 	 */
 	function log_request($logFile) {
 
@@ -1164,7 +1164,6 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				if (!is_numeric($rateValue['discountRate']) || $rateValue['discountRate'] < 0)
 						continue;
 
-//~ 				$cur_title = str_replace(" ", "", $product['prices'][$d]['title'].$key);
 				switch ($key) {
 					case 'extraComponent1':	$cur_title = $this->pi_getLL('extraComponent1') . $rateValue['discountRate'];
 										break;
@@ -1440,6 +1439,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 	}
 
 }
+
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ab_booking/pi1/class.tx_abbooking_pi1.php'])	{
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/ab_booking/pi1/class.tx_abbooking_pi1.php']);
 }
