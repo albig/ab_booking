@@ -20,8 +20,6 @@
 .tx-abbooking-pi1 .availabilityCalendar li,
 .tx-abbooking-pi1 .availabilityCalendarLine li
 {
-	padding: 1px;
-
 	-moz-border-radius: 3pt;
 	-webkit-border-radius: 3pt;
   	border-radius: 3pt;
@@ -123,29 +121,27 @@
 	margin: 0;
 	padding-left: 0;
 }
-.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li {
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li,
+.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li {
 	float: left;
-	width: 20px;
-
+	width: 24px;
 	margin: 2px;
-	width: 17px;
 	text-align: center;
 	list-style-type: none;
 }
 
-.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.DayNames {
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.DayNames,
+.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li.DayNames{
 	border: none;
-	margin: 2px 4px;
 	text-decoration: none;
 
 }
 
-.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.noDay {
+.tx-abbooking-pi1 div.availabilityCalendar ul.CalendarLine li.noDay,
+.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li.noDay {
 	font-size: 100%;
 	border: 0px;
 	text-align: center;
-	margin: 2px 4px;
-
 }
 
 /*
@@ -159,29 +155,7 @@
 	margin: 0;
 	padding-left: 0;
 }
-.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li {
-	float: left;
-	width: 20px;
-	margin: 2px;
-	width: 17px;
-	text-align: center;
-	list-style-type: none;
-}
 
-.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li.DayNames {
-	border: none;
-	margin: 2px 4px;
-	text-decoration: none;
-
-}
-
-.tx-abbooking-pi1 div.availabilityCalendarLine ul.CalendarLine li.noDay {
-	font-size: 100%;
-	border: 0px;
-	text-align: center;
-	margin: 2px 4px;
-
-}
 
 .tx-abbooking-pi1 div.calendarCheckinOverview {
 	margin: 0 auto;

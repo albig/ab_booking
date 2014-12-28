@@ -330,7 +330,7 @@ page.jsFooterInline {
 		showOn: 'both',
 		buttonImage: '/typo3conf/ext/ab_booking/ext_icon.gif',
 		buttonImageOnly: true,
-		numberOfMonths: [ 1, 2 ],
+		numberOfMonths: [ 1, 1 ],
 		buttonText: '---',
 	});
 	)

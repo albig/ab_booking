@@ -564,7 +564,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$content .= '<input class="submit" type="submit" name="'.$this->prefixId.'[submit_button_checkavailability]" value="'.htmlspecialchars($this->pi_getLL('submit_button_label')).'">';
 
-		$content .= '</form><br />';
+		$content .= '</form>';
 
 		return $content;
 	}
