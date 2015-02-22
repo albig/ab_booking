@@ -75,6 +75,7 @@ class tx_abbooking_div {
 			}
 			$out[$row['uid']] = $row;
 		}
+		
 		return $out;
 	}
 
@@ -929,14 +930,30 @@ class tx_abbooking_div {
 			if (!empty($product['uiddetails']) && !empty($product['detailsRaw']['header'])) {
 				// get detailed description:
 				$title = $product['detailsRaw']['header'];
-				$bodytext = $product['detailsRaw']['bodytext'];
+    
 			} else {
 				$title = $product['title'];
-				if (!empty($product['detailsRaw']['bodytext']))
-					$bodytext = $product['detailsRaw']['bodytext'];
-				else
-					unset($bodytext);
 			}
+
+			if (!empty($product['detailsRaw']['bodytext'])) {
+				
+				$mconf['tables'] = 'tt_content';
+				$mconf['source'] = explode('#', $product['uiddetails'])[1];
+		
+				$mconf['dontCheckPid'] = 1;
+				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
+
+			} else {
+
+				unset($bodytext);
+
+			}
+
+				$mconf['tables'] = 'tt_content';
+				$mconf['source'] = 12; // $product['uiddetails'];
+		
+				$mconf['dontCheckPid'] = 1;
+				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
 
 
 			if ($enableBookingLink) {
