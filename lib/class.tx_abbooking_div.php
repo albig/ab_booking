@@ -935,10 +935,11 @@ class tx_abbooking_div {
 				$title = $product['title'];
 			}
 
-			if (!empty($product['detailsRaw']['bodytext'])) {
+			if (!empty($product['detailsRaw']['bodytext']) && !empty($product['uiddetails'])) {
 				
 				$mconf['tables'] = 'tt_content';
-				$mconf['source'] = explode('#', $product['uiddetails'])[1];
+				$tt_content_id = explode('#', $product['uiddetails']);
+				$mconf['source'] = $tt_content_id[1];
 		
 				$mconf['dontCheckPid'] = 1;
 				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
