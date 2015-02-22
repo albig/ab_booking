@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+//~ t3lib_utility_Debug::debugInPopUpWindow($usedPrices,'usedPrices');
+
 
 /**
  * Plugin 'Booking Calendar' for the 'ab_booking' extension.
@@ -1144,15 +1146,14 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$total_amount = 0;
 		$priceArray['adult'.$max_persons] = '+';
 
-		if ($this->lConf['adultSelector'] > $max_persons) {
-			$adultX = $this->lConf['adultSelector'] - $max_persons;
+		if ($product['capacitymax'] > $max_persons) {
+			$adultX = $product['capacitymax'] - $max_persons;
 			$priceArray['adultX'] = '*x';
 		}
 
 		$priceArray['extraComponent1'] = '*+';
 		$priceArray['extraComponent2'] = '*+';
 
-//~ t3lib_utility_Debug::debugInPopUpWindow($priceArray,'priceArray');
 		foreach($priceArray as $key => $operator) {
 			unset($cur_title);
 			unset($pre_title);
@@ -1232,7 +1233,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$currency = $product['prices'][$this->lConf['startDateStamp']]['currency'];
 
 		// input form element for selectable options
-		if (is_array($usedPrices))
+		if (is_array($usedPrices)) {
+			
 			foreach ($usedPrices as $title => $value) {
 				if (empty($value['rateUsed']))
 					continue;
@@ -1271,6 +1273,8 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 				$priceDetails[] = $lDetails;
 			}
+			
+		}
 
 		// apply discount; discountValue is taken from startDate
 		$discountrate = $product['prices'][$this->lConf['startDateStamp']]['discount'];
