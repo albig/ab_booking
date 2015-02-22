@@ -1129,18 +1129,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 
 		$dayStep = 1;
 
-		$max_amount = 0;
-		// assuming every adult costs more;
-		// e.g. 1 adult 10, 2 adults 20, 3 adults 25...
-		// if you don't have prices per person, please use adult2 for the entire object
-		for ($i=1; $i<=$product['capacitymax']; $i++) {
+		// check the maximum amount of persons (no rate --> reduce amount)
+		for ($i=1; $i <= $product['capacitymax']; $i++) {
 
-			if ($product['prices'][$interval['startDate']]['adult'.$i] >= $max_amount) {
-				$max_amount = $product['prices'][$interval['startDate']]['adult'.$i];
+			if (!empty($product['prices'][$interval['startDate']]['adult'.$i])) {
 				$max_persons = $i;
 			}
-			if ($max_amount > 0 && $i >= $this->lConf['adultSelector'])
-					break;
+			// break, if global adultSelector limits the amount
+			if ($i >= $this->lConf['adultSelector'])
+				break;
 		}
 
 		// step through days from startdate to (enddate | maxAvailable) and add rate for every day
@@ -1155,6 +1152,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$priceArray['extraComponent1'] = '*+';
 		$priceArray['extraComponent2'] = '*+';
 
+//~ t3lib_utility_Debug::debugInPopUpWindow($priceArray,'priceArray');
 		foreach($priceArray as $key => $operator) {
 			unset($cur_title);
 			unset($pre_title);
