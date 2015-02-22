@@ -939,11 +939,9 @@ class tx_abbooking_div {
 				t3lib_utility_Debug::debugInPopUpWindow($product,'$product');
 
 				$mconf['tables'] = 'tt_content';
-				$tt_content_id = explode('#', $product['uiddetails']);
-				$mconf['source'] = $tt_content_id[1];
-		
+				$mconf['source'] = explode('#', $product['uiddetails'])[1];
 				$mconf['dontCheckPid'] = 1;
-				t3lib_utility_Debug::debugInPopUpWindow($mconf,'$mconf');
+
 				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
 
 			} else {
@@ -951,13 +949,6 @@ class tx_abbooking_div {
 				unset($bodytext);
 
 			}
-
-				$mconf['tables'] = 'tt_content';
-				$mconf['source'] = 12; // $product['uiddetails'];
-		
-				$mconf['dontCheckPid'] = 1;
-				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
-
 
 			if ($enableBookingLink) {
 				$conf['additionalParams'] = '&'.$this->prefixId.'[ABx]='.$params_united.'&'.$this->prefixId.'[abnocache]=1';
