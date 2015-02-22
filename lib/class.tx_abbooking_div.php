@@ -936,7 +936,6 @@ class tx_abbooking_div {
 			}
 
 			if (!empty($product['detailsRaw']['bodytext']) && !empty($product['uiddetails'])) {
-				t3lib_utility_Debug::debugInPopUpWindow($product,'$product');
 
 				$mconf['tables'] = 'tt_content';
 				$mconf['source'] = explode('#', $product['uiddetails'])[1];
