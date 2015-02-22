@@ -936,12 +936,14 @@ class tx_abbooking_div {
 			}
 
 			if (!empty($product['detailsRaw']['bodytext']) && !empty($product['uiddetails'])) {
-				
+				t3lib_utility_Debug::debugInPopUpWindow($product,'$product');
+
 				$mconf['tables'] = 'tt_content';
 				$tt_content_id = explode('#', $product['uiddetails']);
 				$mconf['source'] = $tt_content_id[1];
 		
 				$mconf['dontCheckPid'] = 1;
+				t3lib_utility_Debug::debugInPopUpWindow($mconf,'$mconf');
 				$bodytext = $this->cObj->cObjGetSingle('RECORDS', $mconf);
 
 			} else {
