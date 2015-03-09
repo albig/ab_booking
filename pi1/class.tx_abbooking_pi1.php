@@ -1146,13 +1146,15 @@ class tx_abbooking_pi1 extends tslib_pibase {
 		$total_amount = 0;
 		$priceArray['adult'.$max_persons] = '+';
 
-		if ($product['capacitymax'] > $max_persons) {
+		if ($product['capacitymax'] < $max_persons) {
 			$adultX = $product['capacitymax'] - $max_persons;
 			$priceArray['adultX'] = '*x';
 		}
 
 		$priceArray['extraComponent1'] = '*+';
 		$priceArray['extraComponent2'] = '*+';
+
+//~ t3lib_utility_Debug::debugInPopUpWindow($max_persons,'max_persons');
 
 		foreach($priceArray as $key => $operator) {
 			unset($cur_title);
@@ -1191,6 +1193,7 @@ class tx_abbooking_pi1 extends tslib_pibase {
 				$usedPrices[$cur_title]['discount'] = $rateValue['discount'];
 				$usedPrices[$cur_title]['isOption'] = $rateValue['isOption'];
 				$usedPrices[$cur_title]['isOptionSelected'] = $rateValue['isOptionSelected'];
+
 
 				switch ($key) {
 					case 'extraComponent1':	$usedPrices[$cur_title]['title'] = $this->pi_getLL('extraComponent1');
